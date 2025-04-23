@@ -7,23 +7,51 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateBMI, getBMICategory } from "@/utils/calculationUtils";
 import { BMICalcProps, UnitSystem } from "@/types/calculatorTypes";
-import { downloadResultsAsCSV, prepareResultsAsText, copyResultsToClipboard } from "@/utils/downloadUtils";
+import { 
+  downloadResultsAsCSV, 
+  prepareResultsAsText, 
+  copyResultsToClipboard,
+  createShareableLink 
+} from "@/utils/downloadUtils";
+import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
+import { Check, Copy, Share } from "lucide-react";
 
 const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange }) => {
   const [height, setHeight] = useState<string>("");
   const [weight, setWeight] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
+  const [errors, setErrors] = useState<{height?: string; weight?: string}>({});
   const [bmiResult, setBmiResult] = useState<number | null>(null);
   const [bmiCategory, setBmiCategory] = useState<string>("");
   const [bmiCategoryColor, setBmiCategoryColor] = useState<string>("");
+  const [copied, setCopied] = useState(false);
+
+  const validateInputs = (): boolean => {
+    const newErrors: {height?: string; weight?: string} = {};
+    let isValid = true;
+    
+    if (!height.trim()) {
+      newErrors.height = "Please enter your height";
+      isValid = false;
+    }
+    
+    if (!weight.trim()) {
+      newErrors.weight = "Please enter your weight";
+      isValid = false;
+    }
+    
+    setErrors(newErrors);
+    return isValid;
+  };
 
   const calculateBMIResult = () => {
-    if (!height || !weight) return;
+    if (!validateInputs()) return;
 
     const heightValue = parseFloat(height);
     const weightValue = parseFloat(weight);
 
     if (isNaN(heightValue) || isNaN(weightValue) || heightValue <= 0 || weightValue <= 0) {
-      alert("Please enter valid height and weight values.");
+      showErrorToast("Please enter valid height and weight values.");
       return;
     }
 
@@ -42,6 +70,7 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
     setHeight("");
     setWeight("");
     setBmiResult(null);
+    setErrors({});
   };
 
   const downloadResults = () => {
@@ -57,9 +86,11 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
       },
       date: new Date().toLocaleDateString(),
       unitSystem,
+      userName: userName || undefined,
     };
 
     downloadResultsAsCSV(results, "BMI-Calculator");
+    showSuccessToast("Results downloaded successfully!");
   };
 
   const copyResults = () => {
@@ -75,9 +106,28 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
       },
       date: new Date().toLocaleDateString(),
       unitSystem,
+      userName: userName || undefined,
     };
 
     copyResultsToClipboard(results);
+    setCopied(true);
+    showSuccessToast("Results copied to clipboard!");
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const shareLink = () => {
+    if (bmiResult === null) return;
+    
+    const params = {
+      height,
+      weight,
+      system: unitSystem,
+      name: userName || ""
+    };
+    
+    const link = createShareableLink("bmi", params);
+    navigator.clipboard.writeText(link);
+    showSuccessToast("Shareable link copied to clipboard!");
   };
 
   return (
@@ -86,6 +136,19 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
       <p className="text-gray-600 mb-4 text-center">
         Calculate your Body Mass Index based on your height and weight
       </p>
+
+      <div className="space-y-4 mb-6">
+        <div className="space-y-2">
+          <Label htmlFor="userName">Your Name (optional)</Label>
+          <Input
+            id="userName"
+            type="text"
+            placeholder="Enter your name"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+          />
+        </div>
+      </div>
 
       <Tabs
         defaultValue={unitSystem}
@@ -99,13 +162,20 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
 
         <TabsContent value="imperial" className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="height-imperial">Height (inches)</Label>
+            <Label htmlFor="height-imperial" className="flex justify-between">
+              Height (inches)
+              {errors.height && <span className="text-red-500 text-sm">{errors.height}</span>}
+            </Label>
             <Input
               id="height-imperial"
               type="number"
               placeholder="e.g., 70"
               value={height}
-              onChange={(e) => setHeight(e.target.value)}
+              onChange={(e) => {
+                setHeight(e.target.value);
+                if (e.target.value) setErrors({...errors, height: undefined});
+              }}
+              className={errors.height ? "border-red-500" : ""}
             />
             <p className="text-sm text-gray-500">
               For 5'10", enter 70 inches (5×12 + 10)
@@ -113,37 +183,58 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="weight-imperial">Weight (pounds)</Label>
+            <Label htmlFor="weight-imperial" className="flex justify-between">
+              Weight (pounds)
+              {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
+            </Label>
             <Input
               id="weight-imperial"
               type="number"
               placeholder="e.g., 160"
               value={weight}
-              onChange={(e) => setWeight(e.target.value)}
+              onChange={(e) => {
+                setWeight(e.target.value);
+                if (e.target.value) setErrors({...errors, weight: undefined});
+              }}
+              className={errors.weight ? "border-red-500" : ""}
             />
           </div>
         </TabsContent>
 
         <TabsContent value="metric" className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="height-metric">Height (cm)</Label>
+            <Label htmlFor="height-metric" className="flex justify-between">
+              Height (cm)
+              {errors.height && <span className="text-red-500 text-sm">{errors.height}</span>}
+            </Label>
             <Input
               id="height-metric"
               type="number"
               placeholder="e.g., 175"
               value={height}
-              onChange={(e) => setHeight(e.target.value)}
+              onChange={(e) => {
+                setHeight(e.target.value);
+                if (e.target.value) setErrors({...errors, height: undefined});
+              }}
+              className={errors.height ? "border-red-500" : ""}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="weight-metric">Weight (kg)</Label>
+            <Label htmlFor="weight-metric" className="flex justify-between">
+              Weight (kg)
+              {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
+            </Label>
             <Input
               id="weight-metric"
               type="number"
               placeholder="e.g., 70"
               value={weight}
-              onChange={(e) => setWeight(e.target.value)}
+              onChange={(e) => {
+                setWeight(e.target.value);
+                if (e.target.value) setErrors({...errors, weight: undefined});
+              }}
+              className={errors.weight ? "border-red-500" : ""}
             />
           </div>
         </TabsContent>
@@ -161,6 +252,7 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
             <p className={`text-lg font-medium ${bmiCategoryColor}`}>
               {bmiCategory}
             </p>
+            {userName && <p className="text-sm mt-2">Results for: {userName}</p>}
           </div>
 
           <div className="mt-6 space-y-2">
@@ -195,16 +287,25 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
 
           <div className="mt-4">
             <p className="text-sm text-gray-500 mb-2">
-              Reference: National Institutes of Health (NIH)
+              Reference: U.S. National Institutes of Health (NIH)
             </p>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={copyResults}>
-                Copy Results
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" size="sm" onClick={copyResults} className="flex items-center">
+                {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
+                {copied ? "Copied!" : "Copy Results"}
+              </Button>
+              <Button variant="outline" size="sm" onClick={shareLink} className="flex items-center">
+                <Share className="h-4 w-4 mr-1" />
+                Share Link
               </Button>
               <Button variant="outline" size="sm" onClick={downloadResults}>
                 Download CSV
               </Button>
             </div>
+          </div>
+          
+          <div className="mt-6 text-center text-sm text-wellness-purple">
+            <p>Thank you for using Survive<span className="lowercase">w</span>ellness!</p>
           </div>
         </div>
       )}

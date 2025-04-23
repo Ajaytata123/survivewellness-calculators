@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UnitSystem } from "@/types/calculatorTypes";
@@ -12,21 +11,24 @@ import IdealWeightCalculator from "./calculators/IdealWeightCalculator";
 
 // Fitness & Exercise Calculators
 import HeartRateCalculator from "./calculators/HeartRateCalculator";
-import VO2MaxCalculator from "./calculators/VO2MaxCalculator";
-import WorkoutPlannerCalculator from "./calculators/WorkoutPlannerCalculator";
-import StepCounterCalculator from "./calculators/StepCounterCalculator";
 
 // Nutrition & Diet Calculators
-import MacroCalculator from "./calculators/MacroCalculator";
 import WaterIntakeCalculator from "./calculators/WaterIntakeCalculator";
-import IntermittentFastingCalculator from "./calculators/IntermittentFastingCalculator";
-import CalorieTrackerCalculator from "./calculators/CalorieTrackerCalculator";
 
-// Wellness & Lifestyle Calculators
-import PregnancyCalculator from "./calculators/PregnancyCalculator";
-import AlcoholCalculator from "./calculators/AlcoholCalculator";
-import SmokingCalculator from "./calculators/SmokingCalculator";
-import StressCalculator from "./calculators/StressCalculator";
+// Placeholder component for calculators not yet implemented
+const PlaceholderCalculator: React.FC<{name: string, unitSystem: UnitSystem, onUnitSystemChange: (system: UnitSystem) => void}> = ({ 
+  name, 
+  unitSystem, 
+  onUnitSystemChange 
+}) => (
+  <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-sm text-center">
+    <h2 className="text-2xl font-bold mb-4">{name} Calculator</h2>
+    <p className="text-gray-500 mb-4">This calculator is coming soon! Stay tuned for updates.</p>
+    <div className="p-8 bg-gray-100 rounded-md flex items-center justify-center">
+      <div className="text-wellness-purple text-5xl">⏳</div>
+    </div>
+  </div>
+);
 
 type CalculatorCategory = "body" | "fitness" | "nutrition" | "wellness";
 
@@ -105,31 +107,31 @@ const WellnessCalculatorHub: React.FC = () => {
       case "heartrate":
         return <HeartRateCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       case "vo2max":
-        return <VO2MaxCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
+        return <PlaceholderCalculator name="VO2 Max" unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       case "workout":
-        return <WorkoutPlannerCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
+        return <PlaceholderCalculator name="Workout Planner" unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       case "steps":
-        return <StepCounterCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
+        return <PlaceholderCalculator name="Step Counter" unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       
       // Nutrition & Diet
       case "macro":
-        return <MacroCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
+        return <PlaceholderCalculator name="Macronutrients" unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       case "water":
         return <WaterIntakeCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       case "fasting":
-        return <IntermittentFastingCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
+        return <PlaceholderCalculator name="Intermittent Fasting" unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       case "calories":
-        return <CalorieTrackerCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
+        return <PlaceholderCalculator name="Calorie Tracker" unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       
       // Wellness & Lifestyle
       case "pregnancy":
-        return <PregnancyCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
+        return <PlaceholderCalculator name="Pregnancy Weight" unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       case "alcohol":
-        return <AlcoholCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
+        return <PlaceholderCalculator name="Alcohol Impact" unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       case "smoking":
-        return <SmokingCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
+        return <PlaceholderCalculator name="Smoking Impact" unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       case "stress":
-        return <StressCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
+        return <PlaceholderCalculator name="Stress & Anxiety" unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       
       default:
         return <BMICalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UnitSystem } from "@/types/calculatorTypes";
@@ -11,6 +12,9 @@ import IdealWeightCalculator from "./calculators/IdealWeightCalculator";
 
 // Fitness & Exercise Calculators
 import HeartRateCalculator from "./calculators/HeartRateCalculator";
+import VO2MaxCalculator from "./calculators/VO2MaxCalculator";
+import WorkoutPlannerCalculator from "./calculators/WorkoutPlannerCalculator";
+import StepCounterCalculator from "./calculators/StepCounterCalculator";
 
 // Nutrition & Diet Calculators
 import WaterIntakeCalculator from "./calculators/WaterIntakeCalculator";
@@ -107,11 +111,11 @@ const WellnessCalculatorHub: React.FC = () => {
       case "heartrate":
         return <HeartRateCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       case "vo2max":
-        return <PlaceholderCalculator name="VO2 Max" unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
+        return <VO2MaxCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       case "workout":
-        return <PlaceholderCalculator name="Workout Planner" unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
+        return <WorkoutPlannerCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       case "steps":
-        return <PlaceholderCalculator name="Step Counter" unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
+        return <StepCounterCalculator unitSystem={unitSystem} onUnitSystemChange={handleUnitSystemChange} />;
       
       // Nutrition & Diet
       case "macro":

@@ -137,7 +137,7 @@ const WellnessCalculatorHub: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
+    <div className="calculator-hub-container container mx-auto p-4 max-w-4xl">
       <h1 className="text-4xl font-bold text-center mb-2 text-wellness-purple">Wellness Calculator Hub</h1>
       <p className="text-gray-600 text-center mb-8">
         Explore our health and wellness calculators to track your fitness progress
@@ -145,7 +145,7 @@ const WellnessCalculatorHub: React.FC = () => {
 
       <div className="mb-8">
         <Tabs defaultValue="body" className="w-full">
-          <TabsList className="grid grid-cols-4 mb-4">
+          <TabsList className="grid grid-cols-2 md:grid-cols-4 mb-4">
             <TabsTrigger value="body">Body Composition</TabsTrigger>
             <TabsTrigger value="fitness">Fitness & Exercise</TabsTrigger>
             <TabsTrigger value="nutrition">Nutrition & Diet</TabsTrigger>
@@ -187,7 +187,7 @@ const WellnessCalculatorHub: React.FC = () => {
       </div>
 
       <div className="mt-8 text-center text-sm text-gray-500">
-        <p>© 2025 Survive<span className="lowercase">w</span>ellness. All calculations are based on established formulas and guidelines.</p>
+        <p>© 2025 <a href="https://survivewellness.com" target="_blank" rel="noopener noreferrer" className="text-wellness-purple hover:underline">Survive<span className="lowercase">w</span>ellness</a>. All calculations are based on established formulas and guidelines.</p>
         <p className="mt-1">Always consult with healthcare professionals for personalized advice.</p>
       </div>
       

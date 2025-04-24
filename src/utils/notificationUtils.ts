@@ -28,3 +28,18 @@ export const showWarningToast = (message: string): void => {
     duration: 4000,
   });
 };
+
+// Function for copy confirmation toast
+export const showCopyToast = (): void => {
+  toast.success("Results copied to clipboard!", {
+    duration: 2000,
+  });
+};
+
+// Function for download confirmation toast
+export const showDownloadToast = (): void => {
+  toast.success("Results downloaded successfully!", {
+    duration: 2000,
+  });
+};
+

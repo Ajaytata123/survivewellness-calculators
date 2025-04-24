@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { calculateBodyFat } from "@/utils/calculationUtils";
 import { BodyFatCalcProps, UnitSystem } from "@/types/calculatorTypes";
 import { downloadResultsAsCSV, copyResultsToClipboard } from "@/utils/downloadUtils";
+import { showSuccessToast, showErrorToast, showCopyToast, showDownloadToast } from "@/utils/notificationUtils";
 
 const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSystemChange }) => {
   const [height, setHeight] = useState<string>("");
@@ -19,9 +20,13 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
   const [gender, setGender] = useState<"male" | "female">("male");
   const [bodyFatResult, setBodyFatResult] = useState<number | null>(null);
   const [bodyFatCategory, setBodyFatCategory] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
 
   const calculateBodyFatResult = () => {
-    if (!height || !weight || !waist || !neck || (gender === "female" && !hip)) return;
+    if (!height || !waist || !neck || (gender === "female" && !hip)) {
+      showErrorToast("Please fill in all required fields.");
+      return;
+    }
 
     const heightValue = parseFloat(height);
     const waistValue = parseFloat(waist);
@@ -38,7 +43,7 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
       neckValue <= 0 ||
       (gender === "female" && (hipValue as number) <= 0)
     ) {
-      alert("Please enter valid measurements.");
+      showErrorToast("Please enter valid measurements.");
       return;
     }
 
@@ -53,6 +58,7 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
 
     setBodyFatResult(bodyFat);
     setBodyFatCategory(getBodyFatCategory(bodyFat, gender));
+    showSuccessToast("Body fat calculated successfully!");
   };
 
   const getBodyFatCategory = (bodyFat: number, gender: string): string => {
@@ -84,7 +90,10 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
   };
 
   const downloadResults = () => {
-    if (bodyFatResult === null) return;
+    if (bodyFatResult === null) {
+      showErrorToast("Please calculate your body fat first.");
+      return;
+    }
 
     const results = {
       title: "Body Fat Percentage Calculator",
@@ -99,13 +108,18 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
       },
       date: new Date().toLocaleDateString(),
       unitSystem,
+      userName: userName || "User"
     };
 
     downloadResultsAsCSV(results, "Body-Fat-Calculator");
+    showDownloadToast();
   };
 
   const copyResults = () => {
-    if (bodyFatResult === null) return;
+    if (bodyFatResult === null) {
+      showErrorToast("Please calculate your body fat first.");
+      return;
+    }
 
     const results = {
       title: "Body Fat Percentage Calculator",
@@ -120,9 +134,11 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
       },
       date: new Date().toLocaleDateString(),
       unitSystem,
+      userName: userName || "User"
     };
 
     copyResultsToClipboard(results);
+    showCopyToast();
   };
 
   return (
@@ -131,6 +147,17 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
       <p className="text-gray-600 mb-4 text-center">
         Calculate your body fat percentage using the U.S. Navy Method
       </p>
+
+      <div className="mb-6">
+        <Label htmlFor="userName">Your Name (Optional)</Label>
+        <Input
+          id="userName"
+          placeholder="Enter your name"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          className="mt-1"
+        />
+      </div>
 
       <Tabs
         defaultValue={unitSystem}

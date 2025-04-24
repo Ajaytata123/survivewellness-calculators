@@ -1,5 +1,6 @@
 
 import { ResultForDownload } from "@/types/calculatorTypes";
+import { showCopyToast } from "./notificationUtils";
 
 // Function to prepare results for download in CSV format
 export const prepareResultsForCSV = (results: ResultForDownload): string => {
@@ -26,14 +27,17 @@ export const prepareResultsForCSV = (results: ResultForDownload): string => {
 export const downloadResultsAsCSV = (results: ResultForDownload, calculatorName: string): void => {
   try {
     const csvContent = prepareResultsForCSV(results);
-    const encodedUri = encodeURI(`data:text/csv;charset=utf-8,${csvContent}`);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
     
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    link.setAttribute("href", url);
     link.setAttribute("download", `${calculatorName}-results.csv`);
+    link.style.display = 'none';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   } catch (error) {
     console.error("Error generating CSV:", error);
   }
@@ -68,6 +72,7 @@ export const shareResults = (results: ResultForDownload): void => {
       .share({
         title: `${results.title} Results from Survivewellness`,
         text: textResults,
+        url: "https://survivewellness.com"
       })
       .catch((error) => console.error("Error sharing results:", error));
   } else {

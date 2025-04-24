@@ -1,14 +1,30 @@
 
 import { toast } from "sonner";
 
-export const showSuccessToast = (message: string) => {
+// Function to show success toast notification
+export const showSuccessToast = (message: string): void => {
   toast.success(message, {
-    duration: 2000,
+    duration: 3000,
   });
 };
 
-export const showErrorToast = (message: string) => {
+// Function to show error toast notification
+export const showErrorToast = (message: string): void => {
   toast.error(message, {
+    duration: 4000,
+  });
+};
+
+// Function to show info toast notification
+export const showInfoToast = (message: string): void => {
+  toast.info(message, {
     duration: 3000,
+  });
+};
+
+// Function to show warning toast notification
+export const showWarningToast = (message: string): void => {
+  toast.warning(message, {
+    duration: 4000,
   });
 };

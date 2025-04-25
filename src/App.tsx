@@ -14,7 +14,6 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      {/* Using HashRouter instead of BrowserRouter for GitHub Pages */}
       <HashRouter>
         <Routes>
           <Route path="/" element={<Index />} />

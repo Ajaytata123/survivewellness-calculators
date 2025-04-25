@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: "./", // Changed from "/survivewellness-calculators/" to "./" for relative paths
+  base: "/survivewellness-calculators/", // Changed back to match your GitHub Pages URL path
   server: {
     host: "::",
     port: 8080,

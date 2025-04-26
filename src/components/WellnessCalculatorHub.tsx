@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { UnitSystem } from "@/types/calculatorTypes";
 import { Toaster } from "sonner";
 
@@ -38,7 +38,22 @@ interface CalculatorInfo {
 
 const WellnessCalculatorHub: React.FC = () => {
   const [activeCalculator, setActiveCalculator] = useState<string>("bmi");
+  const [activeCategory, setActiveCategory] = useState<string>("body");
   const [unitSystem, setUnitSystem] = useState<UnitSystem>("imperial");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Handle direct calculator access via URL
+  useEffect(() => {
+    const hash = location.hash.slice(1);
+    if (hash) {
+      const calculatorInfo = calculators.find(calc => calc.id === hash);
+      if (calculatorInfo) {
+        setActiveCalculator(hash);
+        setActiveCategory(calculatorInfo.category);
+      }
+    }
+  }, [location]);
 
   const handleUnitSystemChange = (system: UnitSystem) => {
     setUnitSystem(system);
@@ -70,7 +85,21 @@ const WellnessCalculatorHub: React.FC = () => {
     { id: "stress", name: "Stress & Anxiety", color: "wellness-purple", category: "wellness" },
   ];
 
-  const renderCalculatorButtons = (category: CalculatorCategory) => {
+  const handleCategoryClick = (category: string) => {
+    setActiveCategory(category);
+    const firstCalcInCategory = calculators.find(calc => calc.category === category);
+    if (firstCalcInCategory) {
+      setActiveCalculator(firstCalcInCategory.id);
+      navigate(`#${firstCalcInCategory.id}`);
+    }
+  };
+
+  const handleCalculatorClick = (calculatorId: string) => {
+    setActiveCalculator(calculatorId);
+    navigate(`#${calculatorId}`);
+  };
+
+  const renderCalculatorButtons = (category: string) => {
     return calculators
       .filter(calc => calc.category === category)
       .map(calculator => (
@@ -81,7 +110,7 @@ const WellnessCalculatorHub: React.FC = () => {
               ? `bg-${calculator.color} text-white shadow-md`
               : "bg-gray-100 hover:bg-gray-200"
           }`}
-          onClick={() => setActiveCalculator(calculator.id)}
+          onClick={() => handleCalculatorClick(calculator.id)}
         >
           {calculator.name}
         </button>
@@ -135,87 +164,48 @@ const WellnessCalculatorHub: React.FC = () => {
     }
   };
 
-  // Add direct navigation function
-  const scrollToCalculator = (calculatorId: string) => {
-    const element = document.getElementById(calculatorId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <div className="calculator-hub-container container mx-auto p-4 max-w-4xl">
       <h1 className="text-4xl font-bold text-center mb-2 text-wellness-purple">
-        Survivewellness Calculator Hub
+        SurviveWellness Calculator Hub
       </h1>
       <p className="text-gray-600 text-center mb-8">
         Explore our health and wellness calculators to track your fitness progress
       </p>
 
+      {/* Main Category Buttons */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <button 
-          onClick={() => scrollToCalculator('body')}
-          className="p-4 bg-wellness-purple text-white rounded-lg hover:bg-wellness-purple/90 transition-colors"
+          onClick={() => handleCategoryClick('body')}
+          className={`p-4 ${activeCategory === 'body' ? 'bg-wellness-purple' : 'bg-wellness-purple/80'} text-white rounded-lg hover:bg-wellness-purple/90 transition-colors`}
         >
           Body Composition
         </button>
         <button 
-          onClick={() => scrollToCalculator('fitness')}
-          className="p-4 bg-wellness-blue text-white rounded-lg hover:bg-wellness-blue/90 transition-colors"
+          onClick={() => handleCategoryClick('fitness')}
+          className={`p-4 ${activeCategory === 'fitness' ? 'bg-wellness-blue' : 'bg-wellness-blue/80'} text-white rounded-lg hover:bg-wellness-blue/90 transition-colors`}
         >
           Fitness & Exercise
         </button>
         <button 
-          onClick={() => scrollToCalculator('nutrition')}
-          className="p-4 bg-wellness-green text-white rounded-lg hover:bg-wellness-green/90 transition-colors"
+          onClick={() => handleCategoryClick('nutrition')}
+          className={`p-4 ${activeCategory === 'nutrition' ? 'bg-wellness-green' : 'bg-wellness-green/80'} text-white rounded-lg hover:bg-wellness-green/90 transition-colors`}
         >
           Nutrition & Diet
         </button>
         <button 
-          onClick={() => scrollToCalculator('wellness')}
-          className="p-4 bg-wellness-orange text-white rounded-lg hover:bg-wellness-orange/90 transition-colors"
+          onClick={() => handleCategoryClick('wellness')}
+          className={`p-4 ${activeCategory === 'wellness' ? 'bg-wellness-orange' : 'bg-wellness-orange/80'} text-white rounded-lg hover:bg-wellness-orange/90 transition-colors`}
         >
           Wellness & Lifestyle
         </button>
       </div>
 
+      {/* Sub-calculator buttons */}
       <div className="mb-8">
-        <Tabs defaultValue="body" className="w-full">
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 mb-4">
-            <TabsTrigger value="body" id="body">Body Composition</TabsTrigger>
-            <TabsTrigger value="fitness" id="fitness">Fitness & Exercise</TabsTrigger>
-            <TabsTrigger value="nutrition" id="nutrition">Nutrition & Diet</TabsTrigger>
-            <TabsTrigger value="wellness" id="wellness">Wellness & Lifestyle</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="body">
-            <h2 className="text-xl font-semibold mb-4">Body Composition Calculators</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {renderCalculatorButtons("body")}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="fitness">
-            <h2 className="text-xl font-semibold mb-4">Fitness & Exercise Calculators</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {renderCalculatorButtons("fitness")}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="nutrition">
-            <h2 className="text-xl font-semibold mb-4">Nutrition & Diet Calculators</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {renderCalculatorButtons("nutrition")}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="wellness">
-            <h2 className="text-xl font-semibold mb-4">Wellness & Lifestyle Calculators</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {renderCalculatorButtons("wellness")}
-            </div>
-          </TabsContent>
-        </Tabs>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {renderCalculatorButtons(activeCategory)}
+        </div>
       </div>
 
       <div className="calculator-container">

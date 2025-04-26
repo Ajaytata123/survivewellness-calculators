@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UnitSystem } from "@/types/calculatorTypes";
@@ -136,20 +135,57 @@ const WellnessCalculatorHub: React.FC = () => {
     }
   };
 
+  // Add direct navigation function
+  const scrollToCalculator = (calculatorId: string) => {
+    const element = document.getElementById(calculatorId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="calculator-hub-container container mx-auto p-4 max-w-4xl">
-      <h1 className="text-4xl font-bold text-center mb-2 text-wellness-purple">Wellness Calculator Hub</h1>
+      <h1 className="text-4xl font-bold text-center mb-2 text-wellness-purple">
+        Survivewellness Calculator Hub
+      </h1>
       <p className="text-gray-600 text-center mb-8">
         Explore our health and wellness calculators to track your fitness progress
       </p>
 
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <button 
+          onClick={() => scrollToCalculator('body')}
+          className="p-4 bg-wellness-purple text-white rounded-lg hover:bg-wellness-purple/90 transition-colors"
+        >
+          Body Composition
+        </button>
+        <button 
+          onClick={() => scrollToCalculator('fitness')}
+          className="p-4 bg-wellness-blue text-white rounded-lg hover:bg-wellness-blue/90 transition-colors"
+        >
+          Fitness & Exercise
+        </button>
+        <button 
+          onClick={() => scrollToCalculator('nutrition')}
+          className="p-4 bg-wellness-green text-white rounded-lg hover:bg-wellness-green/90 transition-colors"
+        >
+          Nutrition & Diet
+        </button>
+        <button 
+          onClick={() => scrollToCalculator('wellness')}
+          className="p-4 bg-wellness-orange text-white rounded-lg hover:bg-wellness-orange/90 transition-colors"
+        >
+          Wellness & Lifestyle
+        </button>
+      </div>
+
       <div className="mb-8">
         <Tabs defaultValue="body" className="w-full">
           <TabsList className="grid grid-cols-2 md:grid-cols-4 mb-4">
-            <TabsTrigger value="body">Body Composition</TabsTrigger>
-            <TabsTrigger value="fitness">Fitness & Exercise</TabsTrigger>
-            <TabsTrigger value="nutrition">Nutrition & Diet</TabsTrigger>
-            <TabsTrigger value="wellness">Wellness & Lifestyle</TabsTrigger>
+            <TabsTrigger value="body" id="body">Body Composition</TabsTrigger>
+            <TabsTrigger value="fitness" id="fitness">Fitness & Exercise</TabsTrigger>
+            <TabsTrigger value="nutrition" id="nutrition">Nutrition & Diet</TabsTrigger>
+            <TabsTrigger value="wellness" id="wellness">Wellness & Lifestyle</TabsTrigger>
           </TabsList>
           
           <TabsContent value="body">

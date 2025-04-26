@@ -17,7 +17,7 @@ import StepCounterCalculator from "./calculators/StepCounterCalculator";
 
 // Nutrition & Diet Calculators
 import WaterIntakeCalculator from "./calculators/WaterIntakeCalculator";
-import MacronutrientCalculator from "./calculators/MacronutrientCalculator";
+import MacronutrientCalculator from "./calculators/MacroCalculator";
 import CalorieTrackerCalculator from "./calculators/CalorieTrackerCalculator";
 import IntermittentFastingCalculator from "./calculators/IntermittentFastingCalculator";
 
@@ -165,47 +165,55 @@ const WellnessCalculatorHub: React.FC = () => {
   };
 
   return (
-    <div className="calculator-hub-container mx-auto p-4 max-w-4xl">
-      <div className="text-center space-y-2 mb-8 px-4 md:px-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-wellness-purple">
+    <div className="calculator-hub-container mx-auto p-2 sm:p-4 max-w-4xl">
+      <div className="text-center space-y-2 mb-6 sm:mb-8 px-3 sm:px-8">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-wellness-purple">
           Survivewellness Calculator Hub
         </h1>
-        <p className="text-gray-600 text-sm md:text-base">
-          Explore our health and wellness calculators to track your fitness progress
+        <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
+          Explore our professional health and wellness calculators to track your fitness progress
         </p>
       </div>
 
-      {/* Main Category Buttons - Responsive Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+      {/* Main Category Buttons - Improved Mobile Layout */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">
         <button 
           onClick={() => handleCategoryClick('body')}
-          className={`p-3 md:p-4 ${activeCategory === 'body' ? 'bg-wellness-purple' : 'bg-wellness-purple/80'} text-white rounded-lg hover:bg-wellness-purple/90 transition-colors text-sm md:text-base`}
+          className={`p-2 sm:p-3 md:p-4 ${
+            activeCategory === 'body' ? 'bg-wellness-purple' : 'bg-wellness-purple/80'
+          } text-white rounded-lg hover:bg-wellness-purple/90 transition-colors text-xs sm:text-sm md:text-base font-medium`}
         >
           Body Composition
         </button>
         <button 
           onClick={() => handleCategoryClick('fitness')}
-          className={`p-3 md:p-4 ${activeCategory === 'fitness' ? 'bg-wellness-blue' : 'bg-wellness-blue/80'} text-white rounded-lg hover:bg-wellness-blue/90 transition-colors text-sm md:text-base`}
+          className={`p-2 sm:p-3 md:p-4 ${
+            activeCategory === 'fitness' ? 'bg-wellness-blue' : 'bg-wellness-blue/80'
+          } text-white rounded-lg hover:bg-wellness-blue/90 transition-colors text-xs sm:text-sm md:text-base font-medium`}
         >
           Fitness & Exercise
         </button>
         <button 
           onClick={() => handleCategoryClick('nutrition')}
-          className={`p-3 md:p-4 ${activeCategory === 'nutrition' ? 'bg-wellness-green' : 'bg-wellness-green/80'} text-white rounded-lg hover:bg-wellness-green/90 transition-colors text-sm md:text-base`}
+          className={`p-2 sm:p-3 md:p-4 ${
+            activeCategory === 'nutrition' ? 'bg-wellness-green' : 'bg-wellness-green/80'
+          } text-white rounded-lg hover:bg-wellness-green/90 transition-colors text-xs sm:text-sm md:text-base font-medium`}
         >
           Nutrition & Diet
         </button>
         <button 
           onClick={() => handleCategoryClick('wellness')}
-          className={`p-3 md:p-4 ${activeCategory === 'wellness' ? 'bg-wellness-orange' : 'bg-wellness-orange/80'} text-white rounded-lg hover:bg-wellness-orange/90 transition-colors text-sm md:text-base`}
+          className={`p-2 sm:p-3 md:p-4 ${
+            activeCategory === 'wellness' ? 'bg-wellness-orange' : 'bg-wellness-orange/80'
+          } text-white rounded-lg hover:bg-wellness-orange/90 transition-colors text-xs sm:text-sm md:text-base font-medium`}
         >
           Wellness & Lifestyle
         </button>
       </div>
 
-      {/* Sub-calculator buttons with improved mobile UI */}
-      <div className="mb-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
+      {/* Sub-calculator buttons with improved mobile styling */}
+      <div className="mb-4 sm:mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2">
           {renderCalculatorButtons(activeCategory)}
         </div>
       </div>

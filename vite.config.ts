@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: "/survivewellness-calculators/", // Changed back to match your GitHub Pages URL path
+  base: "/", // Changed to root path for Netlify deployment
   server: {
     host: "::",
     port: 8080,

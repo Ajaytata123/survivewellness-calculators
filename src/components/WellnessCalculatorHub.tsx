@@ -165,56 +165,53 @@ const WellnessCalculatorHub: React.FC = () => {
   };
 
   return (
-    <div className="calculator-hub-container container mx-auto p-4 max-w-4xl">
-      <h1 className="text-4xl font-bold text-center mb-2 text-wellness-purple">
-        SurviveWellness Calculator Hub
-      </h1>
-      <p className="text-gray-600 text-center mb-8">
-        Explore our health and wellness calculators to track your fitness progress
-      </p>
+    <div className="calculator-hub-container mx-auto p-4 max-w-4xl">
+      <div className="text-center space-y-2 mb-8 px-4 md:px-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-wellness-purple">
+          Survivewellness Calculator Hub
+        </h1>
+        <p className="text-gray-600 text-sm md:text-base">
+          Explore our health and wellness calculators to track your fitness progress
+        </p>
+      </div>
 
-      {/* Main Category Buttons */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      {/* Main Category Buttons - Responsive Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
         <button 
           onClick={() => handleCategoryClick('body')}
-          className={`p-4 ${activeCategory === 'body' ? 'bg-wellness-purple' : 'bg-wellness-purple/80'} text-white rounded-lg hover:bg-wellness-purple/90 transition-colors`}
+          className={`p-3 md:p-4 ${activeCategory === 'body' ? 'bg-wellness-purple' : 'bg-wellness-purple/80'} text-white rounded-lg hover:bg-wellness-purple/90 transition-colors text-sm md:text-base`}
         >
           Body Composition
         </button>
         <button 
           onClick={() => handleCategoryClick('fitness')}
-          className={`p-4 ${activeCategory === 'fitness' ? 'bg-wellness-blue' : 'bg-wellness-blue/80'} text-white rounded-lg hover:bg-wellness-blue/90 transition-colors`}
+          className={`p-3 md:p-4 ${activeCategory === 'fitness' ? 'bg-wellness-blue' : 'bg-wellness-blue/80'} text-white rounded-lg hover:bg-wellness-blue/90 transition-colors text-sm md:text-base`}
         >
           Fitness & Exercise
         </button>
         <button 
           onClick={() => handleCategoryClick('nutrition')}
-          className={`p-4 ${activeCategory === 'nutrition' ? 'bg-wellness-green' : 'bg-wellness-green/80'} text-white rounded-lg hover:bg-wellness-green/90 transition-colors`}
+          className={`p-3 md:p-4 ${activeCategory === 'nutrition' ? 'bg-wellness-green' : 'bg-wellness-green/80'} text-white rounded-lg hover:bg-wellness-green/90 transition-colors text-sm md:text-base`}
         >
           Nutrition & Diet
         </button>
         <button 
           onClick={() => handleCategoryClick('wellness')}
-          className={`p-4 ${activeCategory === 'wellness' ? 'bg-wellness-orange' : 'bg-wellness-orange/80'} text-white rounded-lg hover:bg-wellness-orange/90 transition-colors`}
+          className={`p-3 md:p-4 ${activeCategory === 'wellness' ? 'bg-wellness-orange' : 'bg-wellness-orange/80'} text-white rounded-lg hover:bg-wellness-orange/90 transition-colors text-sm md:text-base`}
         >
           Wellness & Lifestyle
         </button>
       </div>
 
-      {/* Sub-calculator buttons */}
-      <div className="mb-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {/* Sub-calculator buttons with improved mobile UI */}
+      <div className="mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
           {renderCalculatorButtons(activeCategory)}
         </div>
       </div>
 
       <div className="calculator-container">
         {renderActiveCalculator()}
-      </div>
-
-      <div className="mt-8 text-center text-sm text-gray-500">
-        <p>© 2025 <a href="https://survivewellness.com" target="_blank" rel="noopener noreferrer" className="text-wellness-purple hover:underline">Survive<span className="lowercase">w</span>ellness</a>. All calculations are based on established formulas and guidelines.</p>
-        <p className="mt-1">Always consult with healthcare professionals for personalized advice.</p>
       </div>
       
       <Toaster position="top-right" />

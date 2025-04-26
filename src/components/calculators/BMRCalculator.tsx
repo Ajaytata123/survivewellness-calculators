@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -144,8 +143,18 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
         className="mb-6"
       >
         <TabsList className="grid grid-cols-2 mb-4">
-          <TabsTrigger value="imperial">Imperial (US)</TabsTrigger>
-          <TabsTrigger value="metric">Metric</TabsTrigger>
+          <TabsTrigger 
+            value="imperial"
+            className={`${unitSystem === 'imperial' ? 'bg-wellness-blue text-white' : 'bg-gray-100'} transition-colors`}
+          >
+            Imperial (US)
+          </TabsTrigger>
+          <TabsTrigger 
+            value="metric"
+            className={`${unitSystem === 'metric' ? 'bg-wellness-green text-white' : 'bg-gray-100'} transition-colors`}
+          >
+            Metric
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="imperial" className="space-y-4">

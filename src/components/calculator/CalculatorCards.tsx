@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import * as LucideIcons from "lucide-react";
-import { CalculatorInfo } from '../WellnessCalculatorHub';
+import { CalculatorInfo } from '@/types/calculator';
 import { cn } from '@/lib/utils';
 
 interface CalculatorCardsProps {
@@ -20,9 +19,8 @@ export const CalculatorCards: React.FC<CalculatorCardsProps> = ({
   isSearching,
 }) => {
   const renderCalculatorButton = (calc: CalculatorInfo) => {
-    // Use type assertion to access icon by name from LucideIcons
-    const IconComponent = (LucideIcons as Record<string, React.ComponentType<any>>)[calc.icon] || 
-                          LucideIcons.Calculator; // Fallback to Calculator icon
+    // Safely get the icon component using the icons object
+    const IconComponent = LucideIcons[calc.icon as keyof typeof LucideIcons] || LucideIcons.Calculator;
     
     return (
       <Button

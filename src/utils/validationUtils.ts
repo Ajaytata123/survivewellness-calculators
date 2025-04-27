@@ -1,4 +1,3 @@
-
 // Input validation utility functions
 
 // Age validation (typically 0-120 years)
@@ -61,6 +60,63 @@ export const validateStepCount = (steps: number): string | null => {
 export const validateWaterIntake = (water: number): string | null => {
   if (water < 0) return "Water intake cannot be negative";
   if (water > 10) return "Please enter a valid water intake (0-10 liters)";
+  return null;
+};
+
+// Generic validation function for any input with minimum and maximum values
+export const validateRange = (value: number, min: number, max: number, fieldName: string): string | null => {
+  if (value < min) return `${fieldName} must be at least ${min}`;
+  if (value > max) return `${fieldName} must be no more than ${max}`;
+  return null;
+};
+
+// Add new validation functions for common fields
+export const validateAge = (age: number): string | null => {
+  if (age < 0) return "Age cannot be negative";
+  if (age > 120) return "Please enter a valid age (0-120 years)";
+  return null;
+};
+
+export const validateWeight = (weight: number, unit: 'kg' | 'lbs'): string | null => {
+  if (unit === 'kg') {
+    if (weight < 20) return "Weight must be at least 20 kg";
+    if (weight > 300) return "Please enter a valid weight (20-300 kg)";
+  } else {
+    if (weight < 44) return "Weight must be at least 44 lbs";
+    if (weight > 660) return "Please enter a valid weight (44-660 lbs)";
+  }
+  return null;
+};
+
+export const validateHeight = (height: number, unit: 'cm' | 'inches'): string | null => {
+  if (unit === 'cm') {
+    if (height < 100) return "Height must be at least 100 cm";
+    if (height > 250) return "Please enter a valid height (100-250 cm)";
+  } else {
+    if (height < 39) return "Height must be at least 39 inches";
+    if (height > 98) return "Please enter a valid height (39-98 inches)";
+  }
+  return null;
+};
+
+// Generic validation function for any input with minimum and maximum values
+export const validateRange = (value: number, min: number, max: number, fieldName: string): string | null => {
+  if (value < min) return `${fieldName} must be at least ${min}`;
+  if (value > max) return `${fieldName} must be no more than ${max}`;
+  return null;
+};
+
+// Add stricter validation for step count
+export const validateStepCount = (steps: number): string | null => {
+  if (steps < 0) return "Step count cannot be negative";
+  if (steps > 100000) return "Daily step count should be between 0 and 100,000";
+  return null;
+};
+
+// Add validation for heart rate with medical standards
+export const validateHeartRate = (heartRate: number): string | null => {
+  if (heartRate < 30) return "Heart rate must be at least 30 BPM";
+  if (heartRate > 220) return "Maximum heart rate should not exceed 220 BPM";
   return null;
 };
 

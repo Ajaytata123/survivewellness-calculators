@@ -36,6 +36,11 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
 
   const categoryCalculators = calculators.filter(calc => calc.category === activeCategory);
 
+  // Create a wrapper function to handle the category type correctly
+  const handleCategorySelect = (category: string) => {
+    setActiveCategory(category as "body" | "fitness" | "nutrition" | "wellness");
+  };
+
   return (
     <div className="flex flex-col w-full h-full">
       <div className="sticky top-0 z-10 bg-white shadow-sm p-4 space-y-4">
@@ -49,7 +54,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
         <CategorySelector
           categories={categories}
           activeCategory={activeCategory}
-          onCategorySelect={setActiveCategory}
+          onCategorySelect={handleCategorySelect}
         />
       </div>
 

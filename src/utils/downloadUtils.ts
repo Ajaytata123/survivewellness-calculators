@@ -69,11 +69,12 @@ export const prepareResultsAsText = (results: ResultForDownload): string => {
 export const shareResults = (results: ResultForDownload): void => {
   if (navigator.share) {
     const textResults = prepareResultsAsText(results);
+    const calculatorPath = results.title.toLowerCase().replace(/\s+/g, '-');
     navigator
       .share({
         title: `${results.title} Results from Survivewellness`,
         text: textResults,
-        url: `https://survivewellness.com/tools-calculators/#${results.calculatorId || ''}`
+        url: `https://survivewellness.com/tools-calculators/#${calculatorPath}`
       })
       .catch((error) => console.error("Error sharing results:", error));
   } else {

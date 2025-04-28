@@ -2,9 +2,9 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import * as LucideIcons from "lucide-react";
 import { CalculatorInfo } from '@/types/calculator';
 import { cn } from '@/lib/utils';
+import { getIconComponent } from '@/utils/iconUtils';
 
 interface CalculatorCardsProps {
   calculators: CalculatorInfo[];
@@ -20,9 +20,8 @@ export const CalculatorCards: React.FC<CalculatorCardsProps> = ({
   isSearching,
 }) => {
   const renderCalculatorButton = (calc: CalculatorInfo) => {
-    // Get the proper icon component or default to Calculator
-    const iconName = calc.icon as keyof typeof LucideIcons;
-    const IconComponent = LucideIcons[iconName] || LucideIcons.Calculator;
+    // Get the proper icon component using our utility function
+    const IconComponent = getIconComponent(calc.icon);
     
     return (
       <Button

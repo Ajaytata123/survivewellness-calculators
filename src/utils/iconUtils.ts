@@ -1,10 +1,12 @@
 
 import * as LucideIcons from "lucide-react";
-import { LucideIcon } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { CalculatorCategory } from "@/types/calculator";
 
 export const getIconComponent = (iconName: string): LucideIcon => {
-  return LucideIcons[iconName as keyof typeof LucideIcons] || LucideIcons.Calculator;
+  // Find the icon in LucideIcons or return Calculator as fallback
+  const IconComponent = (LucideIcons as Record<string, LucideIcon>)[iconName] || LucideIcons.Calculator;
+  return IconComponent;
 };
 
 export const getCategoryIcon = (category: CalculatorCategory): LucideIcon => {

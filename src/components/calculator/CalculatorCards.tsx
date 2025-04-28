@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -19,8 +20,9 @@ export const CalculatorCards: React.FC<CalculatorCardsProps> = ({
   isSearching,
 }) => {
   const renderCalculatorButton = (calc: CalculatorInfo) => {
-    // Safely get the icon component using the icons object
-    const IconComponent = LucideIcons[calc.icon as keyof typeof LucideIcons] || LucideIcons.Calculator;
+    // Get the proper icon component or default to Calculator
+    const iconName = calc.icon as keyof typeof LucideIcons;
+    const IconComponent = LucideIcons[iconName] || LucideIcons.Calculator;
     
     return (
       <Button
@@ -55,8 +57,8 @@ export const CalculatorCards: React.FC<CalculatorCardsProps> = ({
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
+      <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2" />
+      <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2" />
     </Carousel>
   );
 };

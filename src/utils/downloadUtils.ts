@@ -1,3 +1,4 @@
+
 import { ResultForDownload } from "@/types/calculatorTypes";
 import { showCopyToast } from "./notificationUtils";
 
@@ -88,6 +89,7 @@ export const copyResultsToClipboard = (results: ResultForDownload): void => {
   
   navigator.clipboard.writeText(textToCopy)
     .then(() => {
+      showCopyToast();
       console.log("Results copied to clipboard");
     })
     .catch(err => console.error("Could not copy text: ", err));

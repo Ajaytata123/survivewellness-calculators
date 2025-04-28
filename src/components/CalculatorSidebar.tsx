@@ -1,26 +1,16 @@
-
 import React from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Search } from "@/components/ui/search";
-import { CalculatorInfo } from '@/types/calculator';
+import { CalculatorInfo as CalcInfo } from '@/types/calculator';
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 
-type CalculatorCategory = "body" | "fitness" | "nutrition" | "wellness";
-
-interface CalculatorInfo {
-  id: string;
-  name: string;
-  color: string;
-  category: CalculatorCategory;
-}
-
 interface CalculatorSidebarProps {
   activeCalculator: string;
   onCalculatorSelect: (calculatorId: string) => void;
-  calculators: CalculatorInfo[];
+  calculators: CalcInfo[];
   searchQuery: string;
   setSearchQuery: (query: string) => void;
 }
@@ -37,15 +27,15 @@ export const CalculatorSidebar = ({
         calc.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : calculators;
 
-  const categoryOrder: CalculatorCategory[] = ["body", "fitness", "nutrition", "wellness"];
-  const categoryNames: Record<CalculatorCategory, string> = {
+  const categoryOrder: ("body" | "fitness" | "nutrition" | "wellness")[] = ["body", "fitness", "nutrition", "wellness"];
+  const categoryNames: Record<"body" | "fitness" | "nutrition" | "wellness", string> = {
     body: "Body Composition",
     fitness: "Fitness & Exercise",
     nutrition: "Nutrition & Diet",
     wellness: "Wellness & Lifestyle"
   };
 
-  const categoryColors: Record<CalculatorCategory, string> = {
+  const categoryColors: Record<"body" | "fitness" | "nutrition" | "wellness", string> = {
     body: "wellness-purple",
     fitness: "wellness-blue",
     nutrition: "wellness-green",

@@ -1,8 +1,9 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Heart, Activity, Scale, Utensils } from "lucide-react";
+import { CalculatorCategory } from '@/types/calculator';
 import { cn } from '@/lib/utils';
+import { getCategoryIcon, getCategoryName } from '@/utils/iconUtils';
 
 interface CategorySelectorProps {
   categories: string[];
@@ -15,48 +16,30 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
   activeCategory,
   onCategorySelect,
 }) => {
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'body':
-        return <Scale className="w-4 h-4 mr-2" />;
-      case 'fitness':
-        return <Activity className="w-4 h-4 mr-2" />;
-      case 'nutrition':
-        return <Utensils className="w-4 h-4 mr-2" />;
-      case 'wellness':
-        return <Heart className="w-4 h-4 mr-2" />;
-      default:
-        return null;
-    }
-  };
-
-  const getCategoryName = (category: string) => {
-    const names: Record<string, string> = {
-      body: "Body Composition",
-      fitness: "Fitness & Exercise",
-      nutrition: "Nutrition & Diet",
-      wellness: "Wellness & Lifestyle"
-    };
-    return names[category] || category;
+  const renderCategoryButton = (category: string) => {
+    const IconComponent = getCategoryIcon(category as CalculatorCategory);
+    const categoryName = getCategoryName(category as CalculatorCategory);
+    
+    return (
+      <Button
+        key={category}
+        variant={activeCategory === category ? "default" : "outline"}
+        className={cn(
+          "whitespace-nowrap flex-shrink-0 justify-start px-4 py-2",
+          activeCategory === category && "bg-wellness-purple text-white"
+        )}
+        onClick={() => onCategorySelect(category)}
+      >
+        <IconComponent className="w-4 h-4 mr-2" />
+        <span className="text-sm">{categoryName}</span>
+      </Button>
+    );
   };
 
   return (
     <div className="overflow-x-auto pb-2">
-      <div className="flex space-x-2 min-w-min">
-        {categories.map(category => (
-          <Button
-            key={category}
-            variant={activeCategory === category ? "default" : "outline"}
-            className={cn(
-              "whitespace-nowrap min-w-[80%] justify-start",
-              activeCategory === category && "bg-wellness-purple text-white"
-            )}
-            onClick={() => onCategorySelect(category)}
-          >
-            {getCategoryIcon(category)}
-            {getCategoryName(category)}
-          </Button>
-        ))}
+      <div className="flex space-x-2 min-w-max">
+        {categories.map(category => renderCategoryButton(category))}
       </div>
     </div>
   );

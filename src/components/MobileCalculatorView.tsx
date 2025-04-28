@@ -1,13 +1,14 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search } from "@/components/ui/search";
-import { CalculatorInfo } from '@/types/calculator';
+import { CalculatorInfo, CalculatorCategory } from '@/types/calculator';
 import CalculatorDisplay from './CalculatorDisplay';
 import { UnitSystem } from '@/types/calculatorTypes';
 import { CategorySelector } from './calculator/CategorySelector';
 import { CalculatorCards } from './calculator/CalculatorCards';
 import { TabsContent, Tabs, TabsList, TabsTrigger } from './ui/tabs';
 import { Separator } from './ui/separator';
+import { getCategoryName } from '@/utils/iconUtils';
 
 interface MobileCalculatorViewProps {
   calculators: CalculatorInfo[];
@@ -28,21 +29,50 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   unitSystem,
   onUnitSystemChange,
 }) => {
-  const categories = Array.from(new Set(calculators.map(calc => calc.category)));
-  const [activeCategory, setActiveCategory] = useState(categories[0]);
+  const categories: CalculatorCategory[] = ["body", "fitness", "nutrition", "wellness"];
+  const [activeCategory, setActiveCategory] = useState<CalculatorCategory>(categories[0]);
   const [activeTab, setActiveTab] = useState<"browse" | "calculator">("browse");
+  const [filteredCategories, setFilteredCategories] = useState<CalculatorCategory[]>(categories);
 
+  // Filter calculators based on search query
   const filteredCalculators = calculators.filter(calc => 
     calc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     calc.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const categoryCalculators = calculators.filter(calc => calc.category === activeCategory);
+  // Update filtered categories whenever search query changes
+  useEffect(() => {
+    if (!searchQuery) {
+      setFilteredCategories(categories);
+      return;
+    }
 
-  // Create a wrapper function to handle the category type correctly
-  const handleCategorySelect = (category: string) => {
-    setActiveCategory(category as "body" | "fitness" | "nutrition" | "wellness");
-  };
+    // Find categories that have matching calculators
+    const matchingCategories = Array.from(new Set(
+      filteredCalculators.map(calc => calc.category)
+    )) as CalculatorCategory[];
+
+    // Also include categories that match the search directly
+    categories.forEach(category => {
+      const categoryName = getCategoryName(category).toLowerCase();
+      if (
+        categoryName.includes(searchQuery.toLowerCase()) &&
+        !matchingCategories.includes(category)
+      ) {
+        matchingCategories.push(category);
+      }
+    });
+
+    setFilteredCategories(matchingCategories);
+
+    // If current active category isn't in filtered list but we have matches, switch to first match
+    if (matchingCategories.length > 0 && !matchingCategories.includes(activeCategory)) {
+      setActiveCategory(matchingCategories[0]);
+    }
+  }, [searchQuery, calculators, activeCategory]);
+
+  // Get calculators for the currently selected category
+  const categoryCalculators = calculators.filter(calc => calc.category === activeCategory);
 
   // When a calculator is selected, automatically switch to calculator tab
   const handleCalculatorSelect = (id: string) => {
@@ -51,6 +81,20 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   };
 
   const activeCalcInfo = calculators.find(calc => calc.id === activeCalculator);
+
+  // Group calculators by category for search results
+  const calculatorsByCategory: Record<CalculatorCategory, CalculatorInfo[]> = {
+    body: [],
+    fitness: [],
+    nutrition: [],
+    wellness: []
+  };
+
+  if (searchQuery) {
+    filteredCalculators.forEach(calc => {
+      calculatorsByCategory[calc.category].push(calc);
+    });
+  }
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -74,11 +118,13 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
               className="w-full"
             />
             
-            <CategorySelector
-              categories={categories}
-              activeCategory={activeCategory}
-              onCategorySelect={handleCategorySelect}
-            />
+            {!searchQuery && (
+              <CategorySelector
+                categories={categories}
+                activeCategory={activeCategory}
+                onCategorySelect={(cat) => setActiveCategory(cat as CalculatorCategory)}
+              />
+            )}
           </>
         )}
         
@@ -99,12 +145,35 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
       <div className="flex-1 p-4">
         {activeTab === "browse" ? (
           <div className="animate-fade-in">
-            <CalculatorCards
-              calculators={searchQuery ? filteredCalculators : categoryCalculators}
-              activeCalculator={activeCalculator}
-              onCalculatorSelect={handleCalculatorSelect}
-              isSearching={!!searchQuery}
-            />
+            {!searchQuery ? (
+              <CalculatorCards
+                calculators={categoryCalculators}
+                activeCalculator={activeCalculator}
+                onCalculatorSelect={handleCalculatorSelect}
+                isSearching={false}
+              />
+            ) : (
+              <div className="space-y-6">
+                {filteredCategories.map(category => {
+                  const categoryCalcs = calculatorsByCategory[category];
+                  if (categoryCalcs.length === 0) return null;
+                  
+                  return (
+                    <div key={category} className="space-y-2">
+                      <h2 className="text-md font-semibold text-wellness-purple">
+                        {getCategoryName(category)}
+                      </h2>
+                      <CalculatorCards
+                        calculators={categoryCalcs}
+                        activeCalculator={activeCalculator}
+                        onCalculatorSelect={handleCalculatorSelect}
+                        isSearching={true}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         ) : (
           <div className="animate-fade-in">

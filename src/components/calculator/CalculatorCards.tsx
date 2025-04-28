@@ -41,7 +41,7 @@ export const CalculatorCards: React.FC<CalculatorCardsProps> = ({
 
   if (isSearching) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-2">
         {calculators.map(calc => renderCalculatorButton(calc))}
       </div>
     );

@@ -6,9 +6,9 @@ import { cn } from '@/lib/utils';
 import { getCategoryIcon, getCategoryName } from '@/utils/iconUtils';
 
 interface CategorySelectorProps {
-  categories: string[];
-  activeCategory: string;
-  onCategorySelect: (category: string) => void;
+  categories: CalculatorCategory[];
+  activeCategory: CalculatorCategory;
+  onCategorySelect: (category: CalculatorCategory) => void;
 }
 
 export const CategorySelector: React.FC<CategorySelectorProps> = ({
@@ -16,9 +16,9 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
   activeCategory,
   onCategorySelect,
 }) => {
-  const renderCategoryButton = (category: string) => {
-    const IconComponent = getCategoryIcon(category as CalculatorCategory);
-    const categoryName = getCategoryName(category as CalculatorCategory);
+  const renderCategoryButton = (category: CalculatorCategory) => {
+    const IconComponent = getCategoryIcon(category);
+    const categoryName = getCategoryName(category);
     
     return (
       <Button

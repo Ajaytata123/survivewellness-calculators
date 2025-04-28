@@ -4,8 +4,12 @@ import type { LucideIcon } from "lucide-react";
 import { CalculatorCategory } from "@/types/calculator";
 
 export const getIconComponent = (iconName: string): LucideIcon => {
-  // Find the icon in LucideIcons or return Calculator as fallback
-  const IconComponent = (LucideIcons as Record<string, LucideIcon>)[iconName] || LucideIcons.Calculator;
+  // Use type assertion with safety check
+  const IconComponent = (
+    Object.prototype.hasOwnProperty.call(LucideIcons, iconName) 
+      ? (LucideIcons as any)[iconName] 
+      : LucideIcons.Calculator
+  );
   return IconComponent;
 };
 

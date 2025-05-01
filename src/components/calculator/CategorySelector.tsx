@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { CalculatorCategory } from '@/types/calculator';
 import { cn } from '@/lib/utils';
-import { getCategoryIcon, getCategoryName } from '@/utils/iconUtils';
+import { getCategoryIcon, getCategoryName, getCategoryColor } from '@/utils/iconUtils';
 
 interface CategorySelectorProps {
   categories: CalculatorCategory[];
@@ -19,6 +19,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
   const renderCategoryButton = (category: CalculatorCategory) => {
     const IconComponent = getCategoryIcon(category);
     const categoryName = getCategoryName(category);
+    const categoryColor = getCategoryColor(category);
     
     return (
       <Button
@@ -26,7 +27,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
         variant={activeCategory === category ? "default" : "outline"}
         className={cn(
           "whitespace-nowrap flex-shrink-0 justify-start px-4 py-2",
-          activeCategory === category && "bg-wellness-purple text-white"
+          activeCategory === category && `bg-${categoryColor} text-white`
         )}
         onClick={() => onCategorySelect(category)}
       >

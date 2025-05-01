@@ -29,7 +29,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   unitSystem,
   onUnitSystemChange,
 }) => {
-  const categories: CalculatorCategory[] = ["body", "fitness", "nutrition", "wellness"];
+  const categories: CalculatorCategory[] = ["body", "fitness", "nutrition", "wellness", "women"];
   const [activeCategory, setActiveCategory] = useState<CalculatorCategory>(categories[0]);
   const [activeTab, setActiveTab] = useState<"browse" | "calculator">("browse");
   const [filteredCategories, setFilteredCategories] = useState<CalculatorCategory[]>(categories);
@@ -87,7 +87,8 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     body: [],
     fitness: [],
     nutrition: [],
-    wellness: []
+    wellness: [],
+    women: []
   };
 
   if (searchQuery) {

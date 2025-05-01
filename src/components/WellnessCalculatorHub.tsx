@@ -7,6 +7,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { MobileCalculatorView } from "./MobileCalculatorView";
 import { DesktopLayout } from "./calculator/DesktopLayout";
 import { calculators } from "@/data/calculatorData";
+import { CalculatorCategory } from "@/types/calculator";
 
 const WellnessCalculatorHub = () => {
   const [activeCalculator, setActiveCalculator] = useState<string>("bmi");

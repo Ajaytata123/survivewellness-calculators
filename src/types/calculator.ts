@@ -1,5 +1,5 @@
 
-export type CalculatorCategory = "body" | "fitness" | "nutrition" | "wellness";
+export type CalculatorCategory = "body" | "fitness" | "nutrition" | "wellness" | "women";
 
 export interface CalculatorInfo {
   id: string;

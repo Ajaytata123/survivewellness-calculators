@@ -1,3 +1,4 @@
+
 import { CalculatorInfo } from "@/types/calculator";
 
 export const calculators: CalculatorInfo[] = [
@@ -8,7 +9,7 @@ export const calculators: CalculatorInfo[] = [
     icon: "Body", 
     color: "wellness-purple", 
     category: "body",
-    url: "https://survivewellness.com/tools-calculators/#bmi"
+    url: "#bmi"
   },
   { 
     id: "bmr", 
@@ -16,7 +17,7 @@ export const calculators: CalculatorInfo[] = [
     icon: "Activity", 
     color: "wellness-blue", 
     category: "body",
-    url: "https://survivewellness.com/tools-calculators/#bmr"
+    url: "#bmr"
   },
   { 
     id: "bodyfat", 
@@ -24,7 +25,7 @@ export const calculators: CalculatorInfo[] = [
     icon: "Weight", 
     color: "wellness-green", 
     category: "body",
-    url: "https://survivewellness.com/tools-calculators/#bodyfat"
+    url: "#bodyfat"
   },
   { 
     id: "idealweight", 
@@ -32,7 +33,23 @@ export const calculators: CalculatorInfo[] = [
     icon: "Weight", 
     color: "wellness-orange", 
     category: "body",
-    url: "https://survivewellness.com/tools-calculators/#idealweight"
+    url: "#idealweight"
+  },
+  {
+    id: "obesity",
+    name: "Obesity Risk",
+    icon: "Scale",
+    color: "wellness-red",
+    category: "body",
+    url: "#obesity"
+  },
+  {
+    id: "age",
+    name: "Age Calculator",
+    icon: "CalendarDays",
+    color: "wellness-blue",
+    category: "body",
+    url: "#age"
   },
   
   // Fitness & Exercise
@@ -42,7 +59,7 @@ export const calculators: CalculatorInfo[] = [
     icon: "Heart", 
     color: "wellness-red", 
     category: "fitness",
-    url: "https://survivewellness.com/tools-calculators/#heartrate"
+    url: "#heartrate"
   },
   { 
     id: "vo2max", 
@@ -50,15 +67,15 @@ export const calculators: CalculatorInfo[] = [
     icon: "Activity", 
     color: "wellness-blue", 
     category: "fitness",
-    url: "https://survivewellness.com/tools-calculators/#vo2max"
+    url: "#vo2max"
   },
   { 
     id: "workout", 
     name: "Workout Planner", 
-    icon: "Fitness", 
+    icon: "Dumbbell", 
     color: "wellness-green", 
     category: "fitness",
-    url: "https://survivewellness.com/tools-calculators/#workout"
+    url: "#workout"
   },
   { 
     id: "steps", 
@@ -66,33 +83,33 @@ export const calculators: CalculatorInfo[] = [
     icon: "Activity", 
     color: "wellness-purple", 
     category: "fitness",
-    url: "https://survivewellness.com/tools-calculators/#steps"
+    url: "#steps"
   },
   
   // Nutrition & Diet
   { 
     id: "macro", 
     name: "Macronutrients", 
-    icon: "Nutrition", 
+    icon: "Utensils", 
     color: "wellness-green", 
     category: "nutrition",
-    url: "https://survivewellness.com/tools-calculators/#macro"
+    url: "#macro"
   },
   { 
     id: "water", 
     name: "Water Intake", 
-    icon: "Nutrition", 
+    icon: "Droplets", 
     color: "wellness-blue", 
     category: "nutrition",
-    url: "https://survivewellness.com/tools-calculators/#water"
+    url: "#water"
   },
   { 
     id: "fasting", 
     name: "Intermittent Fasting", 
-    icon: "Nutrition", 
+    icon: "Clock", 
     color: "wellness-orange", 
     category: "nutrition",
-    url: "https://survivewellness.com/tools-calculators/#fasting"
+    url: "#fasting"
   },
   { 
     id: "calories", 
@@ -100,7 +117,15 @@ export const calculators: CalculatorInfo[] = [
     icon: "Calculator", 
     color: "wellness-purple", 
     category: "nutrition",
-    url: "https://survivewellness.com/tools-calculators/#calories"
+    url: "#calories"
+  },
+  {
+    id: "mealplan",
+    name: "Meal Planner",
+    icon: "Utensils",
+    color: "wellness-green",
+    category: "nutrition",
+    url: "#mealplan"
   },
   
   // Wellness & Lifestyle
@@ -110,30 +135,88 @@ export const calculators: CalculatorInfo[] = [
     icon: "Weight", 
     color: "wellness-pink", 
     category: "wellness",
-    url: "https://survivewellness.com/tools-calculators/#pregnancy"
+    url: "#pregnancy"
   },
   { 
     id: "alcohol", 
     name: "Alcohol Impact", 
-    icon: "Activity", 
+    icon: "Wine", 
     color: "wellness-red", 
     category: "wellness",
-    url: "https://survivewellness.com/tools-calculators/#alcohol"
+    url: "#alcohol"
   },
   { 
     id: "smoking", 
     name: "Smoking Impact", 
-    icon: "Activity", 
+    icon: "Cigarette", 
     color: "wellness-orange", 
     category: "wellness",
-    url: "https://survivewellness.com/tools-calculators/#smoking"
+    url: "#smoking"
   },
   { 
     id: "stress", 
     name: "Stress & Anxiety", 
-    icon: "Heart", 
+    icon: "HeartPulse", 
     color: "wellness-purple", 
     category: "wellness",
-    url: "https://survivewellness.com/tools-calculators/#stress"
+    url: "#stress"
+  },
+  
+  // Women's Health
+  {
+    id: "ovulation",
+    name: "Ovulation Calculator",
+    icon: "CalendarDays",
+    color: "wellness-pink",
+    category: "women",
+    url: "#ovulation"
+  },
+  {
+    id: "duedate",
+    name: "Due Date Calculator",
+    icon: "Baby",
+    color: "wellness-purple",
+    category: "women",
+    url: "#duedate"
+  },
+  {
+    id: "menstrual",
+    name: "Menstrual Cycle",
+    icon: "Calendar",
+    color: "wellness-red",
+    category: "women",
+    url: "#menstrual"
+  },
+  {
+    id: "menopause",
+    name: "Menopause Estimator",
+    icon: "CalendarDays",
+    color: "wellness-orange",
+    category: "women",
+    url: "#menopause"
+  },
+  {
+    id: "breastcancer",
+    name: "Breast Cancer Risk",
+    icon: "HeartPulse",
+    color: "wellness-pink",
+    category: "women",
+    url: "#breastcancer"
+  },
+  {
+    id: "osteoporosis",
+    name: "Osteoporosis Risk",
+    icon: "Activity",
+    color: "wellness-blue",
+    category: "women",
+    url: "#osteoporosis"
+  },
+  {
+    id: "iron",
+    name: "Iron Intake",
+    icon: "Utensils",
+    color: "wellness-green",
+    category: "women",
+    url: "#iron"
   },
 ];

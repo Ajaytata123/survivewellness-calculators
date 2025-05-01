@@ -1,3 +1,4 @@
+
 import React from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Search } from "@/components/ui/search";
@@ -27,19 +28,21 @@ export const CalculatorSidebar = ({
         calc.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : calculators;
 
-  const categoryOrder: ("body" | "fitness" | "nutrition" | "wellness")[] = ["body", "fitness", "nutrition", "wellness"];
-  const categoryNames: Record<"body" | "fitness" | "nutrition" | "wellness", string> = {
+  const categoryOrder: ("body" | "fitness" | "nutrition" | "wellness" | "women")[] = ["body", "fitness", "nutrition", "wellness", "women"];
+  const categoryNames: Record<"body" | "fitness" | "nutrition" | "wellness" | "women", string> = {
     body: "Body Composition",
     fitness: "Fitness & Exercise",
     nutrition: "Nutrition & Diet",
-    wellness: "Wellness & Lifestyle"
+    wellness: "Wellness & Lifestyle",
+    women: "Women's Health"
   };
 
-  const categoryColors: Record<"body" | "fitness" | "nutrition" | "wellness", string> = {
+  const categoryColors: Record<"body" | "fitness" | "nutrition" | "wellness" | "women", string> = {
     body: "wellness-purple",
     fitness: "wellness-blue",
     nutrition: "wellness-green",
-    wellness: "wellness-orange"
+    wellness: "wellness-orange",
+    women: "wellness-pink"
   };
   
   // Mobile sidebar

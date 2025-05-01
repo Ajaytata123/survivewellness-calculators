@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -537,7 +536,7 @@ const OsteoporosisRiskCalculator: React.FC<OsteoporosisRiskCalcProps> = ({ unitS
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="heavy" id="alcohol-heavy" />
-              <Label htmlFor="alcohol-heavy">Heavy (>7 drinks/week)</Label>
+              <Label htmlFor="alcohol-heavy">Heavy (&gt;7 drinks/week)</Label>
             </div>
           </RadioGroup>
         </div>

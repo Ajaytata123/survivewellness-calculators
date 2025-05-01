@@ -4,11 +4,16 @@ import type { LucideIcon } from "lucide-react";
 import { CalculatorCategory } from "@/types/calculator";
 
 export const getIconComponent = (iconName: string): LucideIcon => {
-  // Safety check for icon name
-  const iconExists = Object.prototype.hasOwnProperty.call(LucideIcons, iconName);
+  // Type assertion to deal with the TypeScript error
+  const iconKey = iconName as keyof typeof LucideIcons;
+  
+  // Check if icon exists in the library
+  const iconExists = Object.prototype.hasOwnProperty.call(LucideIcons, iconKey);
+  
+  // Return the requested icon or fallback to Calculator
   const IconComponent = iconExists 
-    ? (LucideIcons as Record<string, LucideIcon>)[iconName] 
-    : LucideIcons.Calculator;
+    ? LucideIcons[iconKey] as LucideIcon
+    : LucideIcons.Calculator as LucideIcon;
   
   return IconComponent;
 };

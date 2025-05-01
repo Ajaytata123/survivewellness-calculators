@@ -1,30 +1,33 @@
 
-import React from "react";
 import { UnitSystem } from "@/types/calculatorTypes";
 
-// Body Composition Calculators
-import BMICalculator from "./calculators/BMICalculator";
-import BMRCalculator from "./calculators/BMRCalculator";
-import BodyFatCalculator from "./calculators/BodyFatCalculator";
-import IdealWeightCalculator from "./calculators/IdealWeightCalculator";
-
-// Fitness & Exercise Calculators
-import HeartRateCalculator from "./calculators/HeartRateCalculator";
-import VO2MaxCalculator from "./calculators/VO2MaxCalculator";
-import WorkoutPlannerCalculator from "./calculators/WorkoutPlannerCalculator";
-import StepCounterCalculator from "./calculators/StepCounterCalculator";
-
-// Nutrition & Diet Calculators
-import WaterIntakeCalculator from "./calculators/WaterIntakeCalculator";
-import MacronutrientCalculator from "./calculators/MacroCalculator";
-import CalorieTrackerCalculator from "./calculators/CalorieTrackerCalculator";
-import IntermittentFastingCalculator from "./calculators/IntermittentFastingCalculator";
-
-// Wellness & Lifestyle Calculators
-import PregnancyWeightCalculator from "./calculators/PregnancyWeightCalculator";
-import AlcoholImpactCalculator from "./calculators/AlcoholImpactCalculator";
-import SmokingImpactCalculator from "./calculators/SmokingImpactCalculator";
-import StressAnxietyCalculator from "./calculators/StressAnxietyCalculator";
+// Calculators
+import BMICalculator from "@/components/calculators/BMICalculator";
+import BMRCalculator from "@/components/calculators/BMRCalculator";
+import BodyFatCalculator from "@/components/calculators/BodyFatCalculator";
+import IdealWeightCalculator from "@/components/calculators/IdealWeightCalculator";
+import HeartRateCalculator from "@/components/calculators/HeartRateCalculator";
+import VO2MaxCalculator from "@/components/calculators/VO2MaxCalculator";
+import WorkoutPlannerCalculator from "@/components/calculators/WorkoutPlannerCalculator";
+import StepCounterCalculator from "@/components/calculators/StepCounterCalculator";
+import WaterIntakeCalculator from "@/components/calculators/WaterIntakeCalculator";
+import MacronutrientCalculator from "@/components/calculators/MacronutrientCalculator";
+import CalorieTrackerCalculator from "@/components/calculators/CalorieTrackerCalculator";
+import IntermittentFastingCalculator from "@/components/calculators/IntermittentFastingCalculator";
+import PregnancyWeightCalculator from "@/components/calculators/PregnancyWeightCalculator";
+import AlcoholImpactCalculator from "@/components/calculators/AlcoholImpactCalculator";
+import SmokingImpactCalculator from "@/components/calculators/SmokingImpactCalculator";
+import StressAnxietyCalculator from "@/components/calculators/StressAnxietyCalculator";
+import AgeCalculator from "@/components/calculators/AgeCalculator";
+import ObesityRiskCalculator from "@/components/calculators/ObesityRiskCalculator";
+import MealPlannerCalculator from "@/components/calculators/MealPlannerCalculator";
+import OvulationCalculator from "@/components/calculators/OvulationCalculator";
+import DueDateCalculator from "@/components/calculators/DueDateCalculator";
+import MenstrualCycleCalculator from "@/components/calculators/MenstrualCycleCalculator";
+import MenopauseCalculator from "@/components/calculators/MenopauseCalculator";
+import BreastCancerRiskCalculator from "@/components/calculators/BreastCancerRiskCalculator";
+import OsteoporosisRiskCalculator from "@/components/calculators/OsteoporosisRiskCalculator";
+import IronIntakeCalculator from "@/components/calculators/IronIntakeCalculator";
 
 interface CalculatorDisplayProps {
   activeCalculator: string;
@@ -32,27 +35,13 @@ interface CalculatorDisplayProps {
   onUnitSystemChange: (system: UnitSystem) => void;
 }
 
-// Added input validation helpers
-export const validateInputRange = (
-  value: number, 
-  min: number, 
-  max: number, 
-  fieldName: string
-): string | null => {
-  if (value < min) return `${fieldName} must be at least ${min}`;
-  if (value > max) return `${fieldName} must be less than ${max}`;
-  return null;
-};
-
-const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({ 
-  activeCalculator, 
-  unitSystem, 
-  onUnitSystemChange 
+const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
+  activeCalculator,
+  unitSystem,
+  onUnitSystemChange,
 }) => {
-  
   const renderCalculator = () => {
     switch (activeCalculator) {
-      // Body Composition
       case "bmi":
         return <BMICalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
       case "bmr":
@@ -61,8 +50,6 @@ const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
         return <BodyFatCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
       case "idealweight":
         return <IdealWeightCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
-      
-      // Fitness & Exercise
       case "heartrate":
         return <HeartRateCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
       case "vo2max":
@@ -71,18 +58,14 @@ const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
         return <WorkoutPlannerCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
       case "steps":
         return <StepCounterCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
-      
-      // Nutrition & Diet
-      case "macro":
-        return <MacronutrientCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
       case "water":
         return <WaterIntakeCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
-      case "fasting":
-        return <IntermittentFastingCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
+      case "macro":
+        return <MacronutrientCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
       case "calories":
         return <CalorieTrackerCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
-      
-      // Wellness & Lifestyle
+      case "fasting":
+        return <IntermittentFastingCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
       case "pregnancy":
         return <PregnancyWeightCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
       case "alcohol":
@@ -91,17 +74,32 @@ const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
         return <SmokingImpactCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
       case "stress":
         return <StressAnxietyCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
-      
+      case "age":
+        return <AgeCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
+      case "obesity":
+        return <ObesityRiskCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
+      case "mealplan":
+        return <MealPlannerCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
+      case "ovulation":
+        return <OvulationCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
+      case "duedate":
+        return <DueDateCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
+      case "menstrual":
+        return <MenstrualCycleCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
+      case "menopause":
+        return <MenopauseCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
+      case "breastcancer":
+        return <BreastCancerRiskCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
+      case "osteoporosis":
+        return <OsteoporosisRiskCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
+      case "iron":
+        return <IronIntakeCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
       default:
         return <BMICalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
     }
   };
 
-  return (
-    <div className="calculator-container">
-      {renderCalculator()}
-    </div>
-  );
+  return <div className="p-4">{renderCalculator()}</div>;
 };
 
 export default CalculatorDisplay;

@@ -6,7 +6,7 @@ export type UnitSystem = "imperial" | "metric";
 
 export interface BaseCalcProps {
   unitSystem: UnitSystem;
-  onUnitSystemChange: (unitSystem: UnitSystem) => void;
+  onUnitSystemChange: (system: UnitSystem) => void;
   userName?: string;
 }
 
@@ -158,6 +158,118 @@ export interface StressResult {
   stressLevel: number;
   category: string;
   recommendations: string[];
+}
+
+// Age Calculator
+export interface AgeCalcProps extends BaseCalcProps {}
+
+export interface AgeResult {
+  years: number;
+  months: number;
+  days: number;
+  totalDays: number;
+  nextBirthday: string;
+  daysUntilNextBirthday: number;
+}
+
+// Obesity Risk Calculator
+export interface ObesityRiskCalcProps extends BaseCalcProps {}
+
+export interface ObesityRiskResult {
+  bmi: number;
+  bmiCategory: string;
+  waistRisk: string;
+  overallRisk: string;
+  recommendations: string[];
+}
+
+// Meal Planner Calculator
+export interface MealPlannerCalcProps extends BaseCalcProps {}
+
+export interface MealPlannerResult {
+  dailyCalories: number;
+  meals: {
+    name: string;
+    caloriePct: number;
+    calorieAmount: number;
+    proteinGrams: number;
+    carbsGrams: number;
+    fatGrams: number;
+    recommendations: string[];
+  }[];
+}
+
+// Ovulation Calculator 
+export interface OvulationCalcProps extends BaseCalcProps {}
+
+export interface OvulationResult {
+  cycleLength: number;
+  fertileWindowStart: string;
+  fertileWindowEnd: string;
+  ovulationDate: string;
+  nextPeriodDate: string;
+}
+
+// Due Date Calculator
+export interface DueDateCalcProps extends BaseCalcProps {}
+
+export interface DueDateResult {
+  dueDate: string;
+  gestationalAge: {
+    weeks: number;
+    days: number;
+  };
+  trimester: number;
+  milestones: {
+    name: string;
+    date: string;
+    description: string;
+  }[];
+}
+
+// Menopause Calculator
+export interface MenopauseCalcProps extends BaseCalcProps {}
+
+export interface MenopauseResult {
+  estimatedAge: number;
+  riskLevel: string;
+  earlyMenopauseRisk: boolean;
+  estimatedYear: number;
+  recommendations: string[];
+}
+
+// Breast Cancer Risk Calculator
+export interface BreastCancerRiskCalcProps extends BaseCalcProps {}
+
+export interface BreastCancerRiskResult {
+  lifetimeRisk: number;
+  fiveYearRisk: number;
+  riskCategory: string;
+  recommendations: string[];
+}
+
+// Osteoporosis Risk Calculator
+export interface OsteoporosisRiskCalcProps extends BaseCalcProps {}
+
+export interface OsteoporosisRiskResult {
+  riskScore: number;
+  riskCategory: string;
+  recommendations: string[];
+}
+
+// Iron Intake Calculator
+export interface IronIntakeCalcProps extends BaseCalcProps {}
+
+export interface IronIntakeResult {
+  dailyNeed: number;
+  currentIntake: number;
+  deficitOrSurplus: number;
+  recommendations: string[];
+  foodSuggestions: {
+    name: string;
+    ironContent: number;
+    servingSize: string;
+  }[];
 }
 
 // Download utilities

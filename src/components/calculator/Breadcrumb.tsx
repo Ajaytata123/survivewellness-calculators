@@ -1,46 +1,58 @@
 
 import React from 'react';
-import { ChevronRight, Home } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { CalculatorInfo } from '@/types/calculator';
+import { ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { CalculatorInfo, getCategoryName } from '@/types/calculator';
 
 interface BreadcrumbProps {
-  calculatorInfo?: CalculatorInfo;
+  calculators: CalculatorInfo[];
+  activeCalculator: string;
+  onCalculatorSelect: (id: string) => void;
+  className?: string;
 }
 
-export const Breadcrumb: React.FC<BreadcrumbProps> = ({ calculatorInfo }) => {
-  if (!calculatorInfo) return null;
+const Breadcrumb: React.FC<BreadcrumbProps> = ({
+  calculators,
+  activeCalculator,
+  onCalculatorSelect,
+  className
+}) => {
+  const activeCalc = calculators.find(calc => calc.id === activeCalculator);
   
-  const categoryName = getCategoryName(calculatorInfo.category);
+  if (!activeCalc) return null;
+  
+  const categoryName = getCategoryName(activeCalc.category);
   
   return (
-    <div className="breadcrumb" aria-label="Breadcrumb">
-      <Link to="/" className="breadcrumb-item flex items-center">
-        <Home className="h-3.5 w-3.5 mr-1" />
-        <span>Home</span>
-      </Link>
-      <span className="breadcrumb-separator">
-        <ChevronRight className="h-3 w-3" />
-      </span>
-      <span className="breadcrumb-item">{categoryName}</span>
-      <span className="breadcrumb-separator">
-        <ChevronRight className="h-3 w-3" />
-      </span>
-      <span className="breadcrumb-active">{calculatorInfo.name}</span>
-    </div>
+    <nav className={cn("mb-4 py-2 px-2", className)}>
+      <ol className="flex text-sm">
+        <li className="flex items-center">
+          <button 
+            onClick={() => onCalculatorSelect('bmi')} 
+            className="text-gray-500 dark:text-gray-400 hover:text-wellness-blue dark:hover:text-wellness-blue/90"
+          >
+            Home
+          </button>
+        </li>
+        <li className="flex items-center mx-2">
+          <ChevronRight className="h-4 w-4 text-gray-400" />
+        </li>
+        <li className="flex items-center">
+          <span className="text-gray-600 dark:text-gray-300">
+            {categoryName}
+          </span>
+        </li>
+        <li className="flex items-center mx-2">
+          <ChevronRight className="h-4 w-4 text-gray-400" />
+        </li>
+        <li>
+          <span className="text-wellness-purple dark:text-wellness-purple/90 font-medium">
+            {activeCalc.name}
+          </span>
+        </li>
+      </ol>
+    </nav>
   );
 };
-
-function getCategoryName(category: string): string {
-  const categories: Record<string, string> = {
-    'body': 'Body Composition',
-    'fitness': 'Fitness & Exercise',
-    'nutrition': 'Nutrition & Diet',
-    'wellness': 'Wellness & Lifestyle',
-    'women': "Women's Health"
-  };
-  
-  return categories[category] || category;
-}
 
 export default Breadcrumb;

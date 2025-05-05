@@ -4,11 +4,11 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarIcon, Calendar } from "lucide-react";
+import { CalendarIcon, Calendar } from "lucide-react";
 import { format, addDays } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { MenstrualCycleCalcProps } from "@/types/calculatorTypes";
+import { BaseCalcProps } from "@/types/calculatorTypes";
 import IntroSection from "@/components/calculator/IntroSection";
 import ResultActions from "@/components/calculator/ResultActions";
 import KnowMoreButton from "@/components/calculator/KnowMoreButton";
@@ -21,7 +21,7 @@ interface PeriodDay {
   type: 'period' | 'ovulation' | 'fertile';
 }
 
-const PeriodCalculator: React.FC<MenstrualCycleCalcProps> = ({ unitSystem }) => {
+const PeriodCalculator: React.FC<BaseCalcProps> = ({ unitSystem }) => {
   const [userName, setUserName] = useState<string>("");
   const [lastPeriodDate, setLastPeriodDate] = useState<CalendarDate>(undefined);
   const [cycleLength, setCycleLength] = useState<string>("28");
@@ -206,11 +206,11 @@ const PeriodCalculator: React.FC<MenstrualCycleCalcProps> = ({ unitSystem }) => 
               mode="single"
               selected={lastPeriodDate}
               onSelect={setLastPeriodDate}
-              className={cn("border rounded-md", errors.lastPeriodDate ? "border-red-500" : "")}
+              className={cn("border rounded-md pointer-events-auto", errors.lastPeriodDate ? "border-red-500" : "")}
               initialFocus
             />
             {errors.lastPeriodDate && (
-              <p className="error-message">{errors.lastPeriodDate}</p>
+              <p className="error-message text-red-500 text-sm mt-1">{errors.lastPeriodDate}</p>
             )}
           </div>
         </div>
@@ -226,10 +226,10 @@ const PeriodCalculator: React.FC<MenstrualCycleCalcProps> = ({ unitSystem }) => 
               placeholder="e.g., 28"
               value={cycleLength}
               onChange={(e) => setCycleLength(e.target.value)}
-              className={errors.cycleLength ? "input-error" : ""}
+              className={errors.cycleLength ? "border-red-500" : ""}
             />
             {errors.cycleLength && (
-              <p className="error-message">{errors.cycleLength}</p>
+              <p className="error-message text-red-500 text-sm mt-1">{errors.cycleLength}</p>
             )}
             <p className="text-xs text-gray-500 dark:text-gray-400">
               Average is 28 days (21-35 days is normal)
@@ -246,10 +246,10 @@ const PeriodCalculator: React.FC<MenstrualCycleCalcProps> = ({ unitSystem }) => 
               placeholder="e.g., 5"
               value={periodLength}
               onChange={(e) => setPeriodLength(e.target.value)}
-              className={errors.periodLength ? "input-error" : ""}
+              className={errors.periodLength ? "border-red-500" : ""}
             />
             {errors.periodLength && (
-              <p className="error-message">{errors.periodLength}</p>
+              <p className="error-message text-red-500 text-sm mt-1">{errors.periodLength}</p>
             )}
             <p className="text-xs text-gray-500 dark:text-gray-400">
               Average is 5 days (2-10 days is normal)
@@ -282,7 +282,7 @@ const PeriodCalculator: React.FC<MenstrualCycleCalcProps> = ({ unitSystem }) => 
                 fertile: "rdp-day_fertile",
               }}
               showOutsideDays={false}
-              className="w-full"
+              className="w-full pointer-events-auto"
             />
             
             <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
@@ -320,11 +320,11 @@ const PeriodCalculator: React.FC<MenstrualCycleCalcProps> = ({ unitSystem }) => 
             calculatorId="period"
           />
           
-          <p className="disclaimer-text">
+          <p className="disclaimer-text text-xs text-gray-500 mt-4 pt-4 border-t border-dashed border-gray-200">
             This calculator provides estimates based on the information you provided. Individual cycles may vary, and many factors can affect your period. Consult a healthcare provider for medical advice.
           </p>
           
-          <p className="thank-you-text">
+          <p className="thank-you-text text-sm text-center text-wellness-blue mt-4">
             Thank you for using SurviveWellness!
           </p>
         </div>

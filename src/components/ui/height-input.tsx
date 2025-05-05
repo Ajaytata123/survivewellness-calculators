@@ -11,20 +11,22 @@ interface HeightInputProps {
   height: string;
   onHeightChange: (height: string) => void;
   id?: string;
+  error?: string;
 }
 
 export const HeightInput: React.FC<HeightInputProps> = ({
   unitSystem,
   height,
   onHeightChange,
-  id = "height"
+  id = "height",
+  error
 }) => {
   const [inputType, setInputType] = useState<'single' | 'dual'>('single');
   const [feet, setFeet] = useState<string>('');
   const [inches, setInches] = useState<string>('');
   const [cm, setCm] = useState<string>('');
-  const [hasError, setHasError] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [hasError, setHasError] = useState<boolean>(!!error);
+  const [errorMessage, setErrorMessage] = useState<string>(error || '');
 
   // Initialize values based on input height
   useEffect(() => {
@@ -43,6 +45,12 @@ export const HeightInput: React.FC<HeightInputProps> = ({
       setCm(cmValue.toString());
     }
   }, [unitSystem, inputType, height]);
+
+  // Update error status when external error prop changes
+  useEffect(() => {
+    setHasError(!!error);
+    setErrorMessage(error || '');
+  }, [error]);
 
   const validateAndUpdateHeight = () => {
     setHasError(false);
@@ -164,7 +172,7 @@ export const HeightInput: React.FC<HeightInputProps> = ({
           value={height}
           onChange={handleHeightChange}
           placeholder={unitSystem === 'imperial' ? 'e.g., 70' : 'e.g., 178'}
-          className={hasError ? 'input-error' : ''}
+          className={hasError ? 'border-red-500' : ''}
         />
       ) : (
         <div className="grid grid-cols-2 gap-3">
@@ -176,7 +184,7 @@ export const HeightInput: React.FC<HeightInputProps> = ({
               value={feet}
               onChange={handleFeetChange}
               placeholder="e.g., 5"
-              className={hasError ? 'input-error' : ''}
+              className={hasError ? 'border-red-500' : ''}
             />
           </div>
           <div>
@@ -189,13 +197,13 @@ export const HeightInput: React.FC<HeightInputProps> = ({
               value={unitSystem === 'imperial' ? inches : cm}
               onChange={unitSystem === 'imperial' ? handleInchesChange : handleCmChange}
               placeholder={unitSystem === 'imperial' ? 'e.g., 10' : 'e.g., 15'}
-              className={hasError ? 'input-error' : ''}
+              className={hasError ? 'border-red-500' : ''}
             />
           </div>
         </div>
       )}
 
-      {hasError && <p className="error-message">{errorMessage}</p>}
+      {hasError && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
 
       {unitSystem === 'imperial' ? (
         <p className="text-xs text-gray-500 dark:text-gray-400">

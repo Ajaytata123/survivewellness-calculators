@@ -1,12 +1,13 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Search } from "@/components/ui/search";
 import { CalculatorInfo as CalcInfo } from '@/types/calculator';
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { ChevronRight, Menu, ChevronLeft } from "lucide-react";
+import { getIconComponent, getCategoryIcon } from "@/utils/iconUtils";
 
 interface CalculatorSidebarProps {
   activeCalculator: string;
@@ -23,6 +24,8 @@ export const CalculatorSidebar = ({
   searchQuery, 
   setSearchQuery 
 }: CalculatorSidebarProps) => {
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+
   const filteredCalculators = searchQuery 
     ? calculators.filter(calc => 
         calc.name.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -54,7 +57,7 @@ export const CalculatorSidebar = ({
           <span className="sr-only">Open menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-[240px] p-0">
+      <SheetContent side="left" className="w-[280px] p-0">
         <div className="p-4 pb-2">
           <Search 
             placeholder="Search calculators..." 
@@ -62,32 +65,38 @@ export const CalculatorSidebar = ({
             onSearch={setSearchQuery}
           />
         </div>
-        <div className="px-2 py-2">
-          {categoryOrder.map(category => (
+        <div className="px-2 py-2 overflow-y-auto max-h-[85vh]">
+          {categoryOrder.map(category => {
+            const CategoryIcon = getCategoryIcon(category);
+            return (
             <div key={category} className="mb-4">
-              <h3 className={`text-sm font-medium mb-1 text-${categoryColors[category]} px-3`}>
+              <h3 className={`text-sm font-medium mb-1 flex items-center text-${categoryColors[category]} px-3`}>
+                <CategoryIcon className="h-4 w-4 mr-2" />
                 {categoryNames[category]}
               </h3>
               <div className="space-y-1">
                 {filteredCalculators
                   .filter(calc => calc.category === category)
-                  .map(calculator => (
+                  .map(calculator => {
+                    const IconComponent = getIconComponent(calculator.icon);
+                    return (
                     <button
                       key={calculator.id}
                       onClick={() => onCalculatorSelect(calculator.id)}
                       className={cn(
-                        "w-full text-left px-3 py-1.5 text-sm rounded-md",
+                        "w-full text-left px-3 py-1.5 text-sm rounded-md flex items-center",
                         activeCalculator === calculator.id
                           ? `bg-${calculator.color} text-white`
                           : "hover:bg-gray-100"
                       )}
                     >
+                      <IconComponent className="h-4 w-4 mr-2" />
                       {calculator.name}
                     </button>
-                  ))}
+                  )})}
               </div>
             </div>
-          ))}
+          )})}
         </div>
       </SheetContent>
     </Sheet>
@@ -95,40 +104,64 @@ export const CalculatorSidebar = ({
 
   // Desktop sidebar
   const DesktopSidebar = () => (
-    <SidebarProvider defaultOpen={true}>
-      <Sidebar className="hidden md:flex border-r">
+    <SidebarProvider defaultOpen={!isCollapsed}>
+      <Sidebar className={cn(
+        "hidden md:flex border-r transition-all duration-300",
+        isCollapsed ? "md:w-16" : "md:w-64"
+      )}>
         <SidebarContent>
           <SidebarGroup>
-            <div className="px-2 pt-2 pb-4">
-              <Search 
-                placeholder="Search calculators..." 
-                value={searchQuery}
-                onSearch={setSearchQuery}
-              />
+            {!isCollapsed && (
+              <div className="px-2 pt-2 pb-4">
+                <Search 
+                  placeholder="Search calculators..." 
+                  value={searchQuery}
+                  onSearch={setSearchQuery}
+                />
+              </div>
+            )}
+            <div className="absolute right-0 top-2 transform translate-x-1/2 z-10">
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-6 w-6 rounded-full bg-white border shadow-sm"
+                onClick={() => setIsCollapsed(!isCollapsed)}
+              >
+                {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
+              </Button>
             </div>
-            {categoryOrder.map(category => (
+            {categoryOrder.map(category => {
+              const CategoryIcon = getCategoryIcon(category);
+              return (
               <React.Fragment key={category}>
-                <SidebarGroupLabel className={`text-${categoryColors[category]}`}>
-                  {categoryNames[category]}
+                <SidebarGroupLabel className={cn(
+                  `text-${categoryColors[category]}`,
+                  isCollapsed ? "flex justify-center" : ""
+                )}>
+                  {isCollapsed ? <CategoryIcon className="h-5 w-5" /> : categoryNames[category]}
                 </SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu>
                     {filteredCalculators
                       .filter(calc => calc.category === category)
-                      .map(calculator => (
+                      .map(calculator => {
+                        const IconComponent = getIconComponent(calculator.icon);
+                        return (
                         <SidebarMenuItem key={calculator.id}>
                           <SidebarMenuButton
                             onClick={() => onCalculatorSelect(calculator.id)}
                             isActive={activeCalculator === calculator.id}
+                            className={isCollapsed ? "justify-center" : ""}
                           >
-                            <span>{calculator.name}</span>
+                            <IconComponent className="h-5 w-5 mr-2" />
+                            {!isCollapsed && <span>{calculator.name}</span>}
                           </SidebarMenuButton>
                         </SidebarMenuItem>
-                      ))}
+                      )})}
                   </SidebarMenu>
                 </SidebarGroupContent>
               </React.Fragment>
-            ))}
+            )})}
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>

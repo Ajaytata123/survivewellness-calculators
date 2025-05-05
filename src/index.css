@@ -1,3 +1,6 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -96,6 +99,47 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer utilities {
+  .glass-morphism {
+    @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)];
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-br from-wellness-purple via-wellness-pink to-wellness-blue bg-clip-text text-transparent;
+  }
+}
+
+/* Custom Calendar Day Styling for Menstrual Cycle Calendar */
+.rdp-day_period {
+  background-color: theme('colors.wellness.pink') !important;
+  color: white !important;
+}
+
+.rdp-day_ovulation {
+  background-color: theme('colors.wellness.purple') !important;
+  color: white !important;
+}
+
+.rdp-day_fertile {
+  background-color: theme('colors.wellness.softBlue') !important;
+  color: theme('colors.wellness.blue') !important;
+}
+
+/* Make full page scroll on mobile */
+@media (max-width: 768px) {
+  body {
+    @apply overflow-y-auto;
+  }
+
+  #root {
+    @apply min-h-screen w-full max-w-none p-0;
   }
 }

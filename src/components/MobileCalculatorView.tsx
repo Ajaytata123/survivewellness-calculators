@@ -1,17 +1,16 @@
-
 import React, { useState, useEffect } from 'react';
 import { Search } from "@/components/ui/search";
-import { CalculatorInfo, CalculatorCategory } from '@/types/calculator';
+import { CalculatorInfo, CalculatorCategory, getCategoryName } from '@/types/calculator';
 import CalculatorDisplay from './CalculatorDisplay';
 import { UnitSystem } from '@/types/calculatorTypes';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Separator } from './ui/separator';
-import { getCategoryName, getCategoryIcon, getIconComponent } from '@/utils/iconUtils';
+import { getIconComponent } from '@/utils/iconUtils';
 import { Button } from './ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { ChevronLeft, Home, Calendar, Activity, Heart, Scale, Utensils } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Breadcrumb } from './calculator/Breadcrumb';
+import Breadcrumb from './calculator/Breadcrumb';
 
 interface MobileCalculatorViewProps {
   calculators: CalculatorInfo[];

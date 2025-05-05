@@ -7,7 +7,7 @@ interface IntroSectionProps {
   description: string;
 }
 
-export const IntroSection: React.FC<IntroSectionProps> = ({ title, description }) => {
+const IntroSection: React.FC<IntroSectionProps> = ({ title, description }) => {
   return (
     <div className="intro-section mb-6 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border border-gray-100 dark:border-gray-700">
       <div className="flex items-start gap-2">

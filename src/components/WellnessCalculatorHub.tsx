@@ -1,18 +1,17 @@
-
 import React, { useState, useEffect } from "react";
 import { CalculatorSidebar } from "./CalculatorSidebar";
 import CalculatorDisplay from "./CalculatorDisplay";
-import calculatorsData from "@/data/calculatorData";
-import { useMobile } from "@/hooks/use-mobile";
-import MobileCalculatorView from "./MobileCalculatorView";
-import DesktopLayout from "./calculator/DesktopLayout";
+import { calculators } from "@/data/calculatorData";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { MobileCalculatorView } from "./MobileCalculatorView";
+import { DesktopLayout } from "./calculator/DesktopLayout";
 import { UnitSystem } from "@/types/calculatorTypes";
 
 const WellnessCalculatorHub: React.FC = () => {
   const [activeCalculator, setActiveCalculator] = useState<string>("bmi");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [unitSystem, setUnitSystem] = useState<UnitSystem>("imperial");
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
 
   const handleCalculatorSelect = (calculatorId: string) => {
     setActiveCalculator(calculatorId);
@@ -29,7 +28,7 @@ const WellnessCalculatorHub: React.FC = () => {
   useEffect(() => {
     // Get calculator from URL hash if present
     const hash = window.location.hash.substring(1);
-    if (hash && calculatorsData.some(calc => calc.id === hash)) {
+    if (hash && calculators.some(calc => calc.id === hash)) {
       setActiveCalculator(hash);
     }
   }, []);
@@ -52,7 +51,7 @@ const WellnessCalculatorHub: React.FC = () => {
       
       {isMobile ? (
         <MobileCalculatorView
-          calculators={calculatorsData}
+          calculators={calculators}
           activeCalculator={activeCalculator}
           onCalculatorSelect={handleCalculatorSelect}
           searchQuery={searchQuery}
@@ -62,7 +61,7 @@ const WellnessCalculatorHub: React.FC = () => {
         />
       ) : (
         <DesktopLayout
-          calculators={calculatorsData}
+          calculators={calculators}
           activeCalculator={activeCalculator}
           onCalculatorSelect={handleCalculatorSelect}
           searchQuery={searchQuery}

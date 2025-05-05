@@ -220,3 +220,5 @@ export const calculators: CalculatorInfo[] = [
     url: "#iron"
   },
 ];
+
+export default calculators;

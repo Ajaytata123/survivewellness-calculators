@@ -65,6 +65,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
             <div className="flex items-center mt-4 text-sm text-gray-500 dark:text-gray-400">
               <span>Home</span>
               <span className="mx-2">/</span>
+              <span>{calculatorInfo.category.charAt(0).toUpperCase() + calculatorInfo.category.slice(1)}</span>
+              <span className="mx-2">/</span>
               <span className="text-wellness-purple dark:text-wellness-purple/90">{calculatorInfo.name}</span>
             </div>
           )}

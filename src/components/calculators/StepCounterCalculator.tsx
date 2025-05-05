@@ -10,6 +10,9 @@ import { UnitSystem } from "@/types/calculatorTypes";
 import { downloadResultsAsCSV, copyResultsToClipboard } from "@/utils/downloadUtils";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
 import { Check, Copy } from "lucide-react";
+import { HeightInput } from "@/components/ui/height-input";
+import IntroSection from "@/components/calculator/IntroSection";
+import ResultActions from "@/components/calculator/ResultActions";
 
 interface StepCounterCalcProps {
   unitSystem: UnitSystem;
@@ -23,13 +26,13 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
   const [gender, setGender] = useState<"male" | "female">("male");
   const [age, setAge] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
+  const [errors, setErrors] = useState<{steps?: string; height?: string; weight?: string; age?: string}>({});
   const [results, setResults] = useState<{
     distance: number;
     calories: number;
     activeMins: number;
     goalPercentage: number;
   } | null>(null);
-  const [copied, setCopied] = useState(false);
 
   const handleUnitChange = (value: string) => {
     onUnitSystemChange(value as UnitSystem);
@@ -37,42 +40,73 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
     setHeight("");
     setWeight("");
     setResults(null);
+    setErrors({});
+  };
+
+  const validateInputs = (): boolean => {
+    const newErrors: {steps?: string; height?: string; weight?: string; age?: string} = {};
+    let isValid = true;
+    
+    if (!steps.trim()) {
+      newErrors.steps = "Please enter your step count";
+      isValid = false;
+    } else {
+      const stepsValue = parseInt(steps);
+      if (isNaN(stepsValue) || stepsValue <= 0) {
+        newErrors.steps = "Please enter a valid step count";
+        isValid = false;
+      }
+    }
+    
+    if (!height.trim()) {
+      newErrors.height = "Please enter your height";
+      isValid = false;
+    } else {
+      const heightValue = parseFloat(height);
+      if (isNaN(heightValue) || heightValue <= 0) {
+        newErrors.height = "Please enter a valid height";
+        isValid = false;
+      }
+    }
+    
+    if (weight.trim()) {
+      const weightValue = parseFloat(weight);
+      if (isNaN(weightValue) || weightValue <= 0) {
+        newErrors.weight = "Please enter a valid weight";
+        isValid = false;
+      }
+    }
+    
+    if (age.trim()) {
+      const ageValue = parseInt(age);
+      if (isNaN(ageValue) || ageValue <= 0 || ageValue > 120) {
+        newErrors.age = "Please enter a valid age between 1 and 120";
+        isValid = false;
+      }
+    }
+    
+    setErrors(newErrors);
+    return isValid;
   };
 
   const calculateResults = () => {
-    if (!steps || !height) {
-      showErrorToast("Please enter your step count and height");
+    if (!validateInputs()) {
       return;
     }
 
     const stepsValue = parseInt(steps);
     const heightValue = parseFloat(height);
 
-    if (isNaN(stepsValue) || isNaN(heightValue) || stepsValue < 0 || heightValue <= 0) {
-      showErrorToast("Please enter valid steps and height");
-      return;
-    }
-
     // Optional values validation
     let ageValue = 30; // default if not provided
     let weightValue = gender === "male" ? 70 : 60; // default in kg if not provided
 
     if (age) {
-      const parsedAge = parseInt(age);
-      if (isNaN(parsedAge) || parsedAge <= 0 || parsedAge > 120) {
-        showErrorToast("Please enter a valid age between 1 and 120");
-        return;
-      }
-      ageValue = parsedAge;
+      ageValue = parseInt(age);
     }
 
     if (weight) {
-      const parsedWeight = parseFloat(weight);
-      if (isNaN(parsedWeight) || parsedWeight <= 0) {
-        showErrorToast("Please enter a valid weight");
-        return;
-      }
-      weightValue = parsedWeight;
+      weightValue = parseFloat(weight);
       if (unitSystem === "imperial") {
         // Convert pounds to kg
         weightValue = weightValue * 0.453592;
@@ -131,69 +165,15 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
     });
   };
 
-  const downloadResults = () => {
-    if (!results) return;
-
-    const distanceUnit = unitSystem === "imperial" ? "miles" : "km";
-
-    const data = {
-      title: "Step Counter Calculator",
-      results: {
-        "Total Steps": steps,
-        "Distance": `${results.distance} ${distanceUnit}`,
-        "Calories Burned": `${results.calories} calories`,
-        "Active Minutes": `${results.activeMins} minutes`,
-        "Goal Progress": `${results.goalPercentage}% of 10,000 steps`,
-        "Height": `${height} ${unitSystem === "imperial" ? "in" : "cm"}`,
-        ...(weight ? {"Weight": `${weight} ${unitSystem === "imperial" ? "lbs" : "kg"}`} : {}),
-        ...(age ? {"Age": age} : {}),
-        "Gender": gender
-      },
-      date: new Date().toLocaleDateString(),
-      unitSystem,
-      userName: userName || undefined,
-    };
-
-    downloadResultsAsCSV(data, "Step-Counter");
-    showSuccessToast("Results downloaded successfully!");
-  };
-
-  const copyResults = () => {
-    if (!results) return;
-
-    const distanceUnit = unitSystem === "imperial" ? "miles" : "km";
-
-    const data = {
-      title: "Step Counter Calculator",
-      results: {
-        "Total Steps": steps,
-        "Distance": `${results.distance} ${distanceUnit}`,
-        "Calories Burned": `${results.calories} calories`,
-        "Active Minutes": `${results.activeMins} minutes`,
-        "Goal Progress": `${results.goalPercentage}% of 10,000 steps`,
-        "Height": `${height} ${unitSystem === "imperial" ? "in" : "cm"}`,
-        ...(weight ? {"Weight": `${weight} ${unitSystem === "imperial" ? "lbs" : "kg"}`} : {}),
-        ...(age ? {"Age": age} : {}),
-        "Gender": gender
-      },
-      date: new Date().toLocaleDateString(),
-      unitSystem,
-      userName: userName || undefined,
-    };
-
-    copyResultsToClipboard(data);
-    setCopied(true);
-    showSuccessToast("Results copied to clipboard!");
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <Card className="p-6">
       <h2 className="text-2xl font-bold mb-4 text-center">Step Counter Calculator</h2>
-      <p className="text-gray-600 mb-4 text-center">
-        Convert your steps into distance, calories, and activity metrics
-      </p>
-
+      
+      <IntroSection 
+        title="Why Track Your Steps?"
+        description="Step tracking is one of the simplest ways to monitor your daily activity. This calculator converts your steps into meaningful metrics like distance, calories burned, and active minutes, helping you understand the impact of your daily movement."
+      />
+      
       <div className="space-y-4 mb-6">
         <div className="space-y-2">
           <Label htmlFor="userName">Your Name (optional)</Label>
@@ -207,13 +187,20 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="steps">Number of Steps</Label>
+          <Label htmlFor="steps" className="flex justify-between">
+            <span>Number of Steps</span>
+            {errors.steps && <span className="text-red-500 text-sm">{errors.steps}</span>}
+          </Label>
           <Input
             id="steps"
             type="number"
             placeholder="e.g., 8000"
             value={steps}
-            onChange={(e) => setSteps(e.target.value)}
+            onChange={(e) => {
+              setSteps(e.target.value);
+              if (errors.steps) setErrors({...errors, steps: undefined});
+            }}
+            className={errors.steps ? "border-red-500" : ""}
           />
         </div>
       </div>
@@ -229,28 +216,29 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
         </TabsList>
 
         <TabsContent value="imperial" className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="height-imperial">Height (inches)</Label>
-            <Input
-              id="height-imperial"
-              type="number"
-              placeholder="e.g., 70"
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-            />
-            <p className="text-sm text-gray-500">
-              For 5'10", enter 70 inches (5×12 + 10)
-            </p>
-          </div>
+          <HeightInput
+            unitSystem="imperial"
+            height={height}
+            onHeightChange={setHeight}
+            id="height-imperial"
+            error={errors.height}
+          />
 
           <div className="space-y-2">
-            <Label htmlFor="weight-imperial">Weight (pounds, optional)</Label>
+            <Label htmlFor="weight-imperial" className="flex justify-between">
+              <span>Weight (pounds, optional)</span>
+              {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
+            </Label>
             <Input
               id="weight-imperial"
               type="number"
               placeholder="e.g., 160"
               value={weight}
-              onChange={(e) => setWeight(e.target.value)}
+              onChange={(e) => {
+                setWeight(e.target.value);
+                if (errors.weight) setErrors({...errors, weight: undefined});
+              }}
+              className={errors.weight ? "border-red-500" : ""}
             />
             <p className="text-sm text-gray-500">
               For more accurate calorie calculation
@@ -259,25 +247,29 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
         </TabsContent>
 
         <TabsContent value="metric" className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="height-metric">Height (cm)</Label>
-            <Input
-              id="height-metric"
-              type="number"
-              placeholder="e.g., 175"
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-            />
-          </div>
+          <HeightInput
+            unitSystem="metric"
+            height={height}
+            onHeightChange={setHeight}
+            id="height-metric"
+            error={errors.height}
+          />
 
           <div className="space-y-2">
-            <Label htmlFor="weight-metric">Weight (kg, optional)</Label>
+            <Label htmlFor="weight-metric" className="flex justify-between">
+              <span>Weight (kg, optional)</span>
+              {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
+            </Label>
             <Input
               id="weight-metric"
               type="number"
               placeholder="e.g., 70"
               value={weight}
-              onChange={(e) => setWeight(e.target.value)}
+              onChange={(e) => {
+                setWeight(e.target.value);
+                if (errors.weight) setErrors({...errors, weight: undefined});
+              }}
+              className={errors.weight ? "border-red-500" : ""}
             />
             <p className="text-sm text-gray-500">
               For more accurate calorie calculation
@@ -288,13 +280,20 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
 
       <div className="space-y-4 mb-6">
         <div className="space-y-2">
-          <Label htmlFor="age">Age (optional)</Label>
+          <Label htmlFor="age" className="flex justify-between">
+            <span>Age (optional)</span>
+            {errors.age && <span className="text-red-500 text-sm">{errors.age}</span>}
+          </Label>
           <Input
             id="age"
             type="number"
             placeholder="e.g., 35"
             value={age}
-            onChange={(e) => setAge(e.target.value)}
+            onChange={(e) => {
+              setAge(e.target.value);
+              if (errors.age) setErrors({...errors, age: undefined});
+            }}
+            className={errors.age ? "border-red-500" : ""}
           />
         </div>
 
@@ -360,24 +359,32 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
             <p className="text-right text-xs mt-1">{results.goalPercentage}% complete</p>
           </div>
 
-          <div className="mt-4">
-            <p className="text-sm text-gray-500 mb-2">
-              Based on your height and step count
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" onClick={copyResults} className="flex items-center">
-                {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
-                {copied ? "Copied!" : "Copy Results"}
-              </Button>
-              <Button variant="outline" size="sm" onClick={downloadResults}>
-                Download CSV
-              </Button>
-            </div>
-          </div>
+          <ResultActions
+            title="Step Counter Calculator"
+            results={{
+              "Total Steps": steps,
+              "Distance": `${results.distance} ${unitSystem === "imperial" ? "miles" : "km"}`,
+              "Calories Burned": `${results.calories} calories`,
+              "Active Minutes": `${results.activeMins} minutes`,
+              "Goal Progress": `${results.goalPercentage}% of 10,000 steps`,
+              "Height": `${height} ${unitSystem === "imperial" ? "in" : "cm"}`,
+              ...(weight ? {"Weight": `${weight} ${unitSystem === "imperial" ? "lbs" : "kg"}`} : {}),
+              ...(age ? {"Age": age} : {}),
+              "Gender": gender
+            }}
+            fileName="Step-Counter"
+            userName={userName}
+            unitSystem={unitSystem}
+          />
           
-          <div className="mt-6 text-center text-sm text-wellness-purple">
-            <p>Thank you for using Survive<span className="lowercase">w</span>ellness!</p>
-          </div>
+          <p className="text-xs text-gray-500 mt-4 pt-4 border-t border-dashed border-gray-200">
+            Note: These calculations are estimates based on average stride length and metabolic equivalents. 
+            Individual results may vary based on walking style, terrain, and fitness level.
+          </p>
+          
+          <p className="text-center text-sm text-wellness-purple mt-4">
+            Thank you for using SurviveWellness!
+          </p>
         </div>
       )}
     </Card>

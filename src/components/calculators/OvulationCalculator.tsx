@@ -7,12 +7,15 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format, addDays } from "date-fns";
 import { OvulationCalcProps } from "@/types/calculatorTypes";
 import IntroSection from "@/components/calculator/IntroSection";
 import ResultActions from "@/components/calculator/ResultActions";
 import KnowMoreButton from "@/components/calculator/KnowMoreButton";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type CalendarDate = Date | undefined;
 
@@ -170,23 +173,50 @@ const OvulationCalculator: React.FC<OvulationCalcProps> = ({ unitSystem }) => {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="lastPeriod">First Day of Last Period</Label>
-          <div className="relative">
-            <Calendar
-              mode="single"
-              selected={lastPeriodDate}
-              onSelect={setLastPeriodDate}
-              className={errors.lastPeriodDate ? "border border-red-500 rounded-md" : ""}
-              initialFocus
-            />
-            {errors.lastPeriodDate && <p className="error-message">{errors.lastPeriodDate}</p>}
-          </div>
+          <Label htmlFor="lastPeriod" className="flex justify-between">
+            <span>First Day of Last Period</span>
+            {errors.lastPeriodDate && <span className="text-red-500 text-sm">{errors.lastPeriodDate}</span>}
+          </Label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                id="lastPeriod"
+                variant={"outline"}
+                className={cn(
+                  "w-full justify-start text-left font-normal",
+                  !lastPeriodDate && "text-muted-foreground",
+                  errors.lastPeriodDate && "border-red-500"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {lastPeriodDate ? format(lastPeriodDate, "PPP") : <span>Pick a date</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={lastPeriodDate}
+                onSelect={setLastPeriodDate}
+                initialFocus
+                className="p-3 pointer-events-auto"
+              />
+            </PopoverContent>
+          </Popover>
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="cycleLength">Average Cycle Length (days)</Label>
-          <Select value={cycleLength} onValueChange={setCycleLength}>
-            <SelectTrigger id="cycleLength" className={errors.cycleLength ? "input-error" : ""}>
+          <Label htmlFor="cycleLength" className="flex justify-between">
+            <span>Average Cycle Length (days)</span>
+            {errors.cycleLength && <span className="text-red-500 text-sm">{errors.cycleLength}</span>}
+          </Label>
+          <Select 
+            value={cycleLength} 
+            onValueChange={setCycleLength}
+          >
+            <SelectTrigger 
+              id="cycleLength" 
+              className={errors.cycleLength ? "border-red-500" : ""}
+            >
               <SelectValue placeholder="Select cycle length" />
             </SelectTrigger>
             <SelectContent>
@@ -197,7 +227,6 @@ const OvulationCalculator: React.FC<OvulationCalcProps> = ({ unitSystem }) => {
               ))}
             </SelectContent>
           </Select>
-          {errors.cycleLength && <p className="error-message">{errors.cycleLength}</p>}
           <p className="text-xs text-gray-500 dark:text-gray-400">
             A typical cycle length is 28 days, but can range from 21 to 45 days
           </p>
@@ -282,7 +311,7 @@ const OvulationCalculator: React.FC<OvulationCalcProps> = ({ unitSystem }) => {
                 fertile: "rdp-day_fertile",
               }}
               showOutsideDays={false}
-              className="w-full"
+              className="w-full pointer-events-auto"
             />
             
             <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
@@ -331,12 +360,12 @@ const OvulationCalculator: React.FC<OvulationCalcProps> = ({ unitSystem }) => {
             </p>
           </div>
           
-          <p className="disclaimer-text">
+          <p className="disclaimer-text text-xs text-gray-500 mt-4 pt-4 border-t border-dashed border-gray-200">
             This calculator provides estimates based on average cycle patterns.
             Individual cycles may vary, especially if you have irregular periods.
           </p>
           
-          <p className="thank-you-text">
+          <p className="thank-you-text text-sm text-center text-wellness-purple mt-4">
             Thank you for using SurviveWellness!
           </p>
         </div>

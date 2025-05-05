@@ -1,75 +1,58 @@
-import React, { useState, useEffect } from "react";
-import { CalculatorSidebar } from "./CalculatorSidebar";
-import CalculatorDisplay from "./CalculatorDisplay";
-import { calculators } from "@/data/calculatorData";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { MobileCalculatorView } from "./MobileCalculatorView";
-import { DesktopLayout } from "./calculator/DesktopLayout";
-import { UnitSystem } from "@/types/calculatorTypes";
+
+import React, { useState, useEffect } from 'react';
+import { calculatorsData } from '@/data/calculatorData';
+import { CalculatorInfo } from '@/types/calculator';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { MobileCalculatorView } from './MobileCalculatorView';
+import { DesktopLayout } from './calculator/DesktopLayout';
 
 const WellnessCalculatorHub: React.FC = () => {
-  const [activeCalculator, setActiveCalculator] = useState<string>("bmi");
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [unitSystem, setUnitSystem] = useState<UnitSystem>("imperial");
+  const [activeCalculator, setActiveCalculator] = useState<string>('bmi');
   const isMobile = useIsMobile();
 
-  const handleCalculatorSelect = (calculatorId: string) => {
-    setActiveCalculator(calculatorId);
-    if (isMobile) {
-      // For mobile, reset search when a calculator is selected
-      setSearchQuery("");
-    }
-  };
-
-  const handleUnitSystemChange = (system: UnitSystem) => {
-    setUnitSystem(system);
-  };
-
   useEffect(() => {
-    // Get calculator from URL hash if present
-    const hash = window.location.hash.substring(1);
-    if (hash && calculators.some(calc => calc.id === hash)) {
+    // Set active calculator from URL hash if available
+    const hash = window.location.hash.replace('#', '');
+    if (hash && calculatorsData.some(calc => calc.id === hash)) {
       setActiveCalculator(hash);
     }
   }, []);
 
-  // Update hash when calculator changes
-  useEffect(() => {
-    if (activeCalculator) {
-      window.location.hash = activeCalculator;
+  const handleCalculatorSelect = (calculatorId: string) => {
+    setActiveCalculator(calculatorId);
+    window.history.pushState(null, '', `#${calculatorId}`);
+    
+    // Auto-scroll to the calculator section on mobile
+    if (isMobile) {
+      const calculatorElement = document.getElementById('calculator-content');
+      if (calculatorElement) {
+        calculatorElement.scrollIntoView({ behavior: 'smooth' });
+      }
     }
-  }, [activeCalculator]);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
-      <div className="text-center py-6 px-4 max-w-4xl mx-auto">
-        <h1 className="text-2xl md:text-3xl font-bold mb-2 text-wellness-purple">SurviveWellness Calculator Hub</h1>
-        <p className="text-gray-600 dark:text-gray-300 text-sm md:text-base">
+    <div className="wellness-calculator-hub">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-center mb-2">SurviveWellness Calculator Hub</h1>
+        <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
           Explore our professional health and wellness calculators to track your fitness progress
         </p>
+        
+        {isMobile ? (
+          <MobileCalculatorView 
+            calculators={calculatorsData}
+            activeCalculator={activeCalculator}
+            onCalculatorSelect={handleCalculatorSelect}
+          />
+        ) : (
+          <DesktopLayout 
+            calculators={calculatorsData}
+            activeCalculator={activeCalculator}
+            onCalculatorSelect={handleCalculatorSelect}
+          />
+        )}
       </div>
-      
-      {isMobile ? (
-        <MobileCalculatorView
-          calculators={calculators}
-          activeCalculator={activeCalculator}
-          onCalculatorSelect={handleCalculatorSelect}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          unitSystem={unitSystem}
-          onUnitSystemChange={handleUnitSystemChange}
-        />
-      ) : (
-        <DesktopLayout
-          calculators={calculators}
-          activeCalculator={activeCalculator}
-          onCalculatorSelect={handleCalculatorSelect}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          unitSystem={unitSystem}
-          onUnitSystemChange={handleUnitSystemChange}
-        />
-      )}
     </div>
   );
 };

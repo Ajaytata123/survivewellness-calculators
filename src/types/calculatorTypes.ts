@@ -1,4 +1,3 @@
-
 // Types for calculator components
 
 // Common types
@@ -270,6 +269,17 @@ export interface IronIntakeResult {
     ironContent: number;
     servingSize: string;
   }[];
+}
+
+// Menstrual Cycle Calculator
+export interface MenstrualCycleCalcProps extends BaseCalcProps {}
+
+export interface MenstrualCycleResult {
+  nextPeriod: string;
+  ovulation: string;
+  fertileWindowStart: string;
+  fertileWindowEnd: string;
+  nextThreePeriods: string[];
 }
 
 // Download utilities

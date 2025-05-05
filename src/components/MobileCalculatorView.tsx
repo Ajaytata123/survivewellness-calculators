@@ -188,7 +188,11 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
               <Separator orientation="vertical" className="h-4" />
               <span className="font-medium">{activeCalcInfo.name}</span>
             </div>
-            <Breadcrumb calculatorInfo={activeCalcInfo} />
+            <Breadcrumb 
+              calculators={calculators}
+              activeCalculator={activeCalculator}
+              onCalculatorSelect={onCalculatorSelect}
+            />
           </div>
         )}
       </div>

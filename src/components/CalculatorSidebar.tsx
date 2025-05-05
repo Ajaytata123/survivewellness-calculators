@@ -2,11 +2,11 @@
 import React, { useState } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Search } from "@/components/ui/search";
-import { CalculatorInfo as CalcInfo } from '@/types/calculator';
+import { CalculatorInfo as CalcInfo, CalculatorCategory } from '@/types/calculator';
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Menu, ChevronLeft } from "lucide-react";
+import { ChevronRight, ChevronLeft, ChevronUp, ChevronDown, Menu } from "lucide-react";
 import { getIconComponent, getCategoryIcon } from "@/utils/iconUtils";
 
 interface CalculatorSidebarProps {
@@ -25,14 +25,15 @@ export const CalculatorSidebar = ({
   setSearchQuery 
 }: CalculatorSidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
 
   const filteredCalculators = searchQuery 
     ? calculators.filter(calc => 
         calc.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : calculators;
 
-  const categoryOrder: ("body" | "fitness" | "nutrition" | "wellness" | "women")[] = ["body", "fitness", "nutrition", "wellness", "women"];
-  const categoryNames: Record<"body" | "fitness" | "nutrition" | "wellness" | "women", string> = {
+  const categoryOrder: CalculatorCategory[] = ["body", "fitness", "nutrition", "wellness", "women"];
+  const categoryNames: Record<CalculatorCategory, string> = {
     body: "Body Composition",
     fitness: "Fitness & Exercise",
     nutrition: "Nutrition & Diet",
@@ -40,12 +41,19 @@ export const CalculatorSidebar = ({
     women: "Women's Health"
   };
 
-  const categoryColors: Record<"body" | "fitness" | "nutrition" | "wellness" | "women", string> = {
+  const categoryColors: Record<CalculatorCategory, string> = {
     body: "wellness-purple",
     fitness: "wellness-blue",
     nutrition: "wellness-green",
     wellness: "wellness-orange",
     women: "wellness-pink"
+  };
+
+  const toggleCategory = (category: string) => {
+    setCollapsedCategories(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
   };
   
   // Mobile sidebar
@@ -68,35 +76,47 @@ export const CalculatorSidebar = ({
         <div className="px-2 py-2 overflow-y-auto max-h-[85vh]">
           {categoryOrder.map(category => {
             const CategoryIcon = getCategoryIcon(category);
+            const isCollapsed = collapsedCategories[category];
+            
             return (
-            <div key={category} className="mb-4">
-              <h3 className={`text-sm font-medium mb-1 flex items-center text-${categoryColors[category]} px-3`}>
-                <CategoryIcon className="h-4 w-4 mr-2" />
-                {categoryNames[category]}
-              </h3>
-              <div className="space-y-1">
-                {filteredCalculators
-                  .filter(calc => calc.category === category)
-                  .map(calculator => {
-                    const IconComponent = getIconComponent(calculator.icon);
-                    return (
-                    <button
-                      key={calculator.id}
-                      onClick={() => onCalculatorSelect(calculator.id)}
-                      className={cn(
-                        "w-full text-left px-3 py-1.5 text-sm rounded-md flex items-center",
-                        activeCalculator === calculator.id
-                          ? `bg-${calculator.color} text-white`
-                          : "hover:bg-gray-100"
-                      )}
-                    >
-                      <IconComponent className="h-4 w-4 mr-2" />
-                      {calculator.name}
-                    </button>
-                  )})}
+              <div key={category} className="sidebar-category mb-2">
+                <div 
+                  className="sidebar-category-header"
+                  onClick={() => toggleCategory(category)}
+                >
+                  <div className={`flex items-center text-${categoryColors[category]}`}>
+                    <CategoryIcon className="h-4 w-4 mr-2" />
+                    <span className="font-medium">{categoryNames[category]}</span>
+                  </div>
+                  {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+                </div>
+                
+                {!isCollapsed && (
+                  <div className="sidebar-category-content">
+                    {filteredCalculators
+                      .filter(calc => calc.category === category)
+                      .map(calculator => {
+                        const IconComponent = getIconComponent(calculator.icon);
+                        return (
+                        <button
+                          key={calculator.id}
+                          onClick={() => onCalculatorSelect(calculator.id)}
+                          className={cn(
+                            "w-full text-left px-3 py-1.5 text-sm rounded-md flex items-center my-1",
+                            activeCalculator === calculator.id
+                              ? `bg-${calculator.color}/20 text-${calculator.color}`
+                              : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                          )}
+                        >
+                          <IconComponent className="h-4 w-4 mr-2 text-gray-500" />
+                          {calculator.name}
+                        </button>
+                      )})}
+                  </div>
+                )}
               </div>
-            </div>
-          )})}
+            );
+          })}
         </div>
       </SheetContent>
     </Sheet>
@@ -124,44 +144,68 @@ export const CalculatorSidebar = ({
               <Button
                 variant="outline"
                 size="icon"
-                className="h-6 w-6 rounded-full bg-white border shadow-sm"
+                className="h-6 w-6 rounded-full bg-white dark:bg-gray-800 border shadow-sm"
                 onClick={() => setIsCollapsed(!isCollapsed)}
               >
                 {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
               </Button>
             </div>
+            
             {categoryOrder.map(category => {
               const CategoryIcon = getCategoryIcon(category);
+              const isGroupCollapsed = collapsedCategories[category];
+              
               return (
-              <React.Fragment key={category}>
-                <SidebarGroupLabel className={cn(
-                  `text-${categoryColors[category]}`,
-                  isCollapsed ? "flex justify-center" : ""
-                )}>
-                  {isCollapsed ? <CategoryIcon className="h-5 w-5" /> : categoryNames[category]}
-                </SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {filteredCalculators
-                      .filter(calc => calc.category === category)
-                      .map(calculator => {
-                        const IconComponent = getIconComponent(calculator.icon);
-                        return (
-                        <SidebarMenuItem key={calculator.id}>
-                          <SidebarMenuButton
-                            onClick={() => onCalculatorSelect(calculator.id)}
-                            isActive={activeCalculator === calculator.id}
-                            className={isCollapsed ? "justify-center" : ""}
-                          >
-                            <IconComponent className="h-5 w-5 mr-2" />
-                            {!isCollapsed && <span>{calculator.name}</span>}
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      )})}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </React.Fragment>
-            )})}
+                <div key={category} className="sidebar-category mb-1">
+                  <div 
+                    className={cn(
+                      "flex items-center justify-between p-2 cursor-pointer",
+                      isCollapsed ? "justify-center" : "",
+                      `hover:bg-${categoryColors[category]}/10 rounded-md`
+                    )}
+                    onClick={() => !isCollapsed && toggleCategory(category)}
+                  >
+                    <div className={cn(
+                      "flex items-center",
+                      `text-${categoryColors[category]}`,
+                      isCollapsed ? "justify-center" : ""
+                    )}>
+                      <CategoryIcon className="h-5 w-5" />
+                      {!isCollapsed && <span className="ml-2 font-medium">{categoryNames[category]}</span>}
+                    </div>
+                    {!isCollapsed && (
+                      isGroupCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />
+                    )}
+                  </div>
+                  
+                  {!isGroupCollapsed && (
+                    <div className="sidebar-category-content">
+                      {filteredCalculators
+                        .filter(calc => calc.category === category)
+                        .map(calculator => {
+                          const IconComponent = getIconComponent(calculator.icon);
+                          return (
+                            <button
+                              key={calculator.id}
+                              onClick={() => onCalculatorSelect(calculator.id)}
+                              className={cn(
+                                "w-full text-left px-3 py-1.5 text-sm rounded-md flex items-center my-1",
+                                isCollapsed ? "justify-center" : "",
+                                activeCalculator === calculator.id
+                                  ? `bg-${calculator.color}/20 text-${calculator.color}`
+                                  : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                              )}
+                            >
+                              <IconComponent className={cn("h-4 w-4", isCollapsed ? "" : "mr-2")} />
+                              {!isCollapsed && <span>{calculator.name}</span>}
+                            </button>
+                          );
+                        })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>

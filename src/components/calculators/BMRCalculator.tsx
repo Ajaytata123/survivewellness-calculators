@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -8,7 +9,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { calculateBMR, calculateCalorieNeeds } from "@/utils/calculationUtils";
 import { BMRCalcProps, UnitSystem } from "@/types/calculatorTypes";
-import { downloadResultsAsCSV, copyResultsToClipboard } from "@/utils/downloadUtils";
+import { HeightInput } from "@/components/ui/height-input";
+import IntroSection from "@/components/calculator/IntroSection";
+import ResultActions from "@/components/calculator/ResultActions";
+import KnowMoreButton from "@/components/calculator/KnowMoreButton";
+import { validateWeight, validateAge } from "@/utils/validationUtils";
+import { showErrorToast } from "@/utils/notificationUtils";
 
 const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange }) => {
   const [height, setHeight] = useState<string>("");
@@ -18,9 +24,52 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
   const [activity, setActivity] = useState<string>("light");
   const [bmrResult, setBmrResult] = useState<number | null>(null);
   const [calorieNeeds, setCalorieNeeds] = useState<number | null>(null);
+  const [userName, setUserName] = useState<string>("");
+  
+  // Form validation
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  
+  // Reset errors when inputs change
+  useEffect(() => {
+    setErrors({});
+  }, [height, weight, age, gender, activity, unitSystem]);
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!height) {
+      newErrors.height = "Height is required";
+    }
+    
+    if (!weight) {
+      newErrors.weight = "Weight is required";
+    } else {
+      const weightValue = parseFloat(weight);
+      const weightError = validateWeight(weightValue, unitSystem === "metric" ? "kg" : "lbs");
+      if (weightError) {
+        newErrors.weight = weightError;
+      }
+    }
+    
+    if (!age) {
+      newErrors.age = "Age is required";
+    } else {
+      const ageValue = parseInt(age);
+      const ageError = validateAge(ageValue);
+      if (ageError) {
+        newErrors.age = ageError;
+      }
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const calculateBMRResult = () => {
-    if (!height || !weight || !age) return;
+    if (!validateForm()) {
+      showErrorToast("Please fill all required fields correctly");
+      return;
+    }
 
     const heightValue = parseFloat(height);
     const weightValue = parseFloat(weight);
@@ -34,22 +83,32 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
       weightValue <= 0 ||
       ageValue <= 0
     ) {
-      alert("Please enter valid height, weight, and age values.");
+      showErrorToast("Please enter valid height, weight, and age values.");
       return;
     }
 
-    const bmr = calculateBMR(
-      weightValue,
-      heightValue,
-      ageValue,
-      gender,
-      unitSystem === "metric"
-    );
-    
-    const calories = calculateCalorieNeeds(bmr, activity);
+    try {
+      const bmr = calculateBMR(
+        weightValue,
+        heightValue,
+        ageValue,
+        gender,
+        unitSystem === "metric"
+      );
+      
+      const calories = calculateCalorieNeeds(bmr, activity);
 
-    setBmrResult(bmr);
-    setCalorieNeeds(calories);
+      setBmrResult(Math.round(bmr));
+      setCalorieNeeds(Math.round(calories));
+      
+      // Scroll to results
+      setTimeout(() => {
+        document.getElementById('bmr-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    } catch (error) {
+      console.error("Error calculating BMR:", error);
+      showErrorToast("Error calculating your BMR. Please check your inputs.");
+    }
   };
 
   const handleUnitChange = (value: string) => {
@@ -59,58 +118,6 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
     setWeight("");
     setBmrResult(null);
     setCalorieNeeds(null);
-  };
-
-  const downloadResults = () => {
-    if (bmrResult === null || calorieNeeds === null) return;
-
-    const weightLoss = Math.round(calorieNeeds * 0.8);
-    const weightGain = Math.round(calorieNeeds * 1.2);
-
-    const results = {
-      title: "BMR & Calorie Calculator",
-      results: {
-        "Basal Metabolic Rate": `${bmrResult} calories/day`,
-        "Daily Calorie Needs": `${calorieNeeds} calories/day`,
-        "Weight Loss Target": `${weightLoss} calories/day`,
-        "Weight Gain Target": `${weightGain} calories/day`,
-        "Height": `${height} ${unitSystem === "metric" ? "cm" : "inches"}`,
-        "Weight": `${weight} ${unitSystem === "metric" ? "kg" : "pounds"}`,
-        "Age": age,
-        "Gender": gender,
-        "Activity Level": activity
-      },
-      date: new Date().toLocaleDateString(),
-      unitSystem,
-    };
-
-    downloadResultsAsCSV(results, "BMR-Calculator");
-  };
-
-  const copyResults = () => {
-    if (bmrResult === null || calorieNeeds === null) return;
-
-    const weightLoss = Math.round(calorieNeeds * 0.8);
-    const weightGain = Math.round(calorieNeeds * 1.2);
-
-    const results = {
-      title: "BMR & Calorie Calculator",
-      results: {
-        "Basal Metabolic Rate": `${bmrResult} calories/day`,
-        "Daily Calorie Needs": `${calorieNeeds} calories/day`,
-        "Weight Loss Target": `${weightLoss} calories/day`,
-        "Weight Gain Target": `${weightGain} calories/day`,
-        "Height": `${height} ${unitSystem === "metric" ? "cm" : "inches"}`,
-        "Weight": `${weight} ${unitSystem === "metric" ? "kg" : "pounds"}`,
-        "Age": age,
-        "Gender": gender,
-        "Activity Level": activity
-      },
-      date: new Date().toLocaleDateString(),
-      unitSystem,
-    };
-
-    copyResultsToClipboard(results);
   };
 
   const getActivityLabel = (value: string): string => {
@@ -133,44 +140,49 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
   return (
     <Card className="p-6">
       <h2 className="text-2xl font-bold mb-4 text-center">BMR & Calorie Calculator</h2>
-      <p className="text-gray-600 mb-4 text-center">
-        Calculate your Basal Metabolic Rate and daily calorie needs
-      </p>
+      
+      <IntroSection 
+        title="What is BMR?"
+        description="Basal Metabolic Rate (BMR) is the number of calories your body needs to accomplish its most basic life-sustaining functions. This calculator helps you determine your BMR and daily caloric needs based on your activity level."
+      />
+
+      <div className="mb-6">
+        <Label htmlFor="userName">Your Name (optional)</Label>
+        <Input
+          id="userName"
+          type="text"
+          placeholder="Enter your name"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          className="mt-1"
+        />
+      </div>
 
       <Tabs
         defaultValue={unitSystem}
         onValueChange={handleUnitChange}
-        className="mb-6"
+        className="mb-6 unit-tabs"
       >
         <TabsList className="grid grid-cols-2 mb-4">
           <TabsTrigger 
             value="imperial"
-            className={`${unitSystem === 'imperial' ? 'bg-wellness-blue text-white' : 'bg-gray-100'} transition-colors`}
           >
             Imperial (US)
           </TabsTrigger>
           <TabsTrigger 
             value="metric"
-            className={`${unitSystem === 'metric' ? 'bg-wellness-green text-white' : 'bg-gray-100'} transition-colors`}
           >
             Metric
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="imperial" className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="height-imperial">Height (inches)</Label>
-            <Input
-              id="height-imperial"
-              type="number"
-              placeholder="e.g., 70"
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-            />
-            <p className="text-sm text-gray-500">
-              For 5'10", enter 70 inches (5×12 + 10)
-            </p>
-          </div>
+          <HeightInput 
+            unitSystem="imperial"
+            height={height}
+            onHeightChange={setHeight}
+            id="height-imperial"
+          />
 
           <div className="space-y-2">
             <Label htmlFor="weight-imperial">Weight (pounds)</Label>
@@ -180,21 +192,19 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
               placeholder="e.g., 160"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
+              className={errors.weight ? "input-error" : ""}
             />
+            {errors.weight && <div className="error-message">{errors.weight}</div>}
           </div>
         </TabsContent>
 
         <TabsContent value="metric" className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="height-metric">Height (cm)</Label>
-            <Input
-              id="height-metric"
-              type="number"
-              placeholder="e.g., 175"
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-            />
-          </div>
+          <HeightInput 
+            unitSystem="metric"
+            height={height}
+            onHeightChange={setHeight}
+            id="height-metric"
+          />
 
           <div className="space-y-2">
             <Label htmlFor="weight-metric">Weight (kg)</Label>
@@ -204,7 +214,9 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
               placeholder="e.g., 70"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
+              className={errors.weight ? "input-error" : ""}
             />
+            {errors.weight && <div className="error-message">{errors.weight}</div>}
           </div>
         </TabsContent>
       </Tabs>
@@ -218,7 +230,9 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
             placeholder="e.g., 30"
             value={age}
             onChange={(e) => setAge(e.target.value)}
+            className={errors.age ? "input-error" : ""}
           />
+          {errors.age && <div className="error-message">{errors.age}</div>}
         </div>
 
         <div className="space-y-2">
@@ -264,18 +278,20 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
       </Button>
 
       {bmrResult !== null && calorieNeeds !== null && (
-        <div className="bg-gray-50 p-4 rounded-md">
+        <div id="bmr-results" className="results-container">
           <div className="text-center mb-4">
             <h3 className="text-xl font-bold">Your Results</h3>
+            {userName && <p className="text-sm mb-2">Results for: {userName}</p>}
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              <div className="bg-white p-3 rounded-md shadow-sm">
-                <h4 className="text-gray-500 text-sm">Basal Metabolic Rate</h4>
-                <p className="text-2xl font-bold text-wellness-purple">{bmrResult}</p>
+              <div className="result-highlight rounded-md text-center p-4">
+                <h4 className="text-gray-500 dark:text-gray-400 text-sm">Basal Metabolic Rate</h4>
+                <p className="text-2xl font-bold text-wellness-purple dark:text-wellness-purple/90">{bmrResult}</p>
                 <p className="text-sm">calories/day</p>
               </div>
-              <div className="bg-white p-3 rounded-md shadow-sm">
-                <h4 className="text-gray-500 text-sm">Daily Calorie Needs</h4>
-                <p className="text-2xl font-bold text-wellness-green">{calorieNeeds}</p>
+              <div className="result-highlight rounded-md text-center p-4">
+                <h4 className="text-gray-500 dark:text-gray-400 text-sm">Daily Calorie Needs</h4>
+                <p className="text-2xl font-bold text-wellness-green dark:text-wellness-green/90">{calorieNeeds}</p>
                 <p className="text-sm">calories/day</p>
               </div>
             </div>
@@ -284,30 +300,47 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
           <div className="mt-4">
             <h4 className="font-medium mb-2">Calorie Targets:</h4>
             <div className="grid grid-cols-2 gap-2">
-              <div className="bg-wellness-softBlue p-3 rounded-md">
+              <div className="bg-wellness-softBlue dark:bg-wellness-softBlue/30 p-3 rounded-md">
                 <p className="text-sm font-medium">Weight Loss</p>
                 <p className="text-lg font-bold">{Math.round(calorieNeeds * 0.8)} calories</p>
               </div>
-              <div className="bg-wellness-softGreen p-3 rounded-md">
+              <div className="bg-wellness-softGreen dark:bg-wellness-softGreen/30 p-3 rounded-md">
                 <p className="text-sm font-medium">Weight Gain</p>
                 <p className="text-lg font-bold">{Math.round(calorieNeeds * 1.2)} calories</p>
               </div>
             </div>
           </div>
 
-          <div className="mt-4">
-            <p className="text-sm text-gray-500 mb-2">
-              Based on the Mifflin-St Jeor Equation
-            </p>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={copyResults}>
-                Copy Results
-              </Button>
-              <Button variant="outline" size="sm" onClick={downloadResults}>
-                Download CSV
-              </Button>
-            </div>
-          </div>
+          <ResultActions
+            title="BMR & Calorie Calculator"
+            results={{
+              "Basal Metabolic Rate": `${bmrResult} calories/day`,
+              "Daily Calorie Needs": `${calorieNeeds} calories/day`,
+              "Weight Loss Target": `${Math.round(calorieNeeds * 0.8)} calories/day`,
+              "Weight Gain Target": `${Math.round(calorieNeeds * 1.2)} calories/day`,
+              "Height": `${height} ${unitSystem === "metric" ? "cm" : "inches"}`,
+              "Weight": `${weight} ${unitSystem === "metric" ? "kg" : "pounds"}`,
+              "Age": age,
+              "Gender": gender,
+              "Activity Level": getActivityLabel(activity)
+            }}
+            fileName="BMR-Calculator"
+            userName={userName}
+            unitSystem={unitSystem}
+          />
+          
+          <KnowMoreButton 
+            calculatorName="BMR"
+            calculatorId="bmr"
+          />
+          
+          <p className="disclaimer-text">
+            Based on the Mifflin-St Jeor Equation. Results may vary for individuals with specific medical conditions.
+          </p>
+          
+          <p className="thank-you-text">
+            Thank you for using SurviveWellness!
+          </p>
         </div>
       )}
     </Card>

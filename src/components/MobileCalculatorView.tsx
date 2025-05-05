@@ -4,14 +4,14 @@ import { Search } from "@/components/ui/search";
 import { CalculatorInfo, CalculatorCategory } from '@/types/calculator';
 import CalculatorDisplay from './CalculatorDisplay';
 import { UnitSystem } from '@/types/calculatorTypes';
-import { CategorySelector } from './calculator/CategorySelector';
-import { TabsContent, Tabs, TabsList, TabsTrigger } from './ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Separator } from './ui/separator';
 import { getCategoryName, getCategoryIcon, getIconComponent } from '@/utils/iconUtils';
 import { Button } from './ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { ChevronLeft, Home, Calendar, Activity, Heart, Scale, Utensils } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Breadcrumb } from './calculator/Breadcrumb';
 
 interface MobileCalculatorViewProps {
   calculators: CalculatorInfo[];
@@ -36,12 +36,21 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   const [activeCategory, setActiveCategory] = useState<CalculatorCategory>(categories[0]);
   const [activeTab, setActiveTab] = useState<"browse" | "calculator">("browse");
   const [filteredCategories, setFilteredCategories] = useState<CalculatorCategory[]>(categories);
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
+    body: true,
+    fitness: true,
+    nutrition: true,
+    wellness: true,
+    women: true
+  });
 
   // Filter calculators based on search query
   const filteredCalculators = calculators.filter(calc => 
     calc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     calc.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const activeCalcInfo = calculators.find(calc => calc.id === activeCalculator);
 
   // Update filtered categories whenever search query changes
   useEffect(() => {
@@ -80,8 +89,6 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     setActiveTab("calculator");
   };
 
-  const activeCalcInfo = calculators.find(calc => calc.id === activeCalculator);
-
   // Group calculators by category for search results
   const calculatorsByCategory: Record<CalculatorCategory, CalculatorInfo[]> = {
     body: [],
@@ -97,6 +104,13 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     });
   }
 
+  const toggleCategory = (category: string) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
+  };
+
   // Function to render calculator cards
   const renderCalculatorCard = (calc: CalculatorInfo) => {
     const IconComponent = getIconComponent(calc.icon);
@@ -108,7 +122,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
           "p-4 border rounded-lg shadow-sm cursor-pointer transition-all",
           activeCalculator === calc.id 
             ? `border-${calc.color} bg-${calc.color}/10` 
-            : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+            : "border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-800/50"
         )}
         onClick={() => handleCalculatorSelect(calc.id)}
       >
@@ -134,9 +148,9 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
 
   return (
     <div className="flex flex-col w-full h-full">
-      <div className="sticky top-0 z-10 bg-white shadow-sm p-4 space-y-4">
+      <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 shadow-sm p-4 space-y-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-bold text-wellness-purple">Wellness Calculators</h1>
+          <h1 className="text-lg font-bold text-gradient">SurviveWellness</h1>
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "browse" | "calculator")} className="w-auto">
             <TabsList className="grid w-[180px] grid-cols-2">
               <TabsTrigger value="browse">Browse</TabsTrigger>
@@ -153,20 +167,29 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
               onSearch={setSearchQuery}
               className="w-full"
             />
+            <h2 className="text-center text-xl font-bold text-gradient mb-0">
+              Calculator Hub
+            </h2>
+            <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+              Track your health and fitness progress
+            </p>
           </>
         )}
         
         {activeTab === "calculator" && activeCalcInfo && (
-          <div className="flex items-center space-x-2">
-            <button 
-              onClick={() => setActiveTab("browse")}
-              className="text-sm text-wellness-purple hover:underline flex items-center"
-            >
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              Back
-            </button>
-            <Separator orientation="vertical" className="h-4" />
-            <span className="font-medium">{activeCalcInfo.name}</span>
+          <div className="space-y-2">
+            <div className="flex items-center space-x-2">
+              <button 
+                onClick={() => setActiveTab("browse")}
+                className="text-sm text-wellness-purple hover:underline flex items-center"
+              >
+                <ChevronLeft className="h-4 w-4 mr-1" />
+                Back
+              </button>
+              <Separator orientation="vertical" className="h-4" />
+              <span className="font-medium">{activeCalcInfo.name}</span>
+            </div>
+            <Breadcrumb calculatorInfo={activeCalcInfo} />
           </div>
         )}
       </div>
@@ -175,29 +198,32 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
         {activeTab === "browse" ? (
           <div className="animate-fade-in">
             {!searchQuery ? (
-              <Accordion type="single" collapsible className="w-full space-y-2">
+              <div className="space-y-4">
                 {categories.map((category) => (
-                  <AccordionItem 
-                    key={category} 
-                    value={category}
-                    className="border rounded-lg px-2 overflow-hidden"
-                  >
-                    <AccordionTrigger className={`text-${getCategoryColor(category)} hover:no-underline px-2`}>
+                  <div key={category} className="border rounded-lg overflow-hidden dark:border-gray-700">
+                    <div 
+                      className={`flex items-center justify-between p-3 cursor-pointer ${getCategoryColor(category)}`}
+                      onClick={() => toggleCategory(category)}
+                    >
                       <div className="flex items-center">
                         {getCategoryIcon(category)}
                         <span className="ml-2 font-medium">{getCategoryName(category)}</span>
                       </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="pb-2">
-                      <div className="grid grid-cols-2 gap-3 pt-1">
-                        {calculators
-                          .filter(calc => calc.category === category)
-                          .map(calc => renderCalculatorCard(calc))}
+                      <ChevronLeft className={`h-4 w-4 transform transition-transform ${expandedCategories[category] ? 'rotate-90' : '-rotate-90'}`} />
+                    </div>
+                    
+                    {expandedCategories[category] && (
+                      <div className="p-3">
+                        <div className="grid grid-cols-2 gap-3">
+                          {calculators
+                            .filter(calc => calc.category === category)
+                            .map(calc => renderCalculatorCard(calc))}
+                        </div>
                       </div>
-                    </AccordionContent>
-                  </AccordionItem>
+                    )}
+                  </div>
                 ))}
-              </Accordion>
+              </div>
             ) : (
               <div className="space-y-6">
                 {filteredCategories.map(category => {
@@ -232,7 +258,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
 
       {/* Bottom Navigation Bar for Mobile */}
       {activeTab === "browse" && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg flex justify-around py-2 z-10">
+        <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t dark:border-gray-800 shadow-lg flex justify-around py-2 z-10">
           {categories.map(category => {
             const isActive = activeCategory === category;
             return (
@@ -246,8 +272,8 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
                 )}
                 onClick={() => {
                   setActiveCategory(category);
-                  // Scroll to the category section
-                  const element = document.querySelector(`[value="${category}"]`);
+                  // Find the DOM element for this category
+                  const element = document.querySelector(`[data-category="${category}"]`);
                   if (element) {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
@@ -276,11 +302,11 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
 // Helper function to get category color
 function getCategoryColor(category: CalculatorCategory): string {
   const colors: Record<CalculatorCategory, string> = {
-    body: "wellness-purple",
-    fitness: "wellness-blue", 
-    nutrition: "wellness-green",
-    wellness: "wellness-orange",
-    women: "wellness-pink"
+    body: "bg-wellness-softPurple/30 text-wellness-purple",
+    fitness: "bg-wellness-softBlue/30 text-wellness-blue", 
+    nutrition: "bg-wellness-softGreen/30 text-wellness-green",
+    wellness: "bg-wellness-softOrange/30 text-wellness-orange",
+    women: "bg-wellness-softPink/30 text-wellness-pink"
   };
-  return colors[category] || "wellness-purple";
+  return colors[category] || "bg-wellness-softPurple/30 text-wellness-purple";
 }

@@ -1,4 +1,5 @@
 
+import React, { useRef, useEffect } from "react";
 import { UnitSystem } from "@/types/calculatorTypes";
 
 // Calculators
@@ -23,7 +24,7 @@ import ObesityRiskCalculator from "@/components/calculators/ObesityRiskCalculato
 import MealPlannerCalculator from "@/components/calculators/MealPlannerCalculator";
 import OvulationCalculator from "@/components/calculators/OvulationCalculator";
 import DueDateCalculator from "@/components/calculators/DueDateCalculator";
-import MenstrualCycleCalculator from "@/components/calculators/MenstrualCycleCalculator";
+import PeriodCalculator from "@/components/calculators/PeriodCalculator"; // Renamed from MenstrualCycleCalculator
 import MenopauseCalculator from "@/components/calculators/MenopauseCalculator";
 import BreastCancerRiskCalculator from "@/components/calculators/BreastCancerRiskCalculator";
 import OsteoporosisRiskCalculator from "@/components/calculators/OsteoporosisRiskCalculator";
@@ -40,6 +41,18 @@ const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
   unitSystem,
   onUnitSystemChange,
 }) => {
+  const calculatorRef = useRef<HTMLDivElement>(null);
+  const prevCalculatorId = useRef<string>(activeCalculator);
+
+  // When calculator changes, we want to maintain scroll position instead of jumping to top
+  useEffect(() => {
+    if (prevCalculatorId.current !== activeCalculator) {
+      prevCalculatorId.current = activeCalculator;
+      // Don't scroll to top when changing calculators
+      // We'll let the browser maintain its scroll position
+    }
+  }, [activeCalculator]);
+
   const renderCalculator = () => {
     switch (activeCalculator) {
       case "bmi":
@@ -85,7 +98,7 @@ const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
       case "duedate":
         return <DueDateCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
       case "menstrual":
-        return <MenstrualCycleCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
+        return <PeriodCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
       case "menopause":
         return <MenopauseCalculator unitSystem={unitSystem} onUnitSystemChange={onUnitSystemChange} />;
       case "breastcancer":
@@ -99,7 +112,7 @@ const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
     }
   };
 
-  return <div className="p-4">{renderCalculator()}</div>;
+  return <div ref={calculatorRef}>{renderCalculator()}</div>;
 };
 
 export default CalculatorDisplay;

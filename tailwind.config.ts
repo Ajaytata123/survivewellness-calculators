@@ -120,8 +120,8 @@ export default {
 				'enter': 'fade-in 0.3s ease-out, scale-in 0.2s ease-out'
 			},
 			fontFamily: {
-				sans: ['Inter', 'sans-serif'],
-				heading: ['Playfair Display', 'serif']
+				sans: ['Nunito', 'sans-serif'],
+				heading: ['Merriweather', 'serif']
 			}
 		}
 	},

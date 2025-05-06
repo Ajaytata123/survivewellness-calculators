@@ -7,7 +7,7 @@ export const calculators: CalculatorInfo[] = [
     id: "bmi", 
     name: "BMI Calculator", 
     icon: "Body", 
-    color: "wellness-purple",  
+    color: "wellness-purple", 
     category: "body",
     url: "#bmi"
   },

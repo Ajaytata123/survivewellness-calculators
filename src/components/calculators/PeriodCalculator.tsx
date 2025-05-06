@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { CalendarIcon, Calendar } from "lucide-react";
 import { format, addDays } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { BaseCalcProps } from "@/types/calculatorTypes";
 import IntroSection from "@/components/calculator/IntroSection";
@@ -201,43 +200,24 @@ const PeriodCalculator: React.FC<BaseCalcProps> = ({ unitSystem }) => {
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="lastPeriod" className="flex justify-between">
-            <span>First Day of Last Period</span>
-            {errors.lastPeriodDate && <span className="text-red-500 text-sm">{errors.lastPeriodDate}</span>}
-          </Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                id="lastPeriod"
-                variant={"outline"}
-                className={cn(
-                  "w-full justify-start text-left font-normal",
-                  !lastPeriodDate && "text-muted-foreground",
-                  errors.lastPeriodDate && "border-red-500"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {lastPeriodDate ? format(lastPeriodDate, "PPP") : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <CalendarComponent
-                mode="single"
-                selected={lastPeriodDate}
-                onSelect={setLastPeriodDate}
-                initialFocus
-                className="p-3 pointer-events-auto"
-              />
-            </PopoverContent>
-          </Popover>
+          <Label htmlFor="lastPeriod">First Day of Last Period</Label>
+          <div className="relative">
+            <CalendarComponent
+              mode="single"
+              selected={lastPeriodDate}
+              onSelect={setLastPeriodDate}
+              className={cn("border rounded-md pointer-events-auto", errors.lastPeriodDate ? "border-red-500" : "")}
+              initialFocus
+            />
+            {errors.lastPeriodDate && (
+              <p className="error-message text-red-500 text-sm mt-1">{errors.lastPeriodDate}</p>
+            )}
+          </div>
         </div>
         
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="cycleLength" className="flex justify-between">
-              <span>Cycle Length (days)</span>
-              {errors.cycleLength && <span className="text-red-500 text-sm">{errors.cycleLength}</span>}
-            </Label>
+            <Label htmlFor="cycleLength">Cycle Length (days)</Label>
             <Input
               id="cycleLength"
               type="number"
@@ -248,16 +228,16 @@ const PeriodCalculator: React.FC<BaseCalcProps> = ({ unitSystem }) => {
               onChange={(e) => setCycleLength(e.target.value)}
               className={errors.cycleLength ? "border-red-500" : ""}
             />
+            {errors.cycleLength && (
+              <p className="error-message text-red-500 text-sm mt-1">{errors.cycleLength}</p>
+            )}
             <p className="text-xs text-gray-500 dark:text-gray-400">
               Average is 28 days (21-35 days is normal)
             </p>
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="periodLength" className="flex justify-between">
-              <span>Period Length (days)</span>
-              {errors.periodLength && <span className="text-red-500 text-sm">{errors.periodLength}</span>}
-            </Label>
+            <Label htmlFor="periodLength">Period Length (days)</Label>
             <Input
               id="periodLength"
               type="number"
@@ -268,6 +248,9 @@ const PeriodCalculator: React.FC<BaseCalcProps> = ({ unitSystem }) => {
               onChange={(e) => setPeriodLength(e.target.value)}
               className={errors.periodLength ? "border-red-500" : ""}
             />
+            {errors.periodLength && (
+              <p className="error-message text-red-500 text-sm mt-1">{errors.periodLength}</p>
+            )}
             <p className="text-xs text-gray-500 dark:text-gray-400">
               Average is 5 days (2-10 days is normal)
             </p>

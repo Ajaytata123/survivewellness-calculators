@@ -1,9 +1,9 @@
 
 import React from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { CalculatorInfo, getCategoryName } from '@/types/calculator';
+import { CalculatorInfo } from '@/types/calculator';
 
 interface BreadcrumbProps {
   calculators: CalculatorInfo[];
@@ -20,13 +20,30 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   
   if (!activeCalcInfo) return null;
   
+  const getCategoryName = (category: string): string => {
+    switch (category) {
+      case 'body':
+        return 'Body Composition';
+      case 'fitness':
+        return 'Fitness & Exercise';
+      case 'nutrition':
+        return 'Nutrition & Diet';
+      case 'wellness':
+        return 'Wellness & Lifestyle';
+      case 'women':
+        return 'Women\'s Health';
+      default:
+        return category.charAt(0).toUpperCase() + category.slice(1);
+    }
+  };
+  
   const categoryName = getCategoryName(activeCalcInfo.category);
   
   return (
     <nav className="breadcrumb" aria-label="Breadcrumb">
       <ol className="flex flex-wrap items-center space-x-1 text-sm text-gray-500 dark:text-gray-400">
         <li>
-          <Link href="/" className="hover:text-wellness-blue">
+          <Link to="/" className="hover:text-wellness-blue">
             Home
           </Link>
         </li>

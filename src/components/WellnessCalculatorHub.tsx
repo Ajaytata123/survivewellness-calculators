@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { calculatorsData } from '@/data/calculatorData';
+import { calculators } from '@/data/calculatorData';
 import { CalculatorInfo } from '@/types/calculator';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MobileCalculatorView } from './MobileCalculatorView';
@@ -13,7 +13,7 @@ const WellnessCalculatorHub: React.FC = () => {
   useEffect(() => {
     // Set active calculator from URL hash if available
     const hash = window.location.hash.replace('#', '');
-    if (hash && calculatorsData.some(calc => calc.id === hash)) {
+    if (hash && calculators.some(calc => calc.id === hash)) {
       setActiveCalculator(hash);
     }
   }, []);
@@ -41,13 +41,13 @@ const WellnessCalculatorHub: React.FC = () => {
         
         {isMobile ? (
           <MobileCalculatorView 
-            calculators={calculatorsData}
+            calculators={calculators}
             activeCalculator={activeCalculator}
             onCalculatorSelect={handleCalculatorSelect}
           />
         ) : (
           <DesktopLayout 
-            calculators={calculatorsData}
+            calculators={calculators}
             activeCalculator={activeCalculator}
             onCalculatorSelect={handleCalculatorSelect}
           />

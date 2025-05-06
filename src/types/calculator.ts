@@ -23,7 +23,9 @@ export const getCategoryName = (category: CalculatorCategory): string => {
     case 'women':
       return 'Women\'s Health';
     default:
-      // Fix: Ensure category is treated as a string to use charAt and slice methods
-      return category.toString().charAt(0).toUpperCase() + category.toString().slice(1);
+      // Since we've covered all possible enum values above,
+      // this is a type-safe approach for handling unexpected values
+      const value = String(category);
+      return value.charAt(0).toUpperCase() + value.slice(1);
   }
 };

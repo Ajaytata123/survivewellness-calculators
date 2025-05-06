@@ -59,7 +59,7 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
       const bmiCategory = getBMICategory(bmiValue);
       
       setBmi(bmiValue);
-      setCategory(bmiCategory);
+      setCategory(bmiCategory); // Fixed: Now passing a string value
       
     } catch (error) {
       console.error("Error calculating BMI:", error);

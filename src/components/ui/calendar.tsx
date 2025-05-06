@@ -17,7 +17,7 @@ function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("p-3 pointer-events-auto", className)}
+      className={cn("p-4 md:p-3 pointer-events-auto", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
@@ -50,6 +50,10 @@ function Calendar({
         day_range_middle:
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
+        // Add specific styles for period, ovulation, and fertile days
+        day_period: "bg-wellness-pink text-white hover:bg-wellness-pink/90",
+        day_ovulation: "bg-wellness-purple text-white hover:bg-wellness-purple/90",
+        day_fertile: "bg-wellness-blue/50 text-blue-900 hover:bg-wellness-blue/60",
         ...classNames,
       }}
       components={{

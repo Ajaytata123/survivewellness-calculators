@@ -30,6 +30,9 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   if (!activeCalc) return null;
   
   const categoryName = getCategoryName(activeCalc.category);
+
+  // Rename "Menstrual Cycle" to "Period" calculator (point 5)
+  const displayName = activeCalc.id === 'menstrualCycle' ? 'Period Calculator' : activeCalc.name;
   
   return (
     <ShadcnBreadcrumb className={cn("py-2 px-0", className)}>
@@ -64,7 +67,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
         
         <BreadcrumbItem>
           <BreadcrumbPage className="text-wellness-purple dark:text-wellness-purple/90 font-medium">
-            {activeCalc.name}
+            {displayName}
           </BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>

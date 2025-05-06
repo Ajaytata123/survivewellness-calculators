@@ -8,7 +8,6 @@ import { Separator } from './ui/separator';
 import { getIconComponent } from '@/utils/iconUtils';
 import { ChevronLeft, Home, Calendar, Activity, Heart, Scale, Utensils } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import Breadcrumb from './calculator/Breadcrumb';
 
 interface MobileCalculatorViewProps {
   calculators: CalculatorInfo[];
@@ -176,12 +175,6 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
               <Separator orientation="vertical" className="h-4" />
               <span className="font-medium">{activeCalcInfo.name}</span>
             </div>
-            <Breadcrumb 
-              calculators={calculators}
-              activeCalculator={activeCalculator}
-              onCalculatorSelect={onCalculatorSelect}
-              className="pt-1 px-1"
-            />
           </div>
         )}
       </div>

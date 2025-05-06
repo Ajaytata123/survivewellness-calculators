@@ -28,6 +28,7 @@ export const CalculatorSidebar = ({
   const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLButtonElement>(null);
+  const [scrolledManually, setScrolledManually] = useState<boolean>(false);
   
   // Track which category contains the active calculator
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -77,23 +78,39 @@ export const CalculatorSidebar = ({
     }
   }, [activeCalculator, calculators]);
 
-  // Scroll to the active item when it changes, but don't scroll to top
+  // Track scroll state to prevent unwanted jumps
   useEffect(() => {
-    if (activeItemRef.current && sidebarRef.current) {
-      // Don't scroll to top, just make sure the active item is visible
+    if (sidebarRef.current) {
+      const handleScroll = () => {
+        setScrolledManually(true);
+        // Reset after a period of inactivity
+        setTimeout(() => setScrolledManually(false), 1500);
+      };
+      
+      sidebarRef.current.addEventListener('scroll', handleScroll);
+      return () => {
+        sidebarRef.current?.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, []);
+
+  // Scroll to the active item when it changes, but only if not manually scrolled
+  useEffect(() => {
+    if (!scrolledManually && activeItemRef.current && sidebarRef.current) {
       const sidebarRect = sidebarRef.current.getBoundingClientRect();
       const activeItemRect = activeItemRef.current.getBoundingClientRect();
       
       if (activeItemRect.bottom > sidebarRect.bottom || activeItemRect.top < sidebarRect.top) {
-        // Only scroll if the item is out of view
-        activeItemRef.current.scrollIntoView({
-          block: 'nearest',
-          inline: 'nearest',
+        // Calculate the scroll position that places the active item in the middle
+        const middlePosition = activeItemRect.top - sidebarRect.top + sidebarRef.current.scrollTop - (sidebarRect.height / 2) + (activeItemRect.height / 2);
+        
+        sidebarRef.current.scrollTo({
+          top: middlePosition,
           behavior: 'smooth'
         });
       }
     }
-  }, [activeCalculator]);
+  }, [activeCalculator, scrolledManually]);
   
   // Mobile sidebar
   const MobileSidebar = () => (
@@ -137,6 +154,9 @@ export const CalculatorSidebar = ({
                       .map(calculator => {
                         const IconComponent = getIconComponent(calculator.icon);
                         const isActive = activeCalculator === calculator.id;
+                        // Rename "Menstrual Cycle" to "Period" calculator (point 5)
+                        const displayName = calculator.id === 'menstrualCycle' ? 'Period Calculator' : calculator.name;
+                        
                         return (
                         <button
                           key={calculator.id}
@@ -150,7 +170,7 @@ export const CalculatorSidebar = ({
                           )}
                         >
                           <IconComponent className="h-4 w-4 mr-2 text-gray-500" />
-                          {calculator.name}
+                          {displayName}
                         </button>
                       )})}
                   </div>
@@ -228,6 +248,9 @@ export const CalculatorSidebar = ({
                           .map(calculator => {
                             const IconComponent = getIconComponent(calculator.icon);
                             const isActive = activeCalculator === calculator.id;
+                            // Rename "Menstrual Cycle" to "Period" calculator (point 5)
+                            const displayName = calculator.id === 'menstrualCycle' ? 'Period Calculator' : calculator.name;
+                            
                             return (
                               <button
                                 key={calculator.id}
@@ -242,7 +265,7 @@ export const CalculatorSidebar = ({
                                 )}
                               >
                                 <IconComponent className={cn("h-4 w-4", isCollapsed ? "" : "mr-2")} />
-                                {!isCollapsed && <span>{calculator.name}</span>}
+                                {!isCollapsed && <span>{displayName}</span>}
                               </button>
                             );
                           })}

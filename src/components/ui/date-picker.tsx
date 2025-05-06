@@ -66,7 +66,7 @@ export function DatePicker({
               setOpen(false); // Close the calendar after selection
             }}
             initialFocus
-            className="p-3 pointer-events-auto"
+            className="p-4 md:p-3 pointer-events-auto"
           />
         </PopoverContent>
       </Popover>

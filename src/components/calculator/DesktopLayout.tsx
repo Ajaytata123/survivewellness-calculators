@@ -47,6 +47,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
               calculators={calculators}
               activeCalculator={activeCalculator}
               onCalculatorSelect={onCalculatorSelect}
+              className="hidden md:flex" // Only show on desktop
             />
           )}
         </div>

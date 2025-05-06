@@ -116,7 +116,7 @@ export const CalculatorSidebar = ({
             return (
               <div key={category} className="sidebar-category mb-2">
                 <div 
-                  className="sidebar-category-header"
+                  className="sidebar-category-header flex items-center justify-between p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
                   onClick={() => toggleCategory(category)}
                 >
                   <div className={`flex items-center text-${categoryColors[category]}`}>

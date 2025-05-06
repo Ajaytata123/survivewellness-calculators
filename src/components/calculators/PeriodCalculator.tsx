@@ -1,10 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, Calendar } from "lucide-react";
 import { format, addDays } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
@@ -13,6 +11,7 @@ import IntroSection from "@/components/calculator/IntroSection";
 import ResultActions from "@/components/calculator/ResultActions";
 import KnowMoreButton from "@/components/calculator/KnowMoreButton";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
+import { DatePicker } from "@/components/ui/date-picker";
 
 type CalendarDate = Date | undefined;
 
@@ -199,21 +198,14 @@ const PeriodCalculator: React.FC<BaseCalcProps> = ({ unitSystem }) => {
           />
         </div>
         
-        <div className="space-y-2">
-          <Label htmlFor="lastPeriod">First Day of Last Period</Label>
-          <div className="relative">
-            <CalendarComponent
-              mode="single"
-              selected={lastPeriodDate}
-              onSelect={setLastPeriodDate}
-              className={cn("border rounded-md pointer-events-auto", errors.lastPeriodDate ? "border-red-500" : "")}
-              initialFocus
-            />
-            {errors.lastPeriodDate && (
-              <p className="error-message text-red-500 text-sm mt-1">{errors.lastPeriodDate}</p>
-            )}
-          </div>
-        </div>
+        <DatePicker
+          date={lastPeriodDate}
+          onDateChange={setLastPeriodDate}
+          label="First Day of Last Period"
+          placeholder="Select date"
+          id="lastPeriod"
+          error={errors.lastPeriodDate}
+        />
         
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">

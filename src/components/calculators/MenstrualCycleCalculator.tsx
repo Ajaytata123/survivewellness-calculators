@@ -1,10 +1,9 @@
-
 import React, { useState, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarIcon, Copy, Share, Info, AlertCircle } from "lucide-react";
+import { Copy, Share, Info, AlertCircle } from "lucide-react";
 import { UnitSystem } from "@/types/calculatorTypes";
 import { downloadResultsAsCSV, copyResultsToClipboard, shareResults } from "@/utils/downloadUtils";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
@@ -12,6 +11,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format, addDays, differenceInDays, isWithinInterval } from "date-fns";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { DatePicker } from "@/components/ui/date-picker";
 
 interface MenstrualCycleCalculatorProps {
   unitSystem: UnitSystem;
@@ -43,9 +43,11 @@ const MenstrualCycleCalculator: React.FC<MenstrualCycleCalculatorProps> = ({ uni
   } | null>(null);
   const [copied, setCopied] = useState(false);
   const [calendarMonth, setCalendarMonth] = useState<Date>(new Date());
+  const [errors, setErrors] = useState<{lastPeriodDate?: string}>({});
 
   const calculateCycle = () => {
     if (!lastPeriodDate) {
+      setErrors({lastPeriodDate: "Please enter your last period start date"});
       showErrorToast("Please enter your last period start date");
       return;
     }
@@ -129,6 +131,14 @@ const MenstrualCycleCalculator: React.FC<MenstrualCycleCalculatorProps> = ({ uni
     if (isInFertileWindow) return "fertile";
 
     return "normal";
+  };
+
+  // Handle date change
+  const handleLastPeriodDateChange = (date: Date | undefined) => {
+    setLastPeriodDate(date);
+    if (date) {
+      setErrors({});
+    }
   };
 
   const handleCopy = () => {
@@ -245,29 +255,14 @@ const MenstrualCycleCalculator: React.FC<MenstrualCycleCalculatorProps> = ({ uni
           />
         </div>
         
-        <div className="space-y-2">
-          <Label htmlFor="lastPeriodDate">First Day of Last Period</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full justify-start text-left font-normal"
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {lastPeriodDate ? format(lastPeriodDate, "PPP") : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={lastPeriodDate}
-                onSelect={setLastPeriodDate}
-                initialFocus
-                className="p-3 pointer-events-auto"
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
+        <DatePicker
+          date={lastPeriodDate}
+          onDateChange={handleLastPeriodDateChange}
+          label="First Day of Last Period"
+          placeholder="Select date"
+          id="lastPeriodDate"
+          error={errors.lastPeriodDate}
+        />
         
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">

@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { CalculatorInfo } from '@/types/calculator';
+import { CalculatorInfo, getCategoryName } from '@/types/calculator';
 
 interface BreadcrumbProps {
   calculators: CalculatorInfo[];
@@ -11,31 +11,14 @@ interface BreadcrumbProps {
   onCalculatorSelect: (calculatorId: string) => void;
 }
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ 
+const Breadcrumb: React.FC<BreadcrumbProps> = ({
   calculators,
   activeCalculator,
-  onCalculatorSelect
+  onCalculatorSelect,
 }) => {
-  const activeCalcInfo = calculators.find(calc => calc.id === activeCalculator);
+  const activeCalcInfo = calculators.find((calc) => calc.id === activeCalculator);
   
   if (!activeCalcInfo) return null;
-  
-  const getCategoryName = (category: string): string => {
-    switch (category) {
-      case 'body':
-        return 'Body Composition';
-      case 'fitness':
-        return 'Fitness & Exercise';
-      case 'nutrition':
-        return 'Nutrition & Diet';
-      case 'wellness':
-        return 'Wellness & Lifestyle';
-      case 'women':
-        return 'Women\'s Health';
-      default:
-        return category.charAt(0).toUpperCase() + category.slice(1);
-    }
-  };
   
   const categoryName = getCategoryName(activeCalcInfo.category);
   
@@ -48,10 +31,15 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
           </Link>
         </li>
         <li className="flex items-center">
-          <ChevronRight className="h-4 w-4 mx-1" />
+          <ChevronRight className="h-4 w-4" />
+        </li>
+        <li>
           <button 
             onClick={() => {
-              const firstCalcInCategory = calculators.find(c => c.category === activeCalcInfo.category);
+              // Find the first calculator of this category
+              const firstCalcInCategory = calculators.find(
+                (calc) => calc.category === activeCalcInfo.category
+              );
               if (firstCalcInCategory) {
                 onCalculatorSelect(firstCalcInCategory.id);
               }
@@ -62,9 +50,13 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
           </button>
         </li>
         <li className="flex items-center">
-          <ChevronRight className="h-4 w-4 mx-1" />
-          <span className="text-gray-900 dark:text-white">
-            {activeCalcInfo.name}
+          <ChevronRight className="h-4 w-4" />
+        </li>
+        <li>
+          <span className={cn("font-medium", activeCalcInfo ? 
+            `text-${activeCalcInfo.color}` : 
+            "text-wellness-blue")}>
+            {activeCalcInfo?.name}
           </span>
         </li>
       </ol>

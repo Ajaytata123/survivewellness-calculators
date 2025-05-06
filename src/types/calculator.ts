@@ -23,8 +23,6 @@ export const getCategoryName = (category: CalculatorCategory): string => {
     case 'women':
       return 'Women\'s Health';
     default:
-      // Fix the 'never' type issue by properly handling the default case
-      const categoryString = String(category);
-      return categoryString.charAt(0).toUpperCase() + categoryString.slice(1);
+      return category.charAt(0).toUpperCase() + category.slice(1);
   }
 };

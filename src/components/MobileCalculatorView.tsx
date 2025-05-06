@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { CalculatorInfo } from '@/types/calculator';
 import Breadcrumb from './calculator/Breadcrumb';
+import CalculatorDisplay from './CalculatorDisplay';
+import { UnitSystem } from '@/types/calculatorTypes';
 
 interface MobileCalculatorViewProps {
   calculators: CalculatorInfo[];
@@ -21,6 +23,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [showCategoryList, setShowCategoryList] = useState(true);
   const [filteredCalculators, setFilteredCalculators] = useState<CalculatorInfo[]>(calculators);
+  const [unitSystem, setUnitSystem] = useState<UnitSystem>("imperial");
 
   const activeCalcInfo = calculators.find(calc => calc.id === activeCalculator);
 
@@ -54,6 +57,10 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     if (showSearch) {
       setSearchQuery('');
     }
+  };
+
+  const handleUnitSystemChange = (system: UnitSystem) => {
+    setUnitSystem(system);
   };
 
   const groupCalculatorsByCategory = () => {
@@ -141,7 +148,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
                           onClick={() => handleCalculatorSelect(calculator.id)}
                         >
                           <span
-                            className={`w-2 h-2 rounded-full mr-2 ${calculator.color}`}
+                            className={`w-2 h-2 rounded-full mr-2 bg-${calculator.color}-500`}
                           ></span>
                           <span>{calculator.name}</span>
                         </button>
@@ -172,7 +179,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
                           onClick={() => handleCalculatorSelect(calculator.id)}
                         >
                           <span
-                            className={`w-2 h-2 rounded-full mr-2 ${calculator.color}`}
+                            className={`w-2 h-2 rounded-full mr-2 bg-${calculator.color}-500`}
                           ></span>
                           <span>{calculator.name}</span>
                         </button>
@@ -186,8 +193,11 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
         ) : (
           activeCalcInfo && (
             <div className="calculator-card">
-              {/* Calculator content will be rendered here */}
-              {/* This is handled by the CalculatorCard component in the parent */}
+              <CalculatorDisplay 
+                activeCalculator={activeCalculator} 
+                unitSystem={unitSystem} 
+                onUnitSystemChange={handleUnitSystemChange} 
+              />
             </div>
           )
         )}

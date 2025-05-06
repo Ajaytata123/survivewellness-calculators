@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Copy, Download, Share } from 'lucide-react';
-import { ResultForDownload } from '@/types/calculatorTypes';
+import { ResultForDownload, UnitSystem } from '@/types/calculatorTypes';
 import { 
   shareResults, 
   downloadResultsAsCSV, 
@@ -14,7 +14,7 @@ interface ResultActionsProps {
   results: Record<string, string | number>;
   fileName: string;
   userName?: string;
-  unitSystem: string;
+  unitSystem: UnitSystem;
   className?: string;
 }
 

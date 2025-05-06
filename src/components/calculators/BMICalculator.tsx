@@ -7,13 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BMICalcProps } from "@/types/calculatorTypes";
-import { calculateBMI } from "@/utils/calculationUtils";
-import { getBMICategory } from "@/utils/calculationUtils";
+import { calculateBMI, getBMICategory } from "@/utils/calculationUtils";
 import { validateWeight } from "@/utils/validationUtils";
 import { showErrorToast } from "@/utils/notificationUtils";
 import IntroSectionTemplate from "@/components/calculator/IntroSectionTemplate";
 import { HeightInputField } from "@/components/ui/height-input-field";
 import ResultActions from "@/components/calculator/ResultActions";
+import { Download, Copy, Share } from "lucide-react";
+import { downloadResultsAsCSV, copyResultsToClipboard, shareResults } from "@/utils/downloadUtils";
 
 // Add the BMI Calculator with required changes
 const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange }) => {
@@ -21,6 +22,7 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
   const [weight, setWeight] = useState<string>("");
   const [bmi, setBmi] = useState<number | null>(null);
   const [category, setCategory] = useState<string>("");
+  const [bmiColor, setBmiColor] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
   
   const [errors, setErrors] = useState<{
@@ -60,7 +62,8 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
       const bmiCategoryResult = getBMICategory(bmiValue);
       
       setBmi(bmiValue);
-      setCategory(bmiCategoryResult.category); // Fixed: Only using the category string from the result
+      setCategory(bmiCategoryResult.category); // Use the category string
+      setBmiColor(bmiCategoryResult.color); // Store the color for UI
       
     } catch (error) {
       console.error("Error calculating BMI:", error);
@@ -74,6 +77,64 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
     setWeight("");
     setBmi(null);
     setCategory("");
+    setBmiColor("");
+  };
+
+  const handleShareResults = () => {
+    if (bmi === null) return;
+
+    const results = {
+      title: "BMI Calculator",
+      date: new Date().toLocaleDateString(),
+      unitSystem: unitSystem,
+      userName: userName || "User",
+      results: {
+        "BMI Value": bmi.toFixed(1),
+        "BMI Category": category,
+        "Height": `${height} ${unitSystem === "metric" ? "cm" : "inches"}`,
+        "Weight": `${weight} ${unitSystem === "metric" ? "kg" : "pounds"}`
+      }
+    };
+
+    shareResults(results);
+  };
+
+  const handleCopyResults = () => {
+    if (bmi === null) return;
+
+    const results = {
+      title: "BMI Calculator",
+      date: new Date().toLocaleDateString(),
+      unitSystem: unitSystem,
+      userName: userName || "User",
+      results: {
+        "BMI Value": bmi.toFixed(1),
+        "BMI Category": category,
+        "Height": `${height} ${unitSystem === "metric" ? "cm" : "inches"}`,
+        "Weight": `${weight} ${unitSystem === "metric" ? "kg" : "pounds"}`
+      }
+    };
+
+    copyResultsToClipboard(results);
+  };
+
+  const handleDownloadResults = () => {
+    if (bmi === null) return;
+
+    const results = {
+      title: "BMI Calculator",
+      date: new Date().toLocaleDateString(),
+      unitSystem: unitSystem,
+      userName: userName || "User",
+      results: {
+        "BMI Value": bmi.toFixed(1),
+        "BMI Category": category,
+        "Height": `${height} ${unitSystem === "metric" ? "cm" : "inches"}`,
+        "Weight": `${weight} ${unitSystem === "metric" ? "kg" : "pounds"}`
+      }
+    };
+
+    downloadResultsAsCSV(results, "BMI-Calculator");
   };
 
   return (
@@ -179,19 +240,33 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
             </div>
           </div>
           
-          <div className="mt-8">
-            <ResultActions
-              title="BMI Calculator"
-              results={{
-                "BMI Value": bmi.toFixed(1),
-                "BMI Category": category,
-                "Height": `${height} ${unitSystem === "metric" ? "cm" : "inches"}`,
-                "Weight": `${weight} ${unitSystem === "metric" ? "kg" : "pounds"}`
-              }}
-              fileName="BMI-Calculator"
-              userName={userName}
-              unitSystem={unitSystem}
-            />
+          <div className="mt-6 space-y-4">
+            <div className="flex flex-wrap gap-3 justify-center">
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-2"
+                onClick={handleCopyResults}
+              >
+                <Copy className="h-4 w-4" />
+                Copy Results
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-2"
+                onClick={handleShareResults}
+              >
+                <Share className="h-4 w-4" />
+                Share Results
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-2"
+                onClick={handleDownloadResults}
+              >
+                <Download className="h-4 w-4" />
+                Download CSV
+              </Button>
+            </div>
           </div>
         </div>
       )}

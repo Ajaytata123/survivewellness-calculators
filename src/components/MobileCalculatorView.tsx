@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Search } from "@/components/ui/search";
 import { CalculatorInfo, CalculatorCategory, getCategoryName } from '@/types/calculator';
@@ -7,8 +6,6 @@ import { UnitSystem } from '@/types/calculatorTypes';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Separator } from './ui/separator';
 import { getIconComponent } from '@/utils/iconUtils';
-import { Button } from './ui/button';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { ChevronLeft, Home, Calendar, Activity, Heart, Scale, Utensils } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Breadcrumb from './calculator/Breadcrumb';
@@ -167,10 +164,11 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
         
         {activeTab === "calculator" && activeCalcInfo && (
           <div className="space-y-2 mt-4">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 px-1">
               <button 
                 onClick={() => setActiveTab("browse")}
                 className="text-sm text-wellness-purple hover:underline flex items-center"
+                aria-label="Back to calculator list"
               >
                 <ChevronLeft className="h-4 w-4 mr-1" />
                 Back
@@ -182,13 +180,13 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
               calculators={calculators}
               activeCalculator={activeCalculator}
               onCalculatorSelect={onCalculatorSelect}
-              className="pt-1"
+              className="pt-1 px-1"
             />
           </div>
         )}
       </div>
 
-      <div className="flex-1 p-4 pb-20">
+      <div className="flex-1 p-4 pb-16">
         {activeTab === "browse" ? (
           <div className="animate-fade-in">
             {!searchQuery ? (

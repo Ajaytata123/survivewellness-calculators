@@ -3,6 +3,14 @@ import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { CalculatorInfo, getCategoryName } from '@/types/calculator';
+import {
+  Breadcrumb as ShadcnBreadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from "@/components/ui/breadcrumb";
 
 interface BreadcrumbProps {
   calculators: CalculatorInfo[];
@@ -24,34 +32,43 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   const categoryName = getCategoryName(activeCalc.category);
   
   return (
-    <nav className={cn("mb-4 py-1 px-1", className)}>
-      <ol className="flex text-sm items-center flex-wrap">
-        <li className="flex items-center">
-          <button 
-            onClick={() => onCalculatorSelect('bmi')} 
-            className="text-gray-500 dark:text-gray-400 hover:text-wellness-blue dark:hover:text-wellness-blue/90"
+    <ShadcnBreadcrumb className={cn("py-2 px-0", className)}>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink 
+            onClick={() => onCalculatorSelect('bmi')}
+            className="text-gray-500 dark:text-gray-400 hover:text-wellness-blue dark:hover:text-wellness-blue/90 cursor-pointer"
           >
             Home
-          </button>
-        </li>
-        <li className="flex items-center mx-1">
-          <ChevronRight className="h-4 w-4 text-gray-400" />
-        </li>
-        <li className="flex items-center">
-          <span className="text-gray-600 dark:text-gray-300">
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        
+        <BreadcrumbSeparator />
+        
+        <BreadcrumbItem>
+          <BreadcrumbLink 
+            className="text-gray-600 dark:text-gray-300 cursor-pointer"
+            onClick={() => {
+              // Find first calculator of this category and navigate to it
+              const firstCalcOfCategory = calculators.find(calc => calc.category === activeCalc.category);
+              if (firstCalcOfCategory) {
+                onCalculatorSelect(firstCalcOfCategory.id);
+              }
+            }}
+          >
             {categoryName}
-          </span>
-        </li>
-        <li className="flex items-center mx-1">
-          <ChevronRight className="h-4 w-4 text-gray-400" />
-        </li>
-        <li>
-          <span className="text-wellness-purple dark:text-wellness-purple/90 font-medium">
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        
+        <BreadcrumbSeparator />
+        
+        <BreadcrumbItem>
+          <BreadcrumbPage className="text-wellness-purple dark:text-wellness-purple/90 font-medium">
             {activeCalc.name}
-          </span>
-        </li>
-      </ol>
-    </nav>
+          </BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </ShadcnBreadcrumb>
   );
 };
 

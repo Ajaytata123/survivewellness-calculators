@@ -61,7 +61,7 @@ export const CalculatorSidebar = ({
     }));
   };
 
-  // Determine which category contains the active calculator
+  // Determine which category contains the active calculator and expand it
   useEffect(() => {
     if (!activeCalculator) return;
     
@@ -77,16 +77,20 @@ export const CalculatorSidebar = ({
     }
   }, [activeCalculator, calculators]);
 
-  // Scroll to the active item when it changes, without forcing scroll to top
+  // Scroll to the active item when it changes, but don't scroll to top
   useEffect(() => {
     if (activeItemRef.current && sidebarRef.current) {
-      // Don't scroll the entire sidebar, just make sure the active item is visible if needed
+      // Don't scroll to top, just make sure the active item is visible
       const sidebarRect = sidebarRef.current.getBoundingClientRect();
       const activeItemRect = activeItemRef.current.getBoundingClientRect();
       
-      // Only scroll if the active item is outside the visible area
-      if (activeItemRect.top < sidebarRect.top || activeItemRect.bottom > sidebarRect.bottom) {
-        activeItemRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      if (activeItemRect.bottom > sidebarRect.bottom || activeItemRect.top < sidebarRect.top) {
+        // Only scroll if the item is out of view
+        activeItemRef.current.scrollIntoView({
+          block: 'nearest',
+          inline: 'nearest',
+          behavior: 'smooth'
+        });
       }
     }
   }, [activeCalculator]);
@@ -202,6 +206,7 @@ export const CalculatorSidebar = ({
                         `hover:bg-${categoryColors[category]}/10 rounded-md`
                       )}
                       onClick={() => !isCollapsed && toggleCategory(category)}
+                      id={`category-${category}`}
                     >
                       <div className={cn(
                         "flex items-center",

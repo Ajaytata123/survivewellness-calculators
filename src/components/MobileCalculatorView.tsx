@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Search } from "@/components/ui/search";
 import { CalculatorInfo, CalculatorCategory, getCategoryName } from '@/types/calculator';
@@ -147,36 +148,25 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
 
   return (
     <div className="flex flex-col w-full h-full">
-      <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 shadow-sm p-4 space-y-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-lg font-bold text-gradient">SurviveWellness</h1>
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "browse" | "calculator")} className="w-auto">
-            <TabsList className="grid w-[180px] grid-cols-2">
-              <TabsTrigger value="browse">Browse</TabsTrigger>
-              <TabsTrigger value="calculator">Calculator</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
+      <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 shadow-sm p-4">
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "browse" | "calculator")} className="w-auto">
+          <TabsList className="grid w-[180px] grid-cols-2">
+            <TabsTrigger value="browse">Browse</TabsTrigger>
+            <TabsTrigger value="calculator">Calculator</TabsTrigger>
+          </TabsList>
+        </Tabs>
         
         {activeTab === "browse" && (
-          <>
-            <Search 
-              placeholder="Search calculators..." 
-              value={searchQuery}
-              onSearch={setSearchQuery}
-              className="w-full"
-            />
-            <h2 className="text-center text-xl font-bold text-gradient mb-0">
-              Calculator Hub
-            </h2>
-            <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-              Track your health and fitness progress
-            </p>
-          </>
+          <Search 
+            placeholder="Search calculators..." 
+            value={searchQuery}
+            onSearch={setSearchQuery}
+            className="w-full mt-4"
+          />
         )}
         
         {activeTab === "calculator" && activeCalcInfo && (
-          <div className="space-y-2">
+          <div className="space-y-2 mt-4">
             <div className="flex items-center space-x-2">
               <button 
                 onClick={() => setActiveTab("browse")}
@@ -192,12 +182,13 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
               calculators={calculators}
               activeCalculator={activeCalculator}
               onCalculatorSelect={onCalculatorSelect}
+              className="pt-1"
             />
           </div>
         )}
       </div>
 
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-4 pb-20">
         {activeTab === "browse" ? (
           <div className="animate-fade-in">
             {!searchQuery ? (
@@ -249,7 +240,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
             )}
           </div>
         ) : (
-          <div className="animate-fade-in pb-20">
+          <div className="animate-fade-in">
             <CalculatorDisplay
               activeCalculator={activeCalculator}
               unitSystem={unitSystem}
@@ -258,46 +249,6 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
           </div>
         )}
       </div>
-
-      {/* Bottom Navigation Bar for Mobile */}
-      {activeTab === "browse" && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t dark:border-gray-800 shadow-lg flex justify-around py-2 z-10">
-          {categories.map(category => {
-            const isActive = activeCategory === category;
-            return (
-              <Button 
-                key={category}
-                variant="ghost"
-                size="sm"
-                className={cn(
-                  "flex flex-col items-center p-1 h-auto",
-                  isActive && `text-${getCategoryColor(category)}`
-                )}
-                onClick={() => {
-                  setActiveCategory(category);
-                  // Find the DOM element for this category
-                  const element = document.querySelector(`[data-category="${category}"]`);
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
-                }}
-              >
-                {getCategoryIcon(category)}
-                <span className="text-xs mt-1">{category.charAt(0).toUpperCase() + category.slice(1)}</span>
-              </Button>
-            );
-          })}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex flex-col items-center p-1 h-auto"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          >
-            <Home className="h-5 w-5" />
-            <span className="text-xs mt-1">Home</span>
-          </Button>
-        </div>
-      )}
     </div>
   );
 };

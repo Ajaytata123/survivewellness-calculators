@@ -33,6 +33,8 @@ export function DatePicker({
   description,
   className
 }: DatePickerProps) {
+  const [open, setOpen] = React.useState(false);
+
   return (
     <div className={cn("space-y-2", className)}>
       <Label htmlFor={id} className="flex justify-between">
@@ -40,7 +42,7 @@ export function DatePicker({
         {error && <span className="text-red-500 text-sm">{error}</span>}
       </Label>
       
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             id={id}
@@ -59,7 +61,10 @@ export function DatePicker({
           <Calendar
             mode="single"
             selected={date}
-            onSelect={onDateChange}
+            onSelect={(selectedDate) => {
+              onDateChange(selectedDate);
+              setOpen(false); // Close the calendar after selection
+            }}
             initialFocus
             className="p-3 pointer-events-auto"
           />

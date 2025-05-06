@@ -24,8 +24,8 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   const categoryName = getCategoryName(activeCalc.category);
   
   return (
-    <nav className={cn("mb-4 py-2 px-2", className)}>
-      <ol className="flex text-sm">
+    <nav className={cn("mb-4 py-1 px-1", className)}>
+      <ol className="flex text-sm items-center flex-wrap">
         <li className="flex items-center">
           <button 
             onClick={() => onCalculatorSelect('bmi')} 
@@ -34,7 +34,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
             Home
           </button>
         </li>
-        <li className="flex items-center mx-2">
+        <li className="flex items-center mx-1">
           <ChevronRight className="h-4 w-4 text-gray-400" />
         </li>
         <li className="flex items-center">
@@ -42,7 +42,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
             {categoryName}
           </span>
         </li>
-        <li className="flex items-center mx-2">
+        <li className="flex items-center mx-1">
           <ChevronRight className="h-4 w-4 text-gray-400" />
         </li>
         <li>

@@ -13,6 +13,7 @@ import { validateWeight } from "@/utils/validationUtils";
 import { showErrorToast } from "@/utils/notificationUtils";
 import IntroSectionTemplate from "@/components/calculator/IntroSectionTemplate";
 import { HeightInputField } from "@/components/ui/height-input-field";
+import ResultActions from "@/components/calculator/ResultActions";
 
 // Add the BMI Calculator with required changes
 const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange }) => {
@@ -176,6 +177,21 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
                 <p className="text-xl font-bold">{category}</p>
               </div>
             </div>
+          </div>
+          
+          <div className="mt-8">
+            <ResultActions
+              title="BMI Calculator"
+              results={{
+                "BMI Value": bmi.toFixed(1),
+                "BMI Category": category,
+                "Height": `${height} ${unitSystem === "metric" ? "cm" : "inches"}`,
+                "Weight": `${weight} ${unitSystem === "metric" ? "kg" : "pounds"}`
+              }}
+              fileName="BMI-Calculator"
+              userName={userName}
+              unitSystem={unitSystem}
+            />
           </div>
         </div>
       )}

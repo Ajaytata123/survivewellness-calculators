@@ -23,6 +23,7 @@ export const getCategoryName = (category: CalculatorCategory): string => {
     case 'women':
       return 'Women\'s Health';
     default:
-      return category.charAt(0).toUpperCase() + category.slice(1);
+      // Fix: Ensure category is treated as a string to use charAt and slice methods
+      return category.toString().charAt(0).toUpperCase() + category.toString().slice(1);
   }
 };

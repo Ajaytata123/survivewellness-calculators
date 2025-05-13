@@ -34,10 +34,13 @@ export function DatePicker({
   className
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
+  
+  // Generate consistent ID based on label if not provided
+  const inputId = id || `date-picker-${label.toLowerCase().replace(/\s/g, '-')}`;
 
   return (
     <div className={cn("space-y-2", className)}>
-      <Label htmlFor={id} className="flex justify-between">
+      <Label htmlFor={inputId} className="flex justify-between">
         {label}
         {error && <span className="text-red-500 text-sm">{error}</span>}
       </Label>
@@ -45,7 +48,7 @@ export function DatePicker({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            id={id || `date-picker-${label.toLowerCase().replace(/\s/g, '-')}`}
+            id={inputId}
             variant="outline"
             className={cn(
               "w-full justify-start text-left font-normal",
@@ -63,7 +66,7 @@ export function DatePicker({
             selected={date}
             onSelect={(selectedDate) => {
               onDateChange(selectedDate);
-              setOpen(false); // Close the calendar after selection
+              setOpen(false);
             }}
             initialFocus
             className="pointer-events-auto"

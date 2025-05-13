@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Search } from "@/components/ui/search";
 import { CalculatorInfo, CalculatorCategory, getCategoryName } from '@/types/calculator';
@@ -49,7 +48,6 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
 
   const activeCalcInfo = calculators.find(calc => calc.id === activeCalculator);
 
-  // Update filtered categories whenever search query changes
   useEffect(() => {
     if (!searchQuery) {
       setFilteredCategories(categories);
@@ -108,7 +106,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     }));
   };
 
-  // Function to render calculator cards
+  // Function to render calculator cards with proper IDs
   const renderCalculatorCard = (calc: CalculatorInfo) => {
     const IconComponent = getIconComponent(calc.icon);
     // Rename "Menstrual Cycle" to "Period" calculator
@@ -117,7 +115,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     return (
       <div 
         key={calc.id}
-        id={`calc-${calc.id}`}
+        id={`mobile-calc-${calc.id}`}
         className={cn(
           "p-4 border rounded-lg shadow-sm cursor-pointer transition-all",
           activeCalculator === calc.id 
@@ -151,8 +149,8 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
       <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 shadow-sm p-4">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "browse" | "calculator")} className="w-auto">
           <TabsList className="grid w-[180px] grid-cols-2">
-            <TabsTrigger value="browse">Browse</TabsTrigger>
-            <TabsTrigger value="calculator">Calculator</TabsTrigger>
+            <TabsTrigger value="browse" id="mobile-browse-tab">Browse</TabsTrigger>
+            <TabsTrigger value="calculator" id="mobile-calculator-tab">Calculator</TabsTrigger>
           </TabsList>
         </Tabs>
         
@@ -162,6 +160,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
             value={searchQuery}
             onSearch={setSearchQuery}
             className="w-full mt-4"
+            id="mobile-calculator-search"
           />
         )}
         
@@ -172,6 +171,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
                 onClick={() => setActiveTab("browse")}
                 className="text-sm text-wellness-purple hover:underline flex items-center"
                 aria-label="Back to calculator list"
+                id="mobile-back-button"
               >
                 <ChevronLeft className="h-4 w-4 mr-1" />
                 Back
@@ -192,7 +192,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
               <div className="space-y-4">
                 {categories.map((category) => (
                   <div key={category} 
-                       id={`category-${category}`}
+                       id={`mobile-category-${category}`}
                        className="border rounded-lg overflow-hidden dark:border-gray-700">
                     <div 
                       className={`flex items-center justify-between p-3 cursor-pointer ${getCategoryColor(category)}`}

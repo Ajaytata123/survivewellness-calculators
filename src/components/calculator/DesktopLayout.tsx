@@ -4,7 +4,6 @@ import { CalculatorInfo } from "@/types/calculator";
 import { CalculatorSidebar } from "../CalculatorSidebar";
 import CalculatorDisplay from "../CalculatorDisplay";
 import { UnitSystem } from "@/types/calculatorTypes";
-import { Moon, Sun } from "lucide-react";
 import Breadcrumb from "./Breadcrumb";
 
 interface DesktopLayoutProps {
@@ -30,7 +29,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
   
   return (
     <div className="flex">
-      <div className="md:w-64 flex-shrink-0">
+      <div className="md:w-64 flex-shrink-0 overflow-y-auto">
         <CalculatorSidebar 
           activeCalculator={activeCalculator} 
           onCalculatorSelect={onCalculatorSelect} 
@@ -52,7 +51,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
           )}
         </div>
         
-        <div className="calculator-area p-4 transition-all duration-500 transform">
+        <div className="calculator-area p-4 transition-all duration-500 transform" id={`desktop-calculator-${activeCalculator}-container`}>
           <CalculatorDisplay 
             activeCalculator={activeCalculator}
             unitSystem={unitSystem}

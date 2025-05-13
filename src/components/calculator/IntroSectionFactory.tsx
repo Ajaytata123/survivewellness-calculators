@@ -114,7 +114,7 @@ const IntroSectionFactory: React.FC<IntroSectionFactoryProps> = ({ calculatorId 
       title: 'What is Iron Intake?',
       description: 'The Iron Intake calculator estimates your daily iron requirements based on age, gender, and specific conditions like pregnancy or heavy menstruation. Adequate iron is essential for preventing anemia and maintaining energy levels.'
     },
-    'menstrualCycle': {
+    'menstrual': {
       title: 'What is Period Calculator?',
       description: 'The Period Calculator helps track and predict your menstrual cycles, fertile windows, and ovulation dates. Regular tracking can help identify cycle irregularities and is useful for both family planning and monitoring reproductive health.'
     },

@@ -8,7 +8,7 @@ interface IntroSectionFactoryProps {
 
 const IntroSectionFactory: React.FC<IntroSectionFactoryProps> = ({ calculatorId }) => {
   // Using a map to store all calculator introductions
-  const introductions: Record<string, { title: string, description: string }> = {
+  const introductions: Record<string, { title: string; description: string }> = {
     // Body Composition
     'bmi': {
       title: 'What is BMI?',

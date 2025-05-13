@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Search } from "@/components/ui/search";
@@ -94,18 +93,19 @@ export const CalculatorSidebar = ({
     }
   }, []);
 
-  // Scroll to the active item when it changes, but only if not manually scrolled
+  // Improved scroll behavior - only scroll to active item if not manually scrolled recently
   useEffect(() => {
     if (!scrolledManually && activeItemRef.current && sidebarRef.current) {
       const sidebarRect = sidebarRef.current.getBoundingClientRect();
       const activeItemRect = activeItemRef.current.getBoundingClientRect();
       
+      // Only scroll if active item is out of view
       if (activeItemRect.bottom > sidebarRect.bottom || activeItemRect.top < sidebarRect.top) {
-        // Calculate the scroll position that places the active item in the middle
-        const middlePosition = activeItemRect.top - sidebarRect.top + sidebarRef.current.scrollTop - (sidebarRect.height / 2) + (activeItemRect.height / 2);
+        // Calculate position that keeps the active category visible
+        const middlePosition = activeItemRect.top - sidebarRect.top + sidebarRef.current.scrollTop - (sidebarRect.height / 3);
         
         sidebarRef.current.scrollTo({
-          top: middlePosition,
+          top: middlePosition >= 0 ? middlePosition : 0,
           behavior: 'smooth'
         });
       }
@@ -135,7 +135,7 @@ export const CalculatorSidebar = ({
             const isCollapsed = collapsedCategories[category];
             
             return (
-              <div key={category} className="sidebar-category mb-2">
+              <div key={category} className="sidebar-category mb-2" id={`mobile-category-${category}`}>
                 <div 
                   className="sidebar-category-header flex items-center justify-between p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
                   onClick={() => toggleCategory(category)}
@@ -154,12 +154,13 @@ export const CalculatorSidebar = ({
                       .map(calculator => {
                         const IconComponent = getIconComponent(calculator.icon);
                         const isActive = activeCalculator === calculator.id;
-                        // Rename "Menstrual Cycle" to "Period" calculator (point 5)
+                        // Rename "Menstrual Cycle" to "Period" calculator
                         const displayName = calculator.id === 'menstrualCycle' ? 'Period Calculator' : calculator.name;
                         
                         return (
                         <button
                           key={calculator.id}
+                          id={`mobile-calc-${calculator.id}`}
                           ref={isActive ? activeItemRef : null}
                           onClick={() => onCalculatorSelect(calculator.id)}
                           className={cn(
@@ -207,6 +208,7 @@ export const CalculatorSidebar = ({
                 size="icon"
                 className="h-6 w-6 rounded-full bg-white dark:bg-gray-800 border shadow-sm"
                 onClick={() => setIsCollapsed(!isCollapsed)}
+                id="toggle-sidebar"
               >
                 {isCollapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
               </Button>
@@ -218,7 +220,7 @@ export const CalculatorSidebar = ({
                 const isGroupCollapsed = collapsedCategories[category];
                 
                 return (
-                  <div key={category} className="sidebar-category mb-1">
+                  <div key={category} className="sidebar-category mb-1" id={`desktop-category-${category}`}>
                     <div 
                       className={cn(
                         "flex items-center justify-between p-2 cursor-pointer",
@@ -226,7 +228,6 @@ export const CalculatorSidebar = ({
                         `hover:bg-${categoryColors[category]}/10 rounded-md`
                       )}
                       onClick={() => !isCollapsed && toggleCategory(category)}
-                      id={`category-${category}`}
                     >
                       <div className={cn(
                         "flex items-center",
@@ -248,12 +249,13 @@ export const CalculatorSidebar = ({
                           .map(calculator => {
                             const IconComponent = getIconComponent(calculator.icon);
                             const isActive = activeCalculator === calculator.id;
-                            // Rename "Menstrual Cycle" to "Period" calculator (point 5)
+                            // Rename "Menstrual Cycle" to "Period" calculator
                             const displayName = calculator.id === 'menstrualCycle' ? 'Period Calculator' : calculator.name;
                             
                             return (
                               <button
                                 key={calculator.id}
+                                id={`desktop-calc-${calculator.id}`}
                                 ref={isActive ? activeItemRef : null}
                                 onClick={() => onCalculatorSelect(calculator.id)}
                                 className={cn(

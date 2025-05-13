@@ -31,7 +31,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   
   const categoryName = getCategoryName(activeCalc.category);
 
-  // Rename "Menstrual Cycle" to "Period" calculator (point 5)
+  // Rename "Menstrual Cycle" to "Period" calculator
   const displayName = activeCalc.id === 'menstrualCycle' ? 'Period Calculator' : activeCalc.name;
   
   return (
@@ -41,6 +41,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
           <BreadcrumbLink 
             onClick={() => onCalculatorSelect('bmi')}
             className="text-gray-500 dark:text-gray-400 hover:text-wellness-blue dark:hover:text-wellness-blue/90 cursor-pointer"
+            id="breadcrumb-home"
           >
             Home
           </BreadcrumbLink>
@@ -58,6 +59,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
                 onCalculatorSelect(firstCalcOfCategory.id);
               }
             }}
+            id={`breadcrumb-category-${activeCalc.category}`}
           >
             {categoryName}
           </BreadcrumbLink>
@@ -66,7 +68,10 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
         <BreadcrumbSeparator />
         
         <BreadcrumbItem>
-          <BreadcrumbPage className="text-wellness-purple dark:text-wellness-purple/90 font-medium">
+          <BreadcrumbPage 
+            className="text-wellness-purple dark:text-wellness-purple/90 font-medium"
+            id={`breadcrumb-calc-${activeCalc.id}`}
+          >
             {displayName}
           </BreadcrumbPage>
         </BreadcrumbItem>

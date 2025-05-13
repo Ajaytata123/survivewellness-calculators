@@ -45,7 +45,7 @@ export function DatePicker({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            id={id}
+            id={id || `date-picker-${label.toLowerCase().replace(/\s/g, '-')}`}
             variant="outline"
             className={cn(
               "w-full justify-start text-left font-normal",
@@ -66,7 +66,7 @@ export function DatePicker({
               setOpen(false); // Close the calendar after selection
             }}
             initialFocus
-            className="p-4 md:p-3 pointer-events-auto"
+            className="pointer-events-auto"
           />
         </PopoverContent>
       </Popover>

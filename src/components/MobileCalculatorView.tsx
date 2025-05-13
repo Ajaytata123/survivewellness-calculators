@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Search } from "@/components/ui/search";
 import { CalculatorInfo, CalculatorCategory, getCategoryName } from '@/types/calculator';
@@ -110,10 +111,13 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   // Function to render calculator cards
   const renderCalculatorCard = (calc: CalculatorInfo) => {
     const IconComponent = getIconComponent(calc.icon);
+    // Rename "Menstrual Cycle" to "Period" calculator
+    const displayName = calc.id === 'menstrualCycle' ? 'Period Calculator' : calc.name;
     
     return (
       <div 
         key={calc.id}
+        id={`calc-${calc.id}`}
         className={cn(
           "p-4 border rounded-lg shadow-sm cursor-pointer transition-all",
           activeCalculator === calc.id 
@@ -126,7 +130,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
           <div className={`p-3 rounded-full bg-${calc.color}/20 mb-2`}>
             <IconComponent className={`h-6 w-6 text-${calc.color}`} />
           </div>
-          <h3 className="font-medium text-sm">{calc.name}</h3>
+          <h3 className="font-medium text-sm">{displayName}</h3>
         </div>
       </div>
     );
@@ -173,7 +177,9 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
                 Back
               </button>
               <Separator orientation="vertical" className="h-4" />
-              <span className="font-medium">{activeCalcInfo.name}</span>
+              <span className="font-medium">
+                {activeCalcInfo.id === 'menstrualCycle' ? 'Period Calculator' : activeCalcInfo.name}
+              </span>
             </div>
           </div>
         )}
@@ -185,7 +191,9 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
             {!searchQuery ? (
               <div className="space-y-4">
                 {categories.map((category) => (
-                  <div key={category} className="border rounded-lg overflow-hidden dark:border-gray-700">
+                  <div key={category} 
+                       id={`category-${category}`}
+                       className="border rounded-lg overflow-hidden dark:border-gray-700">
                     <div 
                       className={`flex items-center justify-between p-3 cursor-pointer ${getCategoryColor(category)}`}
                       onClick={() => toggleCategory(category)}

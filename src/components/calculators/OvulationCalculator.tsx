@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -13,6 +12,7 @@ import IntroSection from "@/components/calculator/IntroSection";
 import ResultActions from "@/components/calculator/ResultActions";
 import KnowMoreButton from "@/components/calculator/KnowMoreButton";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
+import { DatePicker } from "@/components/ui/date-picker";
 
 type CalendarDate = Date | undefined;
 
@@ -169,19 +169,14 @@ const OvulationCalculator: React.FC<OvulationCalcProps> = ({ unitSystem }) => {
           />
         </div>
         
-        <div className="space-y-2">
-          <Label htmlFor="lastPeriod">First Day of Last Period</Label>
-          <div className="relative">
-            <Calendar
-              mode="single"
-              selected={lastPeriodDate}
-              onSelect={setLastPeriodDate}
-              className={errors.lastPeriodDate ? "border border-red-500 rounded-md" : ""}
-              initialFocus
-            />
-            {errors.lastPeriodDate && <p className="error-message">{errors.lastPeriodDate}</p>}
-          </div>
-        </div>
+        <DatePicker
+          date={lastPeriodDate}
+          onDateChange={setLastPeriodDate}
+          label="First Day of Last Period"
+          placeholder="Select date"
+          id="lastPeriod"
+          error={errors.lastPeriodDate}
+        />
         
         <div className="space-y-2">
           <Label htmlFor="cycleLength">Average Cycle Length (days)</Label>

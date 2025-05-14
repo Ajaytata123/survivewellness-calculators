@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Search } from "@/components/ui/search";
@@ -28,6 +29,7 @@ export const CalculatorSidebar = ({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLButtonElement>(null);
   const [scrolledManually, setScrolledManually] = useState<boolean>(false);
+  const [userHasScrolled, setUserHasScrolled] = useState<boolean>(false);
   
   // Track which category contains the active calculator
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -82,8 +84,9 @@ export const CalculatorSidebar = ({
     if (sidebarRef.current) {
       const handleScroll = () => {
         setScrolledManually(true);
+        setUserHasScrolled(true);
         // Reset after a period of inactivity
-        setTimeout(() => setScrolledManually(false), 1500);
+        setTimeout(() => setScrolledManually(false), 2000);
       };
       
       sidebarRef.current.addEventListener('scroll', handleScroll);
@@ -95,22 +98,22 @@ export const CalculatorSidebar = ({
 
   // Improved scroll behavior - only scroll to active item if not manually scrolled recently
   useEffect(() => {
-    if (!scrolledManually && activeItemRef.current && sidebarRef.current) {
+    if (!userHasScrolled && activeItemRef.current && sidebarRef.current) {
       const sidebarRect = sidebarRef.current.getBoundingClientRect();
       const activeItemRect = activeItemRef.current.getBoundingClientRect();
       
       // Only scroll if active item is out of view
       if (activeItemRect.bottom > sidebarRect.bottom || activeItemRect.top < sidebarRect.top) {
-        // Calculate position that keeps the active category visible
-        const middlePosition = activeItemRect.top - sidebarRect.top + sidebarRef.current.scrollTop - (sidebarRect.height / 3);
+        const offset = 100; // Provide some space above the item
+        const scrollPosition = activeItemRect.top - sidebarRect.top + sidebarRef.current.scrollTop - offset;
         
         sidebarRef.current.scrollTo({
-          top: middlePosition >= 0 ? middlePosition : 0,
+          top: Math.max(0, scrollPosition),
           behavior: 'smooth'
         });
       }
     }
-  }, [activeCalculator, scrolledManually]);
+  }, [activeCalculator]);
   
   // Mobile sidebar
   const MobileSidebar = () => (
@@ -155,7 +158,7 @@ export const CalculatorSidebar = ({
                         const IconComponent = getIconComponent(calculator.icon);
                         const isActive = activeCalculator === calculator.id;
                         // Rename "Menstrual Cycle" to "Period" calculator
-                        const displayName = calculator.id === 'menstrualCycle' ? 'Period Calculator' : calculator.name;
+                        const displayName = calculator.id === 'menstrual' ? 'Period Calculator' : calculator.name;
                         
                         return (
                         <button
@@ -250,7 +253,7 @@ export const CalculatorSidebar = ({
                             const IconComponent = getIconComponent(calculator.icon);
                             const isActive = activeCalculator === calculator.id;
                             // Rename "Menstrual Cycle" to "Period" calculator
-                            const displayName = calculator.id === 'menstrualCycle' ? 'Period Calculator' : calculator.name;
+                            const displayName = calculator.id === 'menstrual' ? 'Period Calculator' : calculator.name;
                             
                             return (
                               <button

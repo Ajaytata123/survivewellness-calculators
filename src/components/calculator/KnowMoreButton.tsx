@@ -12,7 +12,7 @@ export const KnowMoreButton: React.FC<KnowMoreButtonProps> = ({
   calculatorId 
 }) => {
   // Display "Period" instead of "Menstrual Cycle" if applicable
-  const displayName = calculatorId === 'menstrualCycle' ? 'Period Calculator' : calculatorName;
+  const displayName = calculatorId === 'menstrual' ? 'Period Calculator' : calculatorName;
   
   return (
     <a 

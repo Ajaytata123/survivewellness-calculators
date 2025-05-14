@@ -56,7 +56,7 @@ const ResultActions: React.FC<ResultActionsProps> = ({
       <div className="flex flex-wrap gap-3 justify-center">
         <Button 
           variant="outline" 
-          className="flex items-center gap-2 bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100"
+          className="flex items-center gap-2"
           onClick={handleCopyResults}
         >
           <Copy className="h-4 w-4" />
@@ -64,15 +64,15 @@ const ResultActions: React.FC<ResultActionsProps> = ({
         </Button>
         <Button 
           variant="outline" 
-          className="flex items-center gap-2 bg-purple-50 text-purple-600 border-purple-100 hover:bg-purple-100"
+          className="flex items-center gap-2"
           onClick={handleShareResults}
         >
           <Share className="h-4 w-4" />
-          Share Link
+          Share Results
         </Button>
         <Button 
           variant="outline" 
-          className="flex items-center gap-2 bg-green-50 text-green-600 border-green-100 hover:bg-green-100"
+          className="flex items-center gap-2"
           onClick={handleDownloadResults}
         >
           <Download className="h-4 w-4" />

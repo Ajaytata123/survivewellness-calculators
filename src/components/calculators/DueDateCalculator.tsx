@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -11,7 +12,6 @@ import IntroSection from "@/components/calculator/IntroSection";
 import ResultActions from "@/components/calculator/ResultActions";
 import KnowMoreButton from "@/components/calculator/KnowMoreButton";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
-import { DatePicker } from "@/components/ui/date-picker";
 
 type CalendarDate = Date | undefined;
 
@@ -206,23 +206,33 @@ const DueDateCalculator: React.FC<DueDateCalcProps> = ({ unitSystem }) => {
         </div>
 
         {calculationType === "lmp" ? (
-          <DatePicker
-            date={lmpDate}
-            onDateChange={setLmpDate}
-            label="First Day of Last Menstrual Period"
-            placeholder="Select date"
-            id="lmpDate"
-            error={errors.lmpDate}
-          />
+          <div className="space-y-2">
+            <Label htmlFor="lmpDate">First Day of Last Menstrual Period</Label>
+            <div className="relative">
+              <Calendar
+                mode="single"
+                selected={lmpDate}
+                onSelect={setLmpDate}
+                className={errors.lmpDate ? "border border-red-500 rounded-md" : ""}
+                initialFocus
+              />
+              {errors.lmpDate && <p className="error-message">{errors.lmpDate}</p>}
+            </div>
+          </div>
         ) : (
-          <DatePicker
-            date={conceptionDate}
-            onDateChange={setConceptionDate}
-            label="Conception Date"
-            placeholder="Select date"
-            id="conceptionDate"
-            error={errors.conceptionDate}
-          />
+          <div className="space-y-2">
+            <Label htmlFor="conceptionDate">Conception Date</Label>
+            <div className="relative">
+              <Calendar
+                mode="single"
+                selected={conceptionDate}
+                onSelect={setConceptionDate}
+                className={errors.conceptionDate ? "border border-red-500 rounded-md" : ""}
+                initialFocus
+              />
+              {errors.conceptionDate && <p className="error-message">{errors.conceptionDate}</p>}
+            </div>
+          </div>
         )}
       </div>
 

@@ -50,10 +50,6 @@ function Calendar({
         day_range_middle:
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
-        // Add specific styles for period, ovulation, and fertile days
-        day_period: "bg-wellness-pink text-white hover:bg-wellness-pink/90",
-        day_ovulation: "bg-wellness-purple text-white hover:bg-wellness-purple/90",
-        day_fertile: "bg-wellness-blue/50 text-blue-900 hover:bg-wellness-blue/60",
         ...classNames,
       }}
       components={{

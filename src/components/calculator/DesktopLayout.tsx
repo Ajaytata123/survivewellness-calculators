@@ -5,6 +5,7 @@ import { CalculatorSidebar } from "../CalculatorSidebar";
 import CalculatorDisplay from "../CalculatorDisplay";
 import { UnitSystem } from "@/types/calculatorTypes";
 import Breadcrumb from "./Breadcrumb";
+import ButtonIdsList from "./ButtonIdsList";
 
 interface DesktopLayoutProps {
   activeCalculator: string;
@@ -52,11 +53,16 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
         </div>
         
         <div className="calculator-area p-4 transition-all duration-500 transform" id={`desktop-calculator-${activeCalculator}-container`}>
-          <CalculatorDisplay 
-            activeCalculator={activeCalculator}
-            unitSystem={unitSystem}
-            onUnitSystemChange={onUnitSystemChange}
-          />
+          {/* If active calculator is 'button-ids', show the ButtonIdsList component */}
+          {activeCalculator === 'button-ids' ? (
+            <ButtonIdsList />
+          ) : (
+            <CalculatorDisplay 
+              activeCalculator={activeCalculator}
+              unitSystem={unitSystem}
+              onUnitSystemChange={onUnitSystemChange}
+            />
+          )}
         </div>
       </div>
     </div>

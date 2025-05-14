@@ -181,11 +181,11 @@ export const calculators: CalculatorInfo[] = [
   },
   {
     id: "menstrual",
-    name: "Menstrual Cycle",
+    name: "Period Calculator", // Changed from "Menstrual Cycle"
     icon: "Calendar",
     color: "wellness-red",
     category: "women",
-    url: "#menstrual"
+    url: "#period" // Updated URL
   },
   {
     id: "menopause",

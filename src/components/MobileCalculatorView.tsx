@@ -110,7 +110,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   const renderCalculatorCard = (calc: CalculatorInfo) => {
     const IconComponent = getIconComponent(calc.icon);
     // Rename "Menstrual Cycle" to "Period" calculator
-    const displayName = calc.id === 'menstrualCycle' ? 'Period Calculator' : calc.name;
+    const displayName = calc.id === 'menstrual' ? 'Period Calculator' : calc.name;
     
     return (
       <div 
@@ -178,7 +178,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
               </button>
               <Separator orientation="vertical" className="h-4" />
               <span className="font-medium">
-                {activeCalcInfo.id === 'menstrualCycle' ? 'Period Calculator' : activeCalcInfo.name}
+                {activeCalcInfo.id === 'menstrual' ? 'Period Calculator' : activeCalcInfo.name}
               </span>
             </div>
           </div>

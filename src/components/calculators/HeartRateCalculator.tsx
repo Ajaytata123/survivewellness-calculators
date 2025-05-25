@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -8,6 +7,7 @@ import { HeartRateCalcProps } from "@/types/calculatorTypes";
 import { downloadResultsAsCSV, copyResultsToClipboard, createShareableLink } from "@/utils/downloadUtils";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
 import { Check, Copy, Share } from "lucide-react";
+import IntroSection from "@/components/calculator/IntroSection";
 
 const HeartRateCalculator: React.FC<HeartRateCalcProps> = ({ unitSystem }) => {
   const [age, setAge] = useState<string>("");
@@ -319,6 +319,9 @@ const HeartRateCalculator: React.FC<HeartRateCalcProps> = ({ unitSystem }) => {
           </div>
         </div>
       )}
+
+      {/* Add info section at the bottom */}
+      <IntroSection calculatorId="heartrate" title="" description="" />
     </Card>
   );
 };

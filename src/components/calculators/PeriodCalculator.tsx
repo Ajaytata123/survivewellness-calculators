@@ -181,11 +181,6 @@ const PeriodCalculator: React.FC<BaseCalcProps> = ({ unitSystem }) => {
     <Card className="p-6">
       <h2 className="text-2xl font-bold mb-4 text-center">Period Calculator</h2>
       
-      <IntroSection 
-        title="What is a menstrual cycle?"
-        description="The menstrual cycle is the monthly hormonal cycle a female's body goes through to prepare for pregnancy. Your cycle starts on the first day of your period and continues to the first day of your next period. Understanding your cycle can help you predict your fertile window and next period."
-      />
-
       <div className="space-y-4 mb-6">
         <div className="space-y-2">
           <Label htmlFor="userName">Your Name (optional)</Label>
@@ -321,6 +316,8 @@ const PeriodCalculator: React.FC<BaseCalcProps> = ({ unitSystem }) => {
           </p>
         </div>
       )}
+      
+      <IntroSection calculatorId="period" title="" description="" />
     </Card>
   );
 };

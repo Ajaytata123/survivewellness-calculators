@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -11,6 +10,7 @@ import { calculateMacros } from "@/utils/calculationUtils";
 import { downloadResultsAsCSV, copyResultsToClipboard, createShareableLink } from "@/utils/downloadUtils";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
 import { Check, Copy, Share } from "lucide-react";
+import IntroSection from "@/components/calculator/IntroSection";
 
 const MacroCalculator: React.FC<MacroCalcProps> = ({ unitSystem, onUnitSystemChange }) => {
   const [userName, setUserName] = useState<string>("");
@@ -21,7 +21,7 @@ const MacroCalculator: React.FC<MacroCalcProps> = ({ unitSystem, onUnitSystemCha
   const [activity, setActivity] = useState<string>("moderate");
   const [goal, setGoal] = useState<string>("maintain");
   const [errors, setErrors] = useState<{height?: string; weight?: string; age?: string}>({});
-  const [macroResult, setMacroResult] = useState<{calories: number; protein: number; carbs: number; fat: number} | null>(null);
+  const [macroResult, setMacroResult = useState<{calories: number; protein: number; carbs: number; fat: number} | null>(null);
   const [copied, setCopied] = useState(false);
 
   const validateInputs = (): boolean => {
@@ -367,6 +367,9 @@ const MacroCalculator: React.FC<MacroCalcProps> = ({ unitSystem, onUnitSystemCha
           </div>
         </div>
       )}
+
+      {/* Add info section at the bottom */}
+      <IntroSection calculatorId="macro" title="" description="" />
     </Card>
   );
 };

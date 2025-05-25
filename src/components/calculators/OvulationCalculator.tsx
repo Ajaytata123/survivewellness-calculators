@@ -152,11 +152,6 @@ const OvulationCalculator: React.FC<OvulationCalcProps> = ({ unitSystem }) => {
     <Card className="p-6">
       <h2 className="text-2xl font-bold mb-4 text-center">Ovulation Calculator</h2>
       
-      <IntroSection 
-        title="What is the Ovulation Calculator?"
-        description="This calculator helps you track your fertility window and most likely ovulation date based on your menstrual cycle. Understanding these patterns can be helpful whether you're trying to conceive or simply want to better understand your body's natural rhythms."
-      />
-      
       <div className="space-y-4 mb-6">
         <div className="space-y-2">
           <Label htmlFor="userName">Your Name (optional)</Label>
@@ -336,6 +331,8 @@ const OvulationCalculator: React.FC<OvulationCalcProps> = ({ unitSystem }) => {
           </p>
         </div>
       )}
+      
+      <IntroSection calculatorId="ovulation" title="" description="" />
     </Card>
   );
 };

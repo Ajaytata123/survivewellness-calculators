@@ -4,8 +4,19 @@ import type { LucideIcon } from "lucide-react";
 import { CalculatorCategory } from "@/types/calculator";
 
 export const getIconComponent = (iconName: string): LucideIcon => {
+  // Handle special icon mappings
+  const iconMappings: Record<string, keyof typeof LucideIcons> = {
+    "Dumbbell": "Weight",
+    "Bone": "Zap",
+    "Cigarette": "Cigarette" as keyof typeof LucideIcons,
+    "Footprints": "Activity"
+  };
+  
+  // Use mapping if available, otherwise use the original name
+  const mappedIconName = iconMappings[iconName] || iconName;
+  
   // Type assertion to deal with the TypeScript error
-  const iconKey = iconName as keyof typeof LucideIcons;
+  const iconKey = mappedIconName as keyof typeof LucideIcons;
   
   // Check if icon exists in the library
   const iconExists = Object.prototype.hasOwnProperty.call(LucideIcons, iconKey);

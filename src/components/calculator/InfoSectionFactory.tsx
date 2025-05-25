@@ -7,6 +7,8 @@ interface InfoSectionFactoryProps {
 }
 
 const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId }) => {
+  console.log('InfoSectionFactory rendering for calculatorId:', calculatorId);
+  
   const getCalculatorInfo = () => {
     switch (calculatorId) {
       case 'bmi':
@@ -375,6 +377,7 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
         };
 
       default:
+        console.log('Unknown calculator ID:', calculatorId);
         return {
           title: "Health Calculator",
           description: "Use this calculator to assess various aspects of your health and wellness journey.",
@@ -386,6 +389,7 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
   };
 
   const info = getCalculatorInfo();
+  console.log('InfoSectionFactory info:', info);
   
   return (
     <InfoSection

@@ -9,6 +9,8 @@ interface IntroSectionProps {
 }
 
 const IntroSection: React.FC<IntroSectionProps> = ({ calculatorId }) => {
+  console.log('IntroSection rendering with calculatorId:', calculatorId);
+  
   // If calculatorId is provided, use the factory to get the specific info
   if (calculatorId) {
     return <InfoSectionFactory calculatorId={calculatorId} />;

@@ -32,38 +32,18 @@ const MacroCalculator: React.FC<MacroCalcProps> = ({ unitSystem, onUnitSystemCha
     clearError
   } = useMacroCalculator(unitSystem, onUnitSystemChange);
 
+  console.log('MacroCalculator rendering, about to show IntroSection');
+
   return (
-    <Card className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">Macronutrient Calculator</h2>
-      <p className="text-gray-600 mb-4 text-center">
-        Determine daily calories and macros for your goals
-      </p>
+    <div className="space-y-6">
+      <Card className="p-6">
+        <h2 className="text-2xl font-bold mb-4 text-center">Macronutrient Calculator</h2>
+        <p className="text-gray-600 mb-4 text-center">
+          Determine daily calories and macros for your goals
+        </p>
 
-      <MacroCalculatorForm
-        unitSystem={unitSystem}
-        userName={userName}
-        height={height}
-        weight={weight}
-        age={age}
-        gender={gender}
-        activity={activity}
-        goal={goal}
-        errors={errors}
-        onUserNameChange={setUserName}
-        onHeightChange={setHeight}
-        onWeightChange={setWeight}
-        onAgeChange={setAge}
-        onGenderChange={setGender}
-        onActivityChange={setActivity}
-        onGoalChange={setGoal}
-        onUnitChange={handleUnitChange}
-        onCalculate={calculateMacroResults}
-        onClearError={clearError}
-      />
-
-      {macroResult && (
-        <MacroCalculatorResults
-          macroResult={macroResult}
+        <MacroCalculatorForm
+          unitSystem={unitSystem}
           userName={userName}
           height={height}
           weight={weight}
@@ -71,14 +51,39 @@ const MacroCalculator: React.FC<MacroCalcProps> = ({ unitSystem, onUnitSystemCha
           gender={gender}
           activity={activity}
           goal={goal}
-          unitSystem={unitSystem}
-          copied={copied}
-          onCopiedChange={setCopied}
+          errors={errors}
+          onUserNameChange={setUserName}
+          onHeightChange={setHeight}
+          onWeightChange={setWeight}
+          onAgeChange={setAge}
+          onGenderChange={setGender}
+          onActivityChange={setActivity}
+          onGoalChange={setGoal}
+          onUnitChange={handleUnitChange}
+          onCalculate={calculateMacroResults}
+          onClearError={clearError}
         />
-      )}
 
+        {macroResult && (
+          <MacroCalculatorResults
+            macroResult={macroResult}
+            userName={userName}
+            height={height}
+            weight={weight}
+            age={age}
+            gender={gender}
+            activity={activity}
+            goal={goal}
+            unitSystem={unitSystem}
+            copied={copied}
+            onCopiedChange={setCopied}
+          />
+        )}
+      </Card>
+
+      {/* Info section displayed as a separate card */}
       <IntroSection calculatorId="macro" title="" description="" />
-    </Card>
+    </div>
   );
 };
 

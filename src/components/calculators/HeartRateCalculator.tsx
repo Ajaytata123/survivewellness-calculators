@@ -174,155 +174,157 @@ const HeartRateCalculator: React.FC<HeartRateCalcProps> = ({ unitSystem }) => {
   };
 
   return (
-    <Card className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">Heart Rate Zone Calculator</h2>
-      <p className="text-gray-600 mb-4 text-center">
-        Calculate your training heart rate zones based on your age
-      </p>
-
-      <div className="bg-wellness-softBlue/30 p-4 rounded-md mb-6">
-        <h3 className="font-medium mb-1">What are Heart Rate Zones?</h3>
-        <p className="text-sm text-gray-600">
-          Heart rate zones are ranges that define the intensity of your workout based on your maximum heart rate. Training in different zones helps optimize cardiovascular fitness, endurance, and fat burning.
+    <div className="space-y-6">
+      <Card className="p-6">
+        <h2 className="text-2xl font-bold mb-4 text-center">Heart Rate Zone Calculator</h2>
+        <p className="text-gray-600 mb-4 text-center">
+          Calculate your training heart rate zones based on your age
         </p>
-      </div>
 
-      <div className="space-y-4 mb-6">
-        <div className="space-y-2">
-          <Label htmlFor="userName">Your Name (optional)</Label>
-          <Input
-            id="userName"
-            type="text"
-            placeholder="Enter your name"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="age" className="flex justify-between">
-            Age
-            {errors.age && <span className="text-red-500 text-sm">{errors.age}</span>}
-          </Label>
-          <Input
-            id="age"
-            type="number"
-            placeholder="e.g., 35"
-            value={age}
-            onChange={(e) => {
-              setAge(e.target.value);
-              if (e.target.value) setErrors({...errors, age: undefined});
-            }}
-            className={errors.age ? "border-red-500" : ""}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="restingHr" className="flex justify-between">
-            Resting Heart Rate (optional)
-          </Label>
-          <Input
-            id="restingHr"
-            type="number"
-            placeholder="e.g., 60 bpm"
-            value={restingHr}
-            onChange={(e) => setRestingHr(e.target.value)}
-          />
-          <p className="text-sm text-gray-500">
-            For more accurate zones, measure your resting heart rate in the morning before getting out of bed.
+        <div className="bg-wellness-softBlue/30 p-4 rounded-md mb-6">
+          <h3 className="font-medium mb-1">What are Heart Rate Zones?</h3>
+          <p className="text-sm text-gray-600">
+            Heart rate zones are ranges that define the intensity of your workout based on your maximum heart rate. Training in different zones helps optimize cardiovascular fitness, endurance, and fat burning.
           </p>
         </div>
-      </div>
 
-      <Button onClick={calculateHeartRateZones} className="w-full mb-6 bg-wellness-blue hover:bg-wellness-blue/90">
-        Calculate Heart Rate Zones
-      </Button>
-
-      {maxHr && hrZones && (
-        <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-md animate-fade-in">
-          <div className="text-center mb-4">
-            <h3 className="text-xl font-bold dark:text-white">Your Heart Rate Zones</h3>
-            <p className="text-3xl font-bold my-2 result-highlight">Max HR: {maxHr} bpm</p>
-            {userName && <p className="text-sm dark:text-gray-300">Results for: {userName}</p>}
+        <div className="space-y-4 mb-6">
+          <div className="space-y-2">
+            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Input
+              id="userName"
+              type="text"
+              placeholder="Enter your name"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+            />
           </div>
 
-          <div className="grid gap-2 mb-4">
-            <div className="bg-red-100 p-3 rounded-md">
-              <p className="text-sm font-medium">Zone 5: Maximal (95-100%)</p>
-              <p className="text-lg font-bold">{hrZones.maximal.min}-{hrZones.maximal.max} bpm</p>
-              <p className="text-xs text-gray-600">Maximum effort, sprints, very short intervals</p>
-            </div>
-            
-            <div className="bg-orange-100 p-3 rounded-md">
-              <p className="text-sm font-medium">Zone 4: Anaerobic (90-95%)</p>
-              <p className="text-lg font-bold">{hrZones.anaerobic.min}-{hrZones.anaerobic.max} bpm</p>
-              <p className="text-xs text-gray-600">High intensity intervals, speed development</p>
-            </div>
-            
-            <div className="bg-yellow-100 p-3 rounded-md">
-              <p className="text-sm font-medium">Zone 3: Threshold (80-90%)</p>
-              <p className="text-lg font-bold">{hrZones.threshold.min}-{hrZones.threshold.max} bpm</p>
-              <p className="text-xs text-gray-600">Improve lactate threshold, race pace</p>
-            </div>
-            
-            <div className="bg-green-100 p-3 rounded-md">
-              <p className="text-sm font-medium">Zone 2: Tempo (70-80%)</p>
-              <p className="text-lg font-bold">{hrZones.tempo.min}-{hrZones.tempo.max} bpm</p>
-              <p className="text-xs text-gray-600">Improve endurance and efficiency</p>
-            </div>
-            
-            <div className="bg-blue-100 p-3 rounded-md">
-              <p className="text-sm font-medium">Zone 1: Aerobic (60-70%)</p>
-              <p className="text-lg font-bold">{hrZones.aerobic.min}-{hrZones.aerobic.max} bpm</p>
-              <p className="text-xs text-gray-600">Improves basic endurance and fat burning</p>
-            </div>
-            
-            <div className="bg-purple-100 p-3 rounded-md">
-              <p className="text-sm font-medium">Recovery (50-60%)</p>
-              <p className="text-lg font-bold">{hrZones.recovery.min}-{hrZones.recovery.max} bpm</p>
-              <p className="text-xs text-gray-600">Active recovery, warm up, cool down</p>
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="age" className="flex justify-between">
+              Age
+              {errors.age && <span className="text-red-500 text-sm">{errors.age}</span>}
+            </Label>
+            <Input
+              id="age"
+              type="number"
+              placeholder="e.g., 35"
+              value={age}
+              onChange={(e) => {
+                setAge(e.target.value);
+                if (e.target.value) setErrors({...errors, age: undefined});
+              }}
+              className={errors.age ? "border-red-500" : ""}
+            />
           </div>
 
-          <div className="mt-6 bg-wellness-softBlue/20 p-4 rounded-md">
-            <Button id="heart-rate-learn-more" variant="outline" size="sm" className="w-full border-wellness-blue text-wellness-blue hover:bg-wellness-blue/10 dark:text-wellness-blue dark:border-wellness-blue">
-              Know more about Heart Rate Zones
-            </Button>
-          </div>
-
-          <div className="mt-4">
-            <p className="text-sm text-gray-500 mb-2 dark:text-gray-400">
-              Based on the Tanaka formula and Karvonen method
+          <div className="space-y-2">
+            <Label htmlFor="restingHr" className="flex justify-between">
+              Resting Heart Rate (optional)
+            </Label>
+            <Input
+              id="restingHr"
+              type="number"
+              placeholder="e.g., 60 bpm"
+              value={restingHr}
+              onChange={(e) => setRestingHr(e.target.value)}
+            />
+            <p className="text-sm text-gray-500">
+              For more accurate zones, measure your resting heart rate in the morning before getting out of bed.
             </p>
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" onClick={copyResults} className="flex items-center bg-wellness-blue/10 text-wellness-blue hover:bg-wellness-blue/20 border-wellness-blue/50">
-                {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
-                {copied ? "Copied!" : "Copy Results"}
-              </Button>
-              <Button variant="outline" size="sm" onClick={shareLink} className="flex items-center bg-wellness-purple/10 text-wellness-purple hover:bg-wellness-purple/20 border-wellness-purple/50">
-                <Share className="h-4 w-4 mr-1" />
-                Share Link
-              </Button>
-              <Button variant="outline" size="sm" onClick={downloadResults} className="bg-wellness-green/10 text-wellness-green hover:bg-wellness-green/20 border-wellness-green/50">
-                Download CSV
-              </Button>
-            </div>
-          </div>
-          
-          <div className="mt-6 text-center">
-            <p className="text-sm font-bold text-wellness-purple dark:text-wellness-pink">
-              Thank you for using Survivewellness!
-            </p>
-            <a href="https://survivewellness.com/tools-calculators/" target="_blank" rel="noopener noreferrer" className="text-xs text-wellness-blue dark:text-wellness-blue hover:underline mt-1 inline-block">
-              For more calculators please visit our dedicated calculators section
-            </a>
           </div>
         </div>
-      )}
+
+        <Button onClick={calculateHeartRateZones} className="w-full mb-6 bg-wellness-blue hover:bg-wellness-blue/90">
+          Calculate Heart Rate Zones
+        </Button>
+
+        {maxHr && hrZones && (
+          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-md animate-fade-in">
+            <div className="text-center mb-4">
+              <h3 className="text-xl font-bold dark:text-white">Your Heart Rate Zones</h3>
+              <p className="text-3xl font-bold my-2 result-highlight">Max HR: {maxHr} bpm</p>
+              {userName && <p className="text-sm dark:text-gray-300">Results for: {userName}</p>}
+            </div>
+
+            <div className="grid gap-2 mb-4">
+              <div className="bg-red-100 p-3 rounded-md">
+                <p className="text-sm font-medium">Zone 5: Maximal (95-100%)</p>
+                <p className="text-lg font-bold">{hrZones.maximal.min}-{hrZones.maximal.max} bpm</p>
+                <p className="text-xs text-gray-600">Maximum effort, sprints, very short intervals</p>
+              </div>
+              
+              <div className="bg-orange-100 p-3 rounded-md">
+                <p className="text-sm font-medium">Zone 4: Anaerobic (90-95%)</p>
+                <p className="text-lg font-bold">{hrZones.anaerobic.min}-{hrZones.anaerobic.max} bpm</p>
+                <p className="text-xs text-gray-600">High intensity intervals, speed development</p>
+              </div>
+              
+              <div className="bg-yellow-100 p-3 rounded-md">
+                <p className="text-sm font-medium">Zone 3: Threshold (80-90%)</p>
+                <p className="text-lg font-bold">{hrZones.threshold.min}-{hrZones.threshold.max} bpm</p>
+                <p className="text-xs text-gray-600">Improve lactate threshold, race pace</p>
+              </div>
+              
+              <div className="bg-green-100 p-3 rounded-md">
+                <p className="text-sm font-medium">Zone 2: Tempo (70-80%)</p>
+                <p className="text-lg font-bold">{hrZones.tempo.min}-{hrZones.tempo.max} bpm</p>
+                <p className="text-xs text-gray-600">Improve endurance and efficiency</p>
+              </div>
+              
+              <div className="bg-blue-100 p-3 rounded-md">
+                <p className="text-sm font-medium">Zone 1: Aerobic (60-70%)</p>
+                <p className="text-lg font-bold">{hrZones.aerobic.min}-{hrZones.aerobic.max} bpm</p>
+                <p className="text-xs text-gray-600">Improves basic endurance and fat burning</p>
+              </div>
+              
+              <div className="bg-purple-100 p-3 rounded-md">
+                <p className="text-sm font-medium">Recovery (50-60%)</p>
+                <p className="text-lg font-bold">{hrZones.recovery.min}-{hrZones.recovery.max} bpm</p>
+                <p className="text-xs text-gray-600">Active recovery, warm up, cool down</p>
+              </div>
+            </div>
+
+            <div className="mt-6 bg-wellness-softBlue/20 p-4 rounded-md">
+              <Button id="heart-rate-learn-more" variant="outline" size="sm" className="w-full border-wellness-blue text-wellness-blue hover:bg-wellness-blue/10 dark:text-wellness-blue dark:border-wellness-blue">
+                Know more about Heart Rate Zones
+              </Button>
+            </div>
+
+            <div className="mt-4">
+              <p className="text-sm text-gray-500 mb-2 dark:text-gray-400">
+                Based on the Tanaka formula and Karvonen method
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" size="sm" onClick={copyResults} className="flex items-center bg-wellness-blue/10 text-wellness-blue hover:bg-wellness-blue/20 border-wellness-blue/50">
+                  {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
+                  {copied ? "Copied!" : "Copy Results"}
+                </Button>
+                <Button variant="outline" size="sm" onClick={shareLink} className="flex items-center bg-wellness-purple/10 text-wellness-purple hover:bg-wellness-purple/20 border-wellness-purple/50">
+                  <Share className="h-4 w-4 mr-1" />
+                  Share Link
+                </Button>
+                <Button variant="outline" size="sm" onClick={downloadResults} className="bg-wellness-green/10 text-wellness-green hover:bg-wellness-green/20 border-wellness-green/50">
+                  Download CSV
+                </Button>
+              </div>
+            </div>
+            
+            <div className="mt-6 text-center">
+              <p className="text-sm font-bold text-wellness-purple dark:text-wellness-pink">
+                Thank you for using Survivewellness!
+              </p>
+              <a href="https://survivewellness.com/tools-calculators/" target="_blank" rel="noopener noreferrer" className="text-xs text-wellness-blue dark:text-wellness-blue hover:underline mt-1 inline-block">
+                For more calculators please visit our dedicated calculators section
+              </a>
+            </div>
+          </div>
+        )}
+      </Card>
 
       {/* Add info section at the bottom */}
       <IntroSection calculatorId="heartrate" title="" description="" />
-    </Card>
+    </div>
   );
 };
 

@@ -1,5 +1,3 @@
-
-// Add the BMICalculator with the required changes
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -138,139 +136,148 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
   };
 
   return (
-    <Card className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">Body Mass Index (BMI) Calculator</h2>
-      
-      <IntroSectionTemplate
-        title="What is BMI?"
-        calculatorName="BMI"
-        description="Body Mass Index (BMI) is a calculation of your body size based on your height and weight. It is a quick and simple way to estimate your overall body composition and risk factors for certain health conditions. The BMI measurement is commonly used to categorize people as underweight, normal weight, overweight or obese."
-      />
-
-      <div className="mb-6">
-        <Label htmlFor="userName">Your Name (optional)</Label>
-        <Input
-          id="userName"
-          type="text"
-          placeholder="Enter your name"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          className="mt-1"
+    <div className="space-y-6">
+      <Card className="p-6">
+        <h2 className="text-2xl font-bold mb-4 text-center">Body Mass Index (BMI) Calculator</h2>
+        
+        <IntroSectionTemplate
+          title="What is BMI?"
+          calculatorName="BMI"
+          description="Body Mass Index (BMI) is a calculation of your body size based on your height and weight. It is a quick and simple way to estimate your overall body composition and risk factors for certain health conditions. The BMI measurement is commonly used to categorize people as underweight, normal weight, overweight or obese."
         />
-      </div>
 
-      <Tabs
-        defaultValue={unitSystem}
-        onValueChange={handleUnitChange}
-        className="mb-6"
-      >
-        <TabsList className="grid grid-cols-2 mb-4">
-          <TabsTrigger value="imperial">Imperial (US)</TabsTrigger>
-          <TabsTrigger value="metric">Metric</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="imperial" className="space-y-4">
-          <HeightInputField 
-            unitSystem="imperial"
-            height={height}
-            setHeight={setHeight}
-            error={errors.height}
+        <div className="mb-6">
+          <Label htmlFor="userName">Your Name (optional)</Label>
+          <Input
+            id="userName"
+            type="text"
+            placeholder="Enter your name"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            className="mt-1"
           />
-
-          <div className="space-y-2">
-            <Label htmlFor="weight-imperial">Weight (pounds)</Label>
-            <Input
-              id="weight-imperial"
-              type="number"
-              placeholder="e.g., 160"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
-              className={errors.weight ? "border-red-500" : ""}
-            />
-            {errors.weight && <p className="text-red-500 text-sm">{errors.weight}</p>}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="metric" className="space-y-4">
-          <HeightInputField 
-            unitSystem="metric"
-            height={height}
-            setHeight={setHeight}
-            error={errors.height}
-          />
-
-          <div className="space-y-2">
-            <Label htmlFor="weight-metric">Weight (kg)</Label>
-            <Input
-              id="weight-metric"
-              type="number"
-              placeholder="e.g., 70"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
-              className={errors.weight ? "border-red-500" : ""}
-            />
-            {errors.weight && <p className="text-red-500 text-sm">{errors.weight}</p>}
-          </div>
-        </TabsContent>
-      </Tabs>
-
-      <Button onClick={calculateBMIResult} className="w-full mb-6">
-        Calculate BMI
-      </Button>
-
-      {bmi !== null && (
-        <div className="results-container bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-          <div className="text-center mb-3">
-            <h3 className="text-xl font-bold">Your BMI Results</h3>
-            {userName && <p className="text-sm mb-2">Results for: {userName}</p>}
-          </div>
-          
-          <div className="result-highlight rounded-md text-center p-4 bg-wellness-softPurple dark:bg-wellness-softPurple/30 mb-4">
-            <div className="flex justify-around items-center">
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Your BMI</p>
-                <p className="text-3xl font-bold text-wellness-purple dark:text-wellness-purple/90">
-                  {bmi.toFixed(1)}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Category</p>
-                <p className="text-xl font-bold">{category}</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-6 space-y-4">
-            <div className="flex flex-wrap gap-3 justify-center">
-              <Button 
-                variant="outline" 
-                className="flex items-center gap-2"
-                onClick={handleCopyResults}
-              >
-                <Copy className="h-4 w-4" />
-                Copy Results
-              </Button>
-              <Button 
-                variant="outline" 
-                className="flex items-center gap-2"
-                onClick={handleShareResults}
-              >
-                <Share className="h-4 w-4" />
-                Share Results
-              </Button>
-              <Button 
-                variant="outline" 
-                className="flex items-center gap-2"
-                onClick={handleDownloadResults}
-              >
-                <Download className="h-4 w-4" />
-                Download CSV
-              </Button>
-            </div>
-          </div>
         </div>
-      )}
-    </Card>
+
+        <Tabs
+          defaultValue={unitSystem}
+          onValueChange={handleUnitChange}
+          className="mb-6"
+        >
+          <TabsList className="grid grid-cols-2 mb-4">
+            <TabsTrigger value="imperial">Imperial (US)</TabsTrigger>
+            <TabsTrigger value="metric">Metric</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="imperial" className="space-y-4">
+            <HeightInputField 
+              unitSystem="imperial"
+              height={height}
+              setHeight={setHeight}
+              error={errors.height}
+            />
+
+            <div className="space-y-2">
+              <Label htmlFor="weight-imperial">Weight (pounds)</Label>
+              <Input
+                id="weight-imperial"
+                type="number"
+                placeholder="e.g., 160"
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
+                className={errors.weight ? "border-red-500" : ""}
+              />
+              {errors.weight && <p className="text-red-500 text-sm">{errors.weight}</p>}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="metric" className="space-y-4">
+            <HeightInputField 
+              unitSystem="metric"
+              height={height}
+              setHeight={setHeight}
+              error={errors.height}
+            />
+
+            <div className="space-y-2">
+              <Label htmlFor="weight-metric">Weight (kg)</Label>
+              <Input
+                id="weight-metric"
+                type="number"
+                placeholder="e.g., 70"
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
+                className={errors.weight ? "border-red-500" : ""}
+              />
+              {errors.weight && <p className="text-red-500 text-sm">{errors.weight}</p>}
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        <Button onClick={calculateBMIResult} className="w-full mb-6">
+          Calculate BMI
+        </Button>
+
+        {bmi !== null && (
+          <div className="results-container bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+            <div className="text-center mb-3">
+              <h3 className="text-xl font-bold">Your BMI Results</h3>
+              {userName && <p className="text-sm mb-2">Results for: {userName}</p>}
+            </div>
+            
+            <div className="result-highlight rounded-md text-center p-4 bg-wellness-softPurple dark:bg-wellness-softPurple/30 mb-4">
+              <div className="flex justify-around items-center">
+                <div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Your BMI</p>
+                  <p className="text-3xl font-bold text-wellness-purple dark:text-wellness-purple/90">
+                    {bmi.toFixed(1)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Category</p>
+                  <p className="text-xl font-bold">{category}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-6 space-y-4">
+              <div className="flex flex-wrap gap-3 justify-center">
+                <Button 
+                  variant="outline" 
+                  className="flex items-center gap-2"
+                  onClick={handleCopyResults}
+                >
+                  <Copy className="h-4 w-4" />
+                  Copy Results
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="flex items-center gap-2"
+                  onClick={handleShareResults}
+                >
+                  <Share className="h-4 w-4" />
+                  Share Results
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="flex items-center gap-2"
+                  onClick={handleDownloadResults}
+                >
+                  <Download className="h-4 w-4" />
+                  Download CSV
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+      </Card>
+
+      {/* Add info section at the bottom */}
+      <IntroSectionTemplate
+        title="What is BMI (Body Mass Index)?"
+        calculatorName="BMI"
+        description="BMI is a simple screening tool that measures body fat based on height and weight. It helps assess whether you're underweight, normal weight, overweight, or obese."
+      />
+    </div>
   );
 };
 

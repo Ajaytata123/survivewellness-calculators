@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -21,7 +22,7 @@ const MacroCalculator: React.FC<MacroCalcProps> = ({ unitSystem, onUnitSystemCha
   const [activity, setActivity] = useState<string>("moderate");
   const [goal, setGoal] = useState<string>("maintain");
   const [errors, setErrors] = useState<{height?: string; weight?: string; age?: string}>({});
-  const [macroResult, setMacroResult = useState<{calories: number; protein: number; carbs: number; fat: number} | null>(null);
+  const [macroResult, setMacroResult] = useState<{calories: number; protein: number; carbs: number; fat: number} | null>(null);
   const [copied, setCopied] = useState(false);
 
   const validateInputs = (): boolean => {

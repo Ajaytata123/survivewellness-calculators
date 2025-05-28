@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -196,7 +197,7 @@ const IronIntakeCalculator: React.FC<IronIntakeCalcProps> = ({ unitSystem, onUni
 
           <div className="space-y-2">
             <Label>Diet Type</Label>
-            <Select value={dietType} onValueChange={setDietType}>
+            <Select value={dietType} onValueChange={(value) => setDietType(value as "omnivorous" | "vegetarian" | "vegan")}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>

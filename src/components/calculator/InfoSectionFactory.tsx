@@ -1,4 +1,3 @@
-
 import React from 'react';
 import InfoSection from './InfoSection';
 
@@ -123,20 +122,6 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
           usage: "Complete a fitness test or enter your performance data to estimate your VO2 Max and fitness level."
         };
 
-      case 'workout':
-        return {
-          title: "What is a Workout Planner?",
-          description: "Create personalized workout plans based on your fitness goals, available time, and equipment to maximize your training effectiveness.",
-          iconName: "Dumbbell",
-          benefits: [
-            "Structured exercise routine",
-            "Goal-specific training",
-            "Progress tracking",
-            "Balanced muscle development"
-          ],
-          usage: "Specify your fitness goals, available time, and equipment to generate a customized workout plan."
-        };
-
       case 'steps':
         return {
           title: "What is Step Counter & Activity Tracker?",
@@ -149,6 +134,21 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
             "Improve overall health"
           ],
           usage: "Set your daily step goal and track your progress throughout the day to maintain an active lifestyle."
+        };
+
+      case 'workout':
+        return {
+          title: "What is Workout Planning?",
+          description: "Create structured, goal-oriented workout plans tailored to your fitness level, available time, and equipment to maximize training effectiveness and achieve your fitness goals.",
+          iconName: "Dumbbell",
+          benefits: [
+            "Structured exercise routine for better results",
+            "Goal-specific training programs",
+            "Efficient use of workout time",
+            "Balanced muscle development",
+            "Progressive difficulty adjustment"
+          ],
+          usage: "Specify your fitness goals, experience level, available time, and equipment to generate a customized workout plan with exercises and scheduling."
         };
 
       case 'macro':
@@ -182,15 +182,16 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
       case 'fasting':
         return {
           title: "What is Intermittent Fasting?",
-          description: "Intermittent fasting involves cycling between periods of eating and fasting. Find the right fasting schedule that fits your lifestyle and goals.",
+          description: "Intermittent fasting involves cycling between periods of eating and fasting. Find the right fasting schedule that fits your lifestyle and health goals.",
           iconName: "Clock",
           benefits: [
-            "Weight management support",
-            "Improved metabolic health",
-            "Enhanced mental clarity",
-            "Simplified meal planning"
+            "Support for weight management goals",
+            "Improved metabolic health markers",
+            "Enhanced mental clarity and focus",
+            "Simplified meal planning and timing",
+            "Potential longevity benefits"
           ],
-          usage: "Choose your preferred fasting method and get a personalized schedule with eating and fasting windows."
+          usage: "Choose your preferred fasting method and lifestyle factors to get a personalized schedule with eating and fasting windows, plus helpful tips."
         };
 
       case 'calories':
@@ -210,15 +211,16 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
       case 'mealplan':
         return {
           title: "What is Meal Planning?",
-          description: "Create balanced, nutritious meal plans tailored to your dietary preferences, health goals, and lifestyle requirements.",
+          description: "Create balanced, nutritious meal plans tailored to your dietary preferences, health goals, and lifestyle requirements for optimal nutrition and convenience.",
           iconName: "ChefHat",
           benefits: [
-            "Balanced nutrition planning",
-            "Time and money savings",
-            "Reduced food waste",
-            "Consistent healthy eating"
+            "Balanced nutrition planning for optimal health",
+            "Time and money savings through organization",
+            "Reduced food waste and better budgeting",
+            "Consistent healthy eating habits",
+            "Customized to dietary restrictions and preferences"
           ],
-          usage: "Specify your dietary preferences and goals to generate personalized meal plans with recipes and shopping lists."
+          usage: "Specify your dietary preferences, calorie goals, and restrictions to generate personalized meal plans with recipes and shopping lists."
         };
 
       case 'pregnancy':
@@ -238,15 +240,16 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
       case 'alcohol':
         return {
           title: "What is Alcohol Impact Assessment?",
-          description: "Understand how alcohol consumption affects your health, fitness goals, and overall well-being with personalized insights.",
+          description: "Understand how alcohol consumption affects your health, fitness goals, and overall well-being with personalized insights based on your drinking patterns.",
           iconName: "Wine",
           benefits: [
-            "Health impact awareness",
-            "Caloric impact understanding",
-            "Fitness goal alignment",
-            "Informed consumption decisions"
+            "Health impact awareness and education",
+            "Caloric impact understanding for weight goals",
+            "Fitness goal alignment and planning",
+            "Informed consumption decision making",
+            "Risk level assessment for health"
           ],
-          usage: "Enter your alcohol consumption patterns to receive insights on health impacts and recommendations."
+          usage: "Enter your alcohol consumption patterns, demographics, and preferences to receive insights on health impacts and personalized recommendations."
         };
 
       case 'smoking':
@@ -323,7 +326,7 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
       case 'menopause':
         return {
           title: "What is Menopause Estimation?",
-          description: "Estimate your menopause timeline and understand the transition phases based on your age, family history, and symptoms.",
+          description: "Estimate your menopause timeline and understand the hormonal changes that occur during perimenopause and menopause to better prepare for this life transition.",
           iconName: "Calendar",
           benefits: [
             "Transition timeline understanding",
@@ -331,65 +334,66 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
             "Health planning",
             "Treatment timing insights"
           ],
-          usage: "Provide your age and family history to estimate your menopause timeline and understand what to expect."
+          usage: "Enter your age, menstrual history, and family history to get an estimated menopause timeline with health recommendations."
         };
 
       case 'breastcancer':
         return {
           title: "What is Breast Cancer Risk Assessment?",
-          description: "Evaluate your breast cancer risk factors using established medical criteria to guide preventive care and screening decisions.",
+          description: "Evaluate your breast cancer risk factors using established medical criteria to understand your risk level and make informed decisions about screening and prevention.",
           iconName: "Shield",
           benefits: [
-            "Early risk identification",
-            "Preventive care planning",
-            "Screening schedule guidance",
-            "Healthcare decision support"
+            "Early risk identification for prevention",
+            "Informed screening schedule planning",
+            "Lifestyle modification guidance",
+            "Peace of mind through awareness",
+            "Healthcare discussion preparation"
           ],
-          usage: "Complete the risk assessment questionnaire to understand your breast cancer risk factors and screening recommendations."
+          usage: "Complete the risk assessment questionnaire with your personal and family history to receive a comprehensive risk evaluation and recommendations."
         };
 
       case 'osteoporosis':
         return {
           title: "What is Osteoporosis Risk Assessment?",
-          description: "Assess your risk of developing osteoporosis based on age, lifestyle factors, and medical history to guide bone health strategies.",
+          description: "Assess your risk of developing osteoporosis and bone fractures based on lifestyle factors, medical history, and demographics to promote bone health.",
           iconName: "Bone",
           benefits: [
-            "Bone health awareness",
-            "Prevention strategy planning",
-            "Screening guidance",
-            "Lifestyle modification support"
+            "Early bone health awareness",
+            "Prevention strategy development",
+            "Screening schedule optimization",
+            "Lifestyle modification guidance",
+            "Fracture risk understanding"
           ],
-          usage: "Answer questions about your health and lifestyle to assess your osteoporosis risk and receive bone health recommendations."
+          usage: "Enter your age, gender, lifestyle factors, and medical history to evaluate your osteoporosis risk and receive bone health recommendations."
         };
 
       case 'iron':
         return {
           title: "What is Iron Intake Assessment?",
-          description: "Calculate your daily iron needs and assess whether you're getting adequate iron from your diet to prevent deficiency.",
+          description: "Calculate your daily iron needs and assess whether you're getting adequate iron from your diet to prevent iron deficiency and maintain optimal health.",
           iconName: "Apple",
           benefits: [
-            "Prevent iron deficiency",
-            "Optimize energy levels",
-            "Support immune function",
-            "Improve cognitive performance"
+            "Prevent iron deficiency anemia",
+            "Optimize energy and cognitive function",
+            "Support immune system health",
+            "Maintain healthy pregnancy outcomes",
+            "Improve athletic performance"
           ],
-          usage: "Enter your dietary habits and personal details to assess your iron intake and receive recommendations for improvement."
+          usage: "Enter your demographics, diet information, and lifestyle factors to calculate your iron needs and receive dietary recommendations."
         };
 
       default:
-        console.log('Unknown calculator ID:', calculatorId);
         return {
-          title: "Health Calculator",
-          description: "Use this calculator to assess various aspects of your health and wellness journey.",
-          iconName: "Calculator",
-          benefits: ["Health monitoring", "Goal setting", "Progress tracking"],
-          usage: "Enter your information to receive personalized health insights."
+          title: "Calculator Information",
+          description: "This calculator provides helpful insights for your health and wellness journey.",
+          iconName: "Info",
+          benefits: [],
+          usage: "Use this calculator to get personalized recommendations based on your input."
         };
     }
   };
 
   const info = getCalculatorInfo();
-  console.log('InfoSectionFactory info:', info);
   
   return (
     <InfoSection

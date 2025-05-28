@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Search } from "@/components/ui/search";
@@ -67,34 +66,50 @@ export const CalculatorSidebar = ({
     
     const activeCalc = calculators.find(calc => calc.id === activeCalculator);
     if (activeCalc) {
-      setActiveCategory(activeCalc.category);
+      let category = activeCalc.category;
+      // Move pregnancy calculator to women's health
+      if (activeCalc.id === 'pregnancy') {
+        category = 'women';
+      }
+      
+      setActiveCategory(category);
       
       // Ensure the category containing the active calculator is expanded
       setCollapsedCategories(prev => ({
         ...prev,
-        [activeCalc.category]: false, // Make sure it's not collapsed
+        [category]: false, // Make sure it's not collapsed
       }));
     }
   }, [activeCalculator, calculators]);
 
-  // Improved scroll behavior - scroll to active item without jumping to top
+  // Fixed scroll behavior - prevent jumping to top and maintain position
   useEffect(() => {
     if (activeItemRef.current && sidebarRef.current) {
-      const sidebarRect = sidebarRef.current.getBoundingClientRect();
-      const activeItemRect = activeItemRef.current.getBoundingClientRect();
+      const sidebar = sidebarRef.current;
+      const activeItem = activeItemRef.current;
       
-      // Only scroll if active item is out of view
-      if (activeItemRect.bottom > sidebarRect.bottom || activeItemRect.top < sidebarRect.top) {
-        const offset = 100; // Provide some space above the item
-        const scrollPosition = activeItemRect.top - sidebarRect.top + sidebarRef.current.scrollTop - offset;
+      // Get current scroll position
+      const currentScrollTop = sidebar.scrollTop;
+      const sidebarHeight = sidebar.clientHeight;
+      const activeItemTop = activeItem.offsetTop;
+      const activeItemHeight = activeItem.offsetHeight;
+      
+      // Check if active item is visible in viewport
+      const itemVisibleTop = activeItemTop - currentScrollTop;
+      const itemVisibleBottom = itemVisibleTop + activeItemHeight;
+      
+      // Only scroll if item is not fully visible
+      if (itemVisibleTop < 100 || itemVisibleBottom > sidebarHeight - 100) {
+        const targetScroll = Math.max(0, activeItemTop - (sidebarHeight / 2) + (activeItemHeight / 2));
         
-        sidebarRef.current.scrollTo({
-          top: Math.max(0, scrollPosition),
+        // Use smooth scrolling with reduced movement
+        sidebar.scrollTo({
+          top: targetScroll,
           behavior: 'smooth'
         });
       }
     }
-  }, [activeCalculator]);
+  }, [activeCalculator]); // Only depend on activeCalculator
   
   // Mobile sidebar
   const MobileSidebar = () => (

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -10,6 +9,7 @@ import { UnitSystem } from "@/types/calculatorTypes";
 import { downloadResultsAsCSV, copyResultsToClipboard, createShareableLink } from "@/utils/downloadUtils";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
 import { Check, Copy, Share } from "lucide-react";
+import IntroSection from "@/components/calculator/IntroSection";
 
 interface VO2MaxCalcProps {
   unitSystem: UnitSystem;
@@ -224,96 +224,97 @@ const VO2MaxCalculator: React.FC<VO2MaxCalcProps> = ({ unitSystem, onUnitSystemC
   };
 
   return (
-    <Card className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">VO2 Max Calculator</h2>
-      <p className="text-gray-600 mb-4 text-center">
-        Estimate your maximal oxygen uptake capacity
-      </p>
+    <div className="space-y-6">
+      <Card className="p-6">
+        <h2 className="text-2xl font-bold mb-4 text-center">VO2 Max Calculator</h2>
+        <p className="text-gray-600 mb-4 text-center">
+          Estimate your maximal oxygen uptake capacity
+        </p>
 
-      <div className="space-y-4 mb-6">
-        <div className="space-y-2">
-          <Label htmlFor="userName">Your Name (optional)</Label>
-          <Input
-            id="userName"
-            type="text"
-            placeholder="Enter your name"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-        </div>
+        <div className="space-y-4 mb-6">
+          <div className="space-y-2">
+            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Input
+              id="userName"
+              type="text"
+              placeholder="Enter your name"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+            />
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="age">Age</Label>
-          <Input
-            id="age"
-            type="number"
-            placeholder="e.g., 35"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-          />
-        </div>
+          <div className="space-y-2">
+            <Label htmlFor="age">Age</Label>
+            <Input
+              id="age"
+              type="number"
+              placeholder="e.g., 35"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+            />
+          </div>
 
-        <div className="space-y-2">
-          <Label>Gender</Label>
-          <RadioGroup
-            value={gender}
-            onValueChange={(value) => setGender(value as "male" | "female")}
-            className="flex space-x-4"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="male" id="male-vo2" />
-              <Label htmlFor="male-vo2">Male</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="female" id="female-vo2" />
-              <Label htmlFor="female-vo2">Female</Label>
-            </div>
-          </RadioGroup>
-        </div>
+          <div className="space-y-2">
+            <Label>Gender</Label>
+            <RadioGroup
+              value={gender}
+              onValueChange={(value) => setGender(value as "male" | "female")}
+              className="flex space-x-4"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="male" id="male-vo2" />
+                <Label htmlFor="male-vo2">Male</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="female" id="female-vo2" />
+                <Label htmlFor="female-vo2">Female</Label>
+              </div>
+            </RadioGroup>
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="restingHR">Resting Heart Rate (bpm)</Label>
-          <Input
-            id="restingHR"
-            type="number"
-            placeholder="e.g., 65"
-            value={restingHR}
-            onChange={(e) => setRestingHR(e.target.value)}
-          />
-          <p className="text-sm text-gray-500">
-            Measure your heart rate when you first wake up, before getting out of bed
-          </p>
-        </div>
+          <div className="space-y-2">
+            <Label htmlFor="restingHR">Resting Heart Rate (bpm)</Label>
+            <Input
+              id="restingHR"
+              type="number"
+              placeholder="e.g., 65"
+              value={restingHR}
+              onChange={(e) => setRestingHR(e.target.value)}
+            />
+            <p className="text-sm text-gray-500">
+              Measure your heart rate when you first wake up, before getting out of bed
+            </p>
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="maxHR">Maximum Heart Rate (bpm)</Label>
-          <Input
-            id="maxHR"
-            type="number"
-            placeholder="e.g., 190"
-            value={maxHR}
-            onChange={(e) => setMaxHR(e.target.value)}
-          />
-          <p className="text-sm text-gray-500">
-            If unknown, you can estimate it as 220 minus your age
-          </p>
-        </div>
+          <div className="space-y-2">
+            <Label htmlFor="maxHR">Maximum Heart Rate (bpm)</Label>
+            <Input
+              id="maxHR"
+              type="number"
+              placeholder="e.g., 190"
+              value={maxHR}
+              onChange={(e) => setMaxHR(e.target.value)}
+            />
+            <p className="text-sm text-gray-500">
+              If unknown, you can estimate it as 220 minus your age
+            </p>
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="activityLevel">Activity Level</Label>
-          <Select
-            value={activityLevel}
-            onValueChange={setActivityLevel}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select activity level" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="sedentary">{getActivityLabel("sedentary")}</SelectItem>
-              <SelectItem value="light">{getActivityLabel("light")}</SelectItem>
-              <SelectItem value="moderate">{getActivityLabel("moderate")}</SelectItem>
-              <SelectItem value="active">{getActivityLabel("active")}</SelectItem>
-              <SelectItem value="veryActive">{getActivityLabel("veryActive")}</SelectItem>
+          <div className="space-y-2">
+            <Label htmlFor="activityLevel">Activity Level</Label>
+            <Select
+              value={activityLevel}
+              onValueChange={setActivityLevel}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select activity level" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="sedentary">{getActivityLabel("sedentary")}</SelectItem>
+                <SelectItem value="light">{getActivityLabel("light")}</SelectItem>
+                <SelectItem value="moderate">{getActivityLabel("moderate")}</SelectItem>
+                <SelectItem value="active">{getActivityLabel("active")}</SelectItem>
+                <SelectItem value="veryActive">{getActivityLabel("veryActive")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -390,6 +391,9 @@ const VO2MaxCalculator: React.FC<VO2MaxCalcProps> = ({ unitSystem, onUnitSystemC
         </div>
       )}
     </Card>
+
+    <IntroSection calculatorId="vo2max" title="" description="" />
+    </div>
   );
 };
 

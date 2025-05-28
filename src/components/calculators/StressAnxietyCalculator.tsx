@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -9,6 +8,7 @@ import { downloadResultsAsCSV, copyResultsToClipboard, createShareableLink } fro
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
 import { Input } from "@/components/ui/input";
 import { Check, Copy, Share } from "lucide-react";
+import IntroSection from "@/components/calculator/IntroSection";
 
 interface StressAnxietyCalcProps {
   unitSystem: UnitSystem;
@@ -473,14 +473,18 @@ const StressAnxietyCalculator: React.FC<StressAnxietyCalcProps> = ({ unitSystem,
   };
 
   return (
-    <Card className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">Stress & Anxiety Assessment</h2>
-      <p className="text-gray-600 mb-4 text-center">
-        Evaluate your current stress levels and get personalized recommendations
-      </p>
+    <div className="space-y-6">
+      <Card className="p-6">
+        <h2 className="text-2xl font-bold mb-4 text-center">Stress & Anxiety Assessment</h2>
+        <p className="text-gray-600 mb-4 text-center">
+          Evaluate your stress and anxiety levels with personalized recommendations
+        </p>
 
-      {renderContent()}
-    </Card>
+        {renderContent()}
+      </Card>
+
+      <IntroSection calculatorId="stress" title="" description="" />
+    </div>
   );
 };
 

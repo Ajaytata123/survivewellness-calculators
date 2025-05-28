@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -10,6 +9,7 @@ import { WaterIntakeCalcProps, UnitSystem } from "@/types/calculatorTypes";
 import { downloadResultsAsCSV, copyResultsToClipboard, createShareableLink } from "@/utils/downloadUtils";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
 import { Check, Copy, Share } from "lucide-react";
+import IntroSection from "@/components/calculator/IntroSection";
 
 const WaterIntakeCalculator: React.FC<WaterIntakeCalcProps> = ({ unitSystem, onUnitSystemChange }) => {
   const [weight, setWeight] = useState<string>("");
@@ -203,93 +203,94 @@ const WaterIntakeCalculator: React.FC<WaterIntakeCalcProps> = ({ unitSystem, onU
   };
 
   return (
-    <Card className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">Water Intake Calculator</h2>
-      <p className="text-gray-600 mb-4 text-center">
-        Calculate your daily water needs based on your weight and activity level
-      </p>
+    <div className="space-y-6">
+      <Card className="p-6">
+        <h2 className="text-2xl font-bold mb-4 text-center">Water Intake Calculator</h2>
+        <p className="text-gray-600 mb-4 text-center">
+          Calculate your daily water needs based on your weight and activity level
+        </p>
 
-      <div className="space-y-4 mb-6">
-        <div className="space-y-2">
-          <Label htmlFor="userName">Your Name (optional)</Label>
-          <Input
-            id="userName"
-            type="text"
-            placeholder="Enter your name"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
+        <div className="space-y-4 mb-6">
+          <div className="space-y-2">
+            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Input
+              id="userName"
+              type="text"
+              placeholder="Enter your name"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+            />
+          </div>
         </div>
-      </div>
 
-      <Tabs
-        defaultValue={unitSystem}
-        onValueChange={handleUnitChange}
-        className="mb-6"
-      >
-        <TabsList className="grid grid-cols-2 mb-4">
-          <TabsTrigger value="imperial">Imperial (US)</TabsTrigger>
-          <TabsTrigger value="metric">Metric</TabsTrigger>
-        </TabsList>
+        <Tabs
+          defaultValue={unitSystem}
+          onValueChange={handleUnitChange}
+          className="mb-6"
+        >
+          <TabsList className="grid grid-cols-2 mb-4">
+            <TabsTrigger value="imperial">Imperial (US)</TabsTrigger>
+            <TabsTrigger value="metric">Metric</TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="imperial" className="space-y-4">
+          <TabsContent value="imperial" className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="weight-imperial" className="flex justify-between">
+                Weight (pounds)
+                {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
+              </Label>
+              <Input
+                id="weight-imperial"
+                type="number"
+                placeholder="e.g., 160"
+                value={weight}
+                onChange={(e) => {
+                  setWeight(e.target.value);
+                  if (e.target.value) setErrors({...errors, weight: undefined});
+                }}
+                className={errors.weight ? "border-red-500" : ""}
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="metric" className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="weight-metric" className="flex justify-between">
+                Weight (kg)
+                {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
+              </Label>
+              <Input
+                id="weight-metric"
+                type="number"
+                placeholder="e.g., 70"
+                value={weight}
+                onChange={(e) => {
+                  setWeight(e.target.value);
+                  if (e.target.value) setErrors({...errors, weight: undefined});
+                }}
+                className={errors.weight ? "border-red-500" : ""}
+              />
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="weight-imperial" className="flex justify-between">
-              Weight (pounds)
-              {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
-            </Label>
-            <Input
-              id="weight-imperial"
-              type="number"
-              placeholder="e.g., 160"
-              value={weight}
-              onChange={(e) => {
-                setWeight(e.target.value);
-                if (e.target.value) setErrors({...errors, weight: undefined});
-              }}
-              className={errors.weight ? "border-red-500" : ""}
-            />
-          </div>
-        </TabsContent>
-
-        <TabsContent value="metric" className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="weight-metric" className="flex justify-between">
-              Weight (kg)
-              {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
-            </Label>
-            <Input
-              id="weight-metric"
-              type="number"
-              placeholder="e.g., 70"
-              value={weight}
-              onChange={(e) => {
-                setWeight(e.target.value);
-                if (e.target.value) setErrors({...errors, weight: undefined});
-              }}
-              className={errors.weight ? "border-red-500" : ""}
-            />
-          </div>
-        </TabsContent>
-      </Tabs>
-
-      <div className="space-y-4 mb-6">
-        <div className="space-y-2">
-          <Label htmlFor="activity">Activity Level</Label>
-          <Select
-            value={activityLevel}
-            onValueChange={setActivityLevel}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select activity level" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="sedentary">{getActivityLabel("sedentary")}</SelectItem>
-              <SelectItem value="light">{getActivityLabel("light")}</SelectItem>
-              <SelectItem value="moderate">{getActivityLabel("moderate")}</SelectItem>
-              <SelectItem value="active">{getActivityLabel("active")}</SelectItem>
-              <SelectItem value="veryActive">{getActivityLabel("veryActive")}</SelectItem>
-            </SelectContent>
+            <Label htmlFor="activity">Activity Level</Label>
+            <Select
+              value={activityLevel}
+              onValueChange={setActivityLevel}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select activity level" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="sedentary">{getActivityLabel("sedentary")}</SelectItem>
+                <SelectItem value="light">{getActivityLabel("light")}</SelectItem>
+                <SelectItem value="moderate">{getActivityLabel("moderate")}</SelectItem>
+                <SelectItem value="active">{getActivityLabel("active")}</SelectItem>
+                <SelectItem value="veryActive">{getActivityLabel("veryActive")}</SelectItem>
+              </SelectContent>
           </Select>
         </div>
 
@@ -373,6 +374,9 @@ const WaterIntakeCalculator: React.FC<WaterIntakeCalcProps> = ({ unitSystem, onU
         </div>
       )}
     </Card>
+
+      <IntroSection calculatorId="water" title="" description="" />
+    </div>
   );
 };
 

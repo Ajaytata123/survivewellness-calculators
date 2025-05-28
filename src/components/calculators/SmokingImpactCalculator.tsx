@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -10,6 +9,7 @@ import { UnitSystem } from "@/types/calculatorTypes";
 import { downloadResultsAsCSV, copyResultsToClipboard, createShareableLink } from "@/utils/downloadUtils";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
 import { Check, Copy, Share } from "lucide-react";
+import IntroSection from "@/components/calculator/IntroSection";
 
 interface SmokingImpactCalcProps {
   unitSystem: UnitSystem;
@@ -225,230 +225,234 @@ const SmokingImpactCalculator: React.FC<SmokingImpactCalcProps> = ({ unitSystem,
   };
 
   return (
-    <Card className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">Smoking Impact Calculator</h2>
-      <p className="text-gray-600 mb-4 text-center">
-        Estimate the health and financial impact of smoking
-      </p>
+    <div className="space-y-6">
+      <Card className="p-6">
+        <h2 className="text-2xl font-bold mb-4 text-center">Smoking Impact Calculator</h2>
+        <p className="text-gray-600 mb-4 text-center">
+          Estimate the health and financial impact of smoking
+        </p>
 
-      <div className="space-y-4 mb-6">
-        <div className="space-y-2">
-          <Label htmlFor="userName">Your Name (optional)</Label>
-          <Input
-            id="userName"
-            type="text"
-            placeholder="Enter your name"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="age">Your Age</Label>
-          <Input
-            id="age"
-            type="number"
-            min="1"
-            placeholder="e.g., 35"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="cigarettesPerDay">Cigarettes Per Day</Label>
-          <Input
-            id="cigarettesPerDay"
-            type="number"
-            min="1"
-            max="100"
-            placeholder="e.g., 10"
-            value={cigarettesPerDay}
-            onChange={(e) => setCigarettesPerDay(e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="smokingYears">Years of Smoking</Label>
-          <Input
-            id="smokingYears"
-            type="number"
-            min="1"
-            placeholder="e.g., 10"
-            value={smokingYears}
-            onChange={(e) => setSmokingYears(e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <Label htmlFor="pricePerPack">Price Per Pack</Label>
-            <div className="flex space-x-2">
-              <button 
-                className={`px-2 rounded ${currency === "$" ? "bg-wellness-purple text-white" : "bg-gray-200"}`}
-                onClick={() => handleCurrencyChange("$")}
-              >
-                $
-              </button>
-              <button 
-                className={`px-2 rounded ${currency === "€" ? "bg-wellness-purple text-white" : "bg-gray-200"}`}
-                onClick={() => handleCurrencyChange("€")}
-              >
-                €
-              </button>
-              <button 
-                className={`px-2 rounded ${currency === "£" ? "bg-wellness-purple text-white" : "bg-gray-200"}`}
-                onClick={() => handleCurrencyChange("£")}
-              >
-                £
-              </button>
-              <button 
-                className={`px-2 rounded ${currency === "¥" ? "bg-wellness-purple text-white" : "bg-gray-200"}`}
-                onClick={() => handleCurrencyChange("¥")}
-              >
-                ¥
-              </button>
-            </div>
-          </div>
-          <div className="flex">
-            <div className="bg-gray-100 px-3 py-2 rounded-l-md border border-r-0 border-input">
-              {currency}
-            </div>
+        <div className="space-y-4 mb-6">
+          <div className="space-y-2">
+            <Label htmlFor="userName">Your Name (optional)</Label>
             <Input
-              id="pricePerPack"
-              type="number"
-              min="0"
-              step="0.01"
-              placeholder="e.g., 8.50"
-              value={pricePerPack}
-              onChange={(e) => setPricePerPack(e.target.value)}
-              className="rounded-l-none"
+              id="userName"
+              type="text"
+              placeholder="Enter your name"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
             />
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="age">Your Age</Label>
+            <Input
+              id="age"
+              type="number"
+              min="1"
+              placeholder="e.g., 35"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="cigarettesPerDay">Cigarettes Per Day</Label>
+            <Input
+              id="cigarettesPerDay"
+              type="number"
+              min="1"
+              max="100"
+              placeholder="e.g., 10"
+              value={cigarettesPerDay}
+              onChange={(e) => setCigarettesPerDay(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="smokingYears">Years of Smoking</Label>
+            <Input
+              id="smokingYears"
+              type="number"
+              min="1"
+              placeholder="e.g., 10"
+              value={smokingYears}
+              onChange={(e) => setSmokingYears(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <Label htmlFor="pricePerPack">Price Per Pack</Label>
+              <div className="flex space-x-2">
+                <button 
+                  className={`px-2 rounded ${currency === "$" ? "bg-wellness-purple text-white" : "bg-gray-200"}`}
+                  onClick={() => handleCurrencyChange("$")}
+                >
+                  $
+                </button>
+                <button 
+                  className={`px-2 rounded ${currency === "€" ? "bg-wellness-purple text-white" : "bg-gray-200"}`}
+                  onClick={() => handleCurrencyChange("€")}
+                >
+                  €
+                </button>
+                <button 
+                  className={`px-2 rounded ${currency === "£" ? "bg-wellness-purple text-white" : "bg-gray-200"}`}
+                  onClick={() => handleCurrencyChange("£")}
+                >
+                  £
+                </button>
+                <button 
+                  className={`px-2 rounded ${currency === "¥" ? "bg-wellness-purple text-white" : "bg-gray-200"}`}
+                  onClick={() => handleCurrencyChange("¥")}
+                >
+                  ¥
+                </button>
+              </div>
+            </div>
+            <div className="flex">
+              <div className="bg-gray-100 px-3 py-2 rounded-l-md border border-r-0 border-input">
+                {currency}
+              </div>
+              <Input
+                id="pricePerPack"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="e.g., 8.50"
+                value={pricePerPack}
+                onChange={(e) => setPricePerPack(e.target.value)}
+                className="rounded-l-none"
+              />
+            </div>
+          </div>
         </div>
-      </div>
 
-      <Button onClick={calculateSmokingImpact} className="w-full mb-6">
-        Calculate Impact
-      </Button>
+        <Button onClick={calculateSmokingImpact} className="w-full mb-6">
+          Calculate Impact
+        </Button>
 
-      {smokingImpact && (
-        <div className="bg-gray-50 p-4 rounded-md">
-          <div className="text-center mb-3">
-            <h3 className="text-xl font-bold">Smoking Impact Results</h3>
-            {userName && <p className="text-sm mb-2">Results for: {userName}</p>}
-          </div>
-          
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="bg-white p-3 rounded-md shadow-sm">
-              <p className="text-sm text-gray-700">Pack-Years</p>
-              <p className="font-bold text-lg">{smokingImpact.packYears}</p>
-              <p className="text-xs text-gray-500">
-                Medical metric for lifetime exposure
-              </p>
+        {smokingImpact && (
+          <div className="bg-gray-50 p-4 rounded-md">
+            <div className="text-center mb-3">
+              <h3 className="text-xl font-bold">Smoking Impact Results</h3>
+              {userName && <p className="text-sm mb-2">Results for: {userName}</p>}
             </div>
-            <div className="bg-white p-3 rounded-md shadow-sm">
-              <p className="text-sm text-gray-700">Health Risk</p>
-              <p className={`font-bold text-lg ${getHealthRiskColor(smokingImpact.healthRisk)}`}>
-                {smokingImpact.healthRisk}
-              </p>
-            </div>
-          </div>
           
-          <div className="space-y-4 mb-4">
-            <div className="bg-wellness-softRed p-3 rounded-md">
-              <h4 className="font-medium mb-2">Health Impact</h4>
-              <div className="space-y-1">
-                <div className="flex justify-between">
-                  <p className="text-sm">Life expectancy reduction:</p>
-                  <p className="font-medium">{smokingImpact.lifeLostDays.toLocaleString()} days ({smokingImpact.lifeLostYears} years)</p>
-                </div>
-                <div className="flex justify-between">
-                  <p className="text-sm">Total cigarettes smoked:</p>
-                  <p className="font-medium">{smokingImpact.totalCigarettes.toLocaleString()}</p>
-                </div>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="bg-white p-3 rounded-md shadow-sm">
+                <p className="text-sm text-gray-700">Pack-Years</p>
+                <p className="font-bold text-lg">{smokingImpact.packYears}</p>
+                <p className="text-xs text-gray-500">
+                  Medical metric for lifetime exposure
+                </p>
               </div>
-              <div className="mt-3 space-y-1">
-                <p className="text-sm font-medium">Toxin Exposure:</p>
-                <div className="flex justify-between">
-                  <p className="text-sm">Carbon monoxide:</p>
-                  <p className="font-medium">{smokingImpact.carbonMonoxide.toLocaleString()} grams</p>
-                </div>
-                <div className="flex justify-between">
-                  <p className="text-sm">Tar:</p>
-                  <p className="font-medium">{smokingImpact.tar.toLocaleString()} grams</p>
-                </div>
+              <div className="bg-white p-3 rounded-md shadow-sm">
+                <p className="text-sm text-gray-700">Health Risk</p>
+                <p className={`font-bold text-lg ${getHealthRiskColor(smokingImpact.healthRisk)}`}>
+                  {smokingImpact.healthRisk}
+                </p>
               </div>
             </div>
+          
+            <div className="space-y-4 mb-4">
+              <div className="bg-wellness-softRed p-3 rounded-md">
+                <h4 className="font-medium mb-2">Health Impact</h4>
+                <div className="space-y-1">
+                  <div className="flex justify-between">
+                    <p className="text-sm">Life expectancy reduction:</p>
+                    <p className="font-medium">{smokingImpact.lifeLostDays.toLocaleString()} days ({smokingImpact.lifeLostYears} years)</p>
+                  </div>
+                  <div className="flex justify-between">
+                    <p className="text-sm">Total cigarettes smoked:</p>
+                    <p className="font-medium">{smokingImpact.totalCigarettes.toLocaleString()}</p>
+                  </div>
+                </div>
+                <div className="mt-3 space-y-1">
+                  <p className="text-sm font-medium">Toxin Exposure:</p>
+                  <div className="flex justify-between">
+                    <p className="text-sm">Carbon monoxide:</p>
+                    <p className="font-medium">{smokingImpact.carbonMonoxide.toLocaleString()} grams</p>
+                  </div>
+                  <div className="flex justify-between">
+                    <p className="text-sm">Tar:</p>
+                    <p className="font-medium">{smokingImpact.tar.toLocaleString()} grams</p>
+                  </div>
+                </div>
+              </div>
             
-            <div className="bg-wellness-softGreen p-3 rounded-md">
-              <h4 className="font-medium mb-2">Financial Impact</h4>
-              <div className="space-y-1">
-                <div className="flex justify-between">
-                  <p className="text-sm">Total money spent:</p>
-                  <p className="font-medium">{currency}{smokingImpact.moneyCost.toLocaleString()}</p>
+              <div className="bg-wellness-softGreen p-3 rounded-md">
+                <h4 className="font-medium mb-2">Financial Impact</h4>
+                <div className="space-y-1">
+                  <div className="flex justify-between">
+                    <p className="text-sm">Total money spent:</p>
+                    <p className="font-medium">{currency}{smokingImpact.moneyCost.toLocaleString()}</p>
+                  </div>
+                  <div className="flex justify-between">
+                    <p className="text-sm">Monthly cost:</p>
+                    <p className="font-medium">{currency}{smokingImpact.monthlyMoneyCost.toLocaleString()}</p>
+                  </div>
+                  <div className="flex justify-between">
+                    <p className="text-sm">Potential investment value:</p>
+                    <p className="font-medium">{currency}{smokingImpact.financialOpportunityCost.toLocaleString()}</p>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <p className="text-sm">Monthly cost:</p>
-                  <p className="font-medium">{currency}{smokingImpact.monthlyMoneyCost.toLocaleString()}</p>
-                </div>
-                <div className="flex justify-between">
-                  <p className="text-sm">Potential investment value:</p>
-                  <p className="font-medium">{currency}{smokingImpact.financialOpportunityCost.toLocaleString()}</p>
-                </div>
+                <p className="text-xs text-gray-600 mt-2">
+                  Investment value assumes 7% annual return if the money was invested instead
+                </p>
               </div>
-              <p className="text-xs text-gray-600 mt-2">
-                Investment value assumes 7% annual return if the money was invested instead
-              </p>
             </div>
-          </div>
           
-          <div className="bg-white p-3 rounded-md shadow-sm mb-4">
-            <h4 className="font-medium mb-2">What These Results Mean</h4>
-            <div className="text-sm space-y-1">
-              <p>
-                <span className="font-medium">Pack-Years:</span> A clinical measure used by healthcare providers 
-                to assess smoking exposure and related health risks.
-              </p>
-              <p>
-                <span className="font-medium">Life Expectancy:</span> Based on research showing that each cigarette 
-                reduces life expectancy by approximately 11 minutes.
-              </p>
-              <p>
-                <span className="font-medium">Health Risk:</span> General assessment based on pack-years, with higher 
-                values indicating increased risk for smoking-related diseases.
-              </p>
+            <div className="bg-white p-3 rounded-md shadow-sm mb-4">
+              <h4 className="font-medium mb-2">What These Results Mean</h4>
+              <div className="text-sm space-y-1">
+                <p>
+                  <span className="font-medium">Pack-Years:</span> A clinical measure used by healthcare providers 
+                  to assess smoking exposure and related health risks.
+                </p>
+                <p>
+                  <span className="font-medium">Life Expectancy:</span> Based on research showing that each cigarette 
+                  reduces life expectancy by approximately 11 minutes.
+                </p>
+                <p>
+                  <span className="font-medium">Health Risk:</span> General assessment based on pack-years, with higher 
+                  values indicating increased risk for smoking-related diseases.
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="mt-4">
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" onClick={copyResults} className="flex items-center">
-                {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
-                {copied ? "Copied!" : "Copy Results"}
-              </Button>
-              <Button variant="outline" size="sm" onClick={shareLink} className="flex items-center">
-                <Share className="h-4 w-4 mr-1" />
-                Share Link
-              </Button>
-              <Button variant="outline" size="sm" onClick={downloadResults}>
-                Download CSV
-              </Button>
+            <div className="mt-4">
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" size="sm" onClick={copyResults} className="flex items-center">
+                  {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
+                  {copied ? "Copied!" : "Copy Results"}
+                </Button>
+                <Button variant="outline" size="sm" onClick={shareLink} className="flex items-center">
+                  <Share className="h-4 w-4 mr-1" />
+                  Share Link
+                </Button>
+                <Button variant="outline" size="sm" onClick={downloadResults}>
+                  Download CSV
+                </Button>
+              </div>
+            </div>
+          
+            <div className="mt-6 text-center text-sm text-wellness-purple">
+              <p>
+                This calculator provides estimates for educational purposes only and is not a diagnostic tool. 
+                Health risks vary by individual. For smoking cessation support, consult a healthcare provider.
+              </p>
+              <p className="mt-2">
+                Thank you for using Survive<span className="lowercase">w</span>ellness!
+              </p>
             </div>
           </div>
-          
-          <div className="mt-6 text-center text-sm text-wellness-purple">
-            <p>
-              This calculator provides estimates for educational purposes only and is not a diagnostic tool. 
-              Health risks vary by individual. For smoking cessation support, consult a healthcare provider.
-            </p>
-            <p className="mt-2">
-              Thank you for using Survive<span className="lowercase">w</span>ellness!
-            </p>
-          </div>
-        </div>
-      )}
-    </Card>
+        )}
+      </Card>
+
+      <IntroSection calculatorId="smoking" title="" description="" />
+    </div>
   );
 };
 

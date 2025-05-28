@@ -28,8 +28,6 @@ export const CalculatorSidebar = ({
   const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLButtonElement>(null);
-  const [scrolledManually, setScrolledManually] = useState<boolean>(false);
-  const [userHasScrolled, setUserHasScrolled] = useState<boolean>(false);
   
   // Track which category contains the active calculator
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -79,26 +77,9 @@ export const CalculatorSidebar = ({
     }
   }, [activeCalculator, calculators]);
 
-  // Track scroll state to prevent unwanted jumps
+  // Improved scroll behavior - scroll to active item without jumping to top
   useEffect(() => {
-    if (sidebarRef.current) {
-      const handleScroll = () => {
-        setScrolledManually(true);
-        setUserHasScrolled(true);
-        // Reset after a period of inactivity
-        setTimeout(() => setScrolledManually(false), 2000);
-      };
-      
-      sidebarRef.current.addEventListener('scroll', handleScroll);
-      return () => {
-        sidebarRef.current?.removeEventListener('scroll', handleScroll);
-      };
-    }
-  }, []);
-
-  // Improved scroll behavior - only scroll to active item if not manually scrolled recently
-  useEffect(() => {
-    if (!userHasScrolled && activeItemRef.current && sidebarRef.current) {
+    if (activeItemRef.current && sidebarRef.current) {
       const sidebarRect = sidebarRef.current.getBoundingClientRect();
       const activeItemRect = activeItemRef.current.getBoundingClientRect();
       
@@ -153,7 +134,13 @@ export const CalculatorSidebar = ({
                 {!isCollapsed && (
                   <div className="sidebar-category-content">
                     {filteredCalculators
-                      .filter(calc => calc.category === category)
+                      .filter(calc => {
+                        // Move pregnancy calculator to women's health
+                        if (calc.id === 'pregnancy') {
+                          return category === 'women';
+                        }
+                        return calc.category === category;
+                      })
                       .map(calculator => {
                         const IconComponent = getIconComponent(calculator.icon);
                         const isActive = activeCalculator === calculator.id;
@@ -217,7 +204,7 @@ export const CalculatorSidebar = ({
               </Button>
             </div>
             
-            <div className="overflow-y-auto max-h-[calc(100vh-100px)]" ref={sidebarRef}>
+            <div className="overflow-y-auto max-h-[calc(100vh-100px)] relative" ref={sidebarRef}>
               {categoryOrder.map(category => {
                 const CategoryIcon = getCategoryIcon(category);
                 const isGroupCollapsed = collapsedCategories[category];
@@ -248,7 +235,13 @@ export const CalculatorSidebar = ({
                     {!isGroupCollapsed && (
                       <div className="sidebar-category-content">
                         {filteredCalculators
-                          .filter(calc => calc.category === category)
+                          .filter(calc => {
+                            // Move pregnancy calculator to women's health
+                            if (calc.id === 'pregnancy') {
+                              return category === 'women';
+                            }
+                            return calc.category === category;
+                          })
                           .map(calculator => {
                             const IconComponent = getIconComponent(calculator.icon);
                             const isActive = activeCalculator === calculator.id;

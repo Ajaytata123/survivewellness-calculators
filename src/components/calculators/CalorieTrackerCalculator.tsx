@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -8,6 +7,7 @@ import { UnitSystem } from "@/types/calculatorTypes";
 import { downloadResultsAsCSV, copyResultsToClipboard, createShareableLink } from "@/utils/downloadUtils";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
 import { Check, Copy, Share, Plus, Minus } from "lucide-react";
+import IntroSection from "@/components/calculator/IntroSection";
 
 interface CalorieTrackerCalcProps {
   unitSystem: UnitSystem;
@@ -230,238 +230,242 @@ const CalorieTrackerCalculator: React.FC<CalorieTrackerCalcProps> = ({ unitSyste
   };
 
   return (
-    <Card className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">Calorie Tracker</h2>
-      <p className="text-gray-600 mb-4 text-center">
-        Track your daily food intake and activities to manage your calories
-      </p>
-
-      <div className="space-y-4 mb-6">
-        <div className="space-y-2">
-          <Label htmlFor="userName">Your Name (optional)</Label>
-          <Input
-            id="userName"
-            type="text"
-            placeholder="Enter your name"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="dailyGoal">Daily Calorie Goal</Label>
-          <Input
-            id="dailyGoal"
-            type="number"
-            placeholder="e.g., 2000"
-            value={dailyGoal}
-            onChange={(e) => setDailyGoal(e.target.value)}
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        {/* Food Entries Section */}
-        <div className="space-y-4">
-          <h3 className="font-semibold text-lg">Food Consumed</h3>
-          
-          <div className="flex space-x-2 mb-4">
-            <div className="flex-1">
-              <Input
-                placeholder="Food name"
-                value={newFood.name}
-                onChange={(e) => setNewFood({...newFood, name: e.target.value})}
-              />
-            </div>
-            <div className="w-24">
-              <Input
-                type="number"
-                placeholder="Calories"
-                value={newFood.calories}
-                onChange={(e) => setNewFood({...newFood, calories: e.target.value})}
-              />
-            </div>
-            <Button onClick={addFoodEntry} size="sm" className="px-3">
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-          
-          <div className="mb-4">
-            <p className="text-sm text-gray-500 mb-2">Common Foods:</p>
-            <div className="flex flex-wrap gap-2">
-              {foodPresets.slice(0, 5).map((preset, index) => (
-                <button
-                  key={index}
-                  onClick={() => addFoodPreset(preset)}
-                  className="text-xs bg-wellness-softBlue hover:bg-blue-100 text-blue-700 px-2 py-1 rounded"
-                >
-                  {preset.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-gray-50 rounded-md p-2 h-[250px] overflow-y-auto space-y-2">
-            {foodEntries.length === 0 ? (
-              <p className="text-gray-500 text-sm text-center italic py-2">No food entries yet</p>
-            ) : (
-              foodEntries.map((entry) => (
-                <div key={entry.id} className="flex justify-between items-center bg-white p-2 rounded shadow-sm">
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{entry.name}</p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <p className="text-sm">{entry.calories} cal</p>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="h-7 w-7 p-0" 
-                      onClick={() => removeFoodEntry(entry.id)}
-                    >
-                      <Minus className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-          
-          <div className="bg-wellness-softPurple p-3 rounded-md text-center">
-            <p className="text-sm text-gray-700">Total Calories Consumed</p>
-            <p className="font-bold text-lg">{getTotalFoodCalories()}</p>
-          </div>
-        </div>
-
-        {/* Activities Section */}
-        <div className="space-y-4">
-          <h3 className="font-semibold text-lg">Activities & Exercise</h3>
-          
-          <div className="flex space-x-2 mb-4">
-            <div className="flex-1">
-              <Input
-                placeholder="Activity name"
-                value={newActivity.name}
-                onChange={(e) => setNewActivity({...newActivity, name: e.target.value})}
-              />
-            </div>
-            <div className="w-24">
-              <Input
-                type="number"
-                placeholder="Calories"
-                value={newActivity.calories}
-                onChange={(e) => setNewActivity({...newActivity, calories: e.target.value})}
-              />
-            </div>
-            <Button onClick={addActivityEntry} size="sm" className="px-3">
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-          
-          <div className="mb-4">
-            <p className="text-sm text-gray-500 mb-2">Common Activities:</p>
-            <div className="flex flex-wrap gap-2">
-              {activityPresets.slice(0, 5).map((preset, index) => (
-                <button
-                  key={index}
-                  onClick={() => addActivityPreset(preset)}
-                  className="text-xs bg-wellness-softGreen hover:bg-green-100 text-green-700 px-2 py-1 rounded"
-                >
-                  {preset.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-gray-50 rounded-md p-2 h-[250px] overflow-y-auto space-y-2">
-            {activityEntries.length === 0 ? (
-              <p className="text-gray-500 text-sm text-center italic py-2">No activity entries yet</p>
-            ) : (
-              activityEntries.map((entry) => (
-                <div key={entry.id} className="flex justify-between items-center bg-white p-2 rounded shadow-sm">
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{entry.name}</p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <p className="text-sm">{entry.calories} cal</p>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="h-7 w-7 p-0" 
-                      onClick={() => removeActivityEntry(entry.id)}
-                    >
-                      <Minus className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-          
-          <div className="bg-wellness-softGreen p-3 rounded-md text-center">
-            <p className="text-sm text-gray-700">Total Calories Burned</p>
-            <p className="font-bold text-lg">{getTotalActivityCalories()}</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-gray-50 p-4 rounded-md mb-6">
-        <div className="text-center">
-          <h3 className="text-xl font-bold">Daily Summary</h3>
-          {userName && <p className="text-sm mb-2">Tracking for: {userName}</p>}
-        </div>
-
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="bg-wellness-softPurple p-3 rounded-md text-center">
-            <p className="text-sm text-gray-700">Consumed</p>
-            <p className="font-bold">{getTotalFoodCalories()} cal</p>
-          </div>
-          <div className="bg-wellness-softGreen p-3 rounded-md text-center">
-            <p className="text-sm text-gray-700">Burned</p>
-            <p className="font-bold">{getTotalActivityCalories()} cal</p>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <p className="font-medium">Daily Goal:</p>
-            <p>{dailyGoal} cal</p>
-          </div>
-          <div className="flex justify-between">
-            <p className="font-medium">Net Calories:</p>
-            <p>{getNetCalories()} cal</p>
-          </div>
-          <div className="flex justify-between">
-            <p className="font-medium">Status:</p>
-            <p className={`font-bold ${getCalorieStatusColor()}`}>{getCalorieStatus()}</p>
-          </div>
-        </div>
-
-        <div className="mt-4">
-          <div className="flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" onClick={copyResults} className="flex items-center">
-              {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
-              {copied ? "Copied!" : "Copy Results"}
-            </Button>
-            <Button variant="outline" size="sm" onClick={shareLink} className="flex items-center">
-              <Share className="h-4 w-4 mr-1" />
-              Share Link
-            </Button>
-            <Button variant="outline" size="sm" onClick={downloadResults}>
-              Download CSV
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <div className="text-center text-sm text-wellness-purple">
-        <p>
-          Remember that calorie tracking is just one aspect of a healthy lifestyle.
+    <div className="space-y-6">
+      <Card className="p-6">
+        <h2 className="text-2xl font-bold mb-4 text-center">Calorie Tracker</h2>
+        <p className="text-gray-600 mb-4 text-center">
+          Track your daily food intake and activities to manage your calories
         </p>
-        <p className="mt-2">
-          Thank you for using Survive<span className="lowercase">w</span>ellness!
-        </p>
-      </div>
-    </Card>
+
+        <div className="space-y-4 mb-6">
+          <div className="space-y-2">
+            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Input
+              id="userName"
+              type="text"
+              placeholder="Enter your name"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="dailyGoal">Daily Calorie Goal</Label>
+            <Input
+              id="dailyGoal"
+              type="number"
+              placeholder="e.g., 2000"
+              value={dailyGoal}
+              onChange={(e) => setDailyGoal(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Food Entries Section */}
+          <div className="space-y-4">
+            <h3 className="font-semibold text-lg">Food Consumed</h3>
+            
+            <div className="flex space-x-2 mb-4">
+              <div className="flex-1">
+                <Input
+                  placeholder="Food name"
+                  value={newFood.name}
+                  onChange={(e) => setNewFood({...newFood, name: e.target.value})}
+                />
+              </div>
+              <div className="w-24">
+                <Input
+                  type="number"
+                  placeholder="Calories"
+                  value={newFood.calories}
+                  onChange={(e) => setNewFood({...newFood, calories: e.target.value})}
+                />
+              </div>
+              <Button onClick={addFoodEntry} size="sm" className="px-3">
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div className="mb-4">
+              <p className="text-sm text-gray-500 mb-2">Common Foods:</p>
+              <div className="flex flex-wrap gap-2">
+                {foodPresets.slice(0, 5).map((preset, index) => (
+                  <button
+                    key={index}
+                    onClick={() => addFoodPreset(preset)}
+                    className="text-xs bg-wellness-softBlue hover:bg-blue-100 text-blue-700 px-2 py-1 rounded"
+                  >
+                    {preset.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-md p-2 h-[250px] overflow-y-auto space-y-2">
+              {foodEntries.length === 0 ? (
+                <p className="text-gray-500 text-sm text-center italic py-2">No food entries yet</p>
+              ) : (
+                foodEntries.map((entry) => (
+                  <div key={entry.id} className="flex justify-between items-center bg-white p-2 rounded shadow-sm">
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">{entry.name}</p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <p className="text-sm">{entry.calories} cal</p>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-7 w-7 p-0" 
+                        onClick={() => removeFoodEntry(entry.id)}
+                      >
+                        <Minus className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+            
+            <div className="bg-wellness-softPurple p-3 rounded-md text-center">
+              <p className="text-sm text-gray-700">Total Calories Consumed</p>
+              <p className="font-bold text-lg">{getTotalFoodCalories()}</p>
+            </div>
+          </div>
+
+          {/* Activities Section */}
+          <div className="space-y-4">
+            <h3 className="font-semibold text-lg">Activities & Exercise</h3>
+            
+            <div className="flex space-x-2 mb-4">
+              <div className="flex-1">
+                <Input
+                  placeholder="Activity name"
+                  value={newActivity.name}
+                  onChange={(e) => setNewActivity({...newActivity, name: e.target.value})}
+                />
+              </div>
+              <div className="w-24">
+                <Input
+                  type="number"
+                  placeholder="Calories"
+                  value={newActivity.calories}
+                  onChange={(e) => setNewActivity({...newActivity, calories: e.target.value})}
+                />
+              </div>
+              <Button onClick={addActivityEntry} size="sm" className="px-3">
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div className="mb-4">
+              <p className="text-sm text-gray-500 mb-2">Common Activities:</p>
+              <div className="flex flex-wrap gap-2">
+                {activityPresets.slice(0, 5).map((preset, index) => (
+                  <button
+                    key={index}
+                    onClick={() => addActivityPreset(preset)}
+                    className="text-xs bg-wellness-softGreen hover:bg-green-100 text-green-700 px-2 py-1 rounded"
+                  >
+                    {preset.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-md p-2 h-[250px] overflow-y-auto space-y-2">
+              {activityEntries.length === 0 ? (
+                <p className="text-gray-500 text-sm text-center italic py-2">No activity entries yet</p>
+              ) : (
+                activityEntries.map((entry) => (
+                  <div key={entry.id} className="flex justify-between items-center bg-white p-2 rounded shadow-sm">
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">{entry.name}</p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <p className="text-sm">{entry.calories} cal</p>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-7 w-7 p-0" 
+                        onClick={() => removeActivityEntry(entry.id)}
+                      >
+                        <Minus className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+            
+            <div className="bg-wellness-softGreen p-3 rounded-md text-center">
+              <p className="text-sm text-gray-700">Total Calories Burned</p>
+              <p className="font-bold text-lg">{getTotalActivityCalories()}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gray-50 p-4 rounded-md mb-6">
+          <div className="text-center">
+            <h3 className="text-xl font-bold">Daily Summary</h3>
+            {userName && <p className="text-sm mb-2">Tracking for: {userName}</p>}
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="bg-wellness-softPurple p-3 rounded-md text-center">
+              <p className="text-sm text-gray-700">Consumed</p>
+              <p className="font-bold">{getTotalFoodCalories()} cal</p>
+            </div>
+            <div className="bg-wellness-softGreen p-3 rounded-md text-center">
+              <p className="text-sm text-gray-700">Burned</p>
+              <p className="font-bold">{getTotalActivityCalories()} cal</p>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <p className="font-medium">Daily Goal:</p>
+              <p>{dailyGoal} cal</p>
+            </div>
+            <div className="flex justify-between">
+              <p className="font-medium">Net Calories:</p>
+              <p>{getNetCalories()} cal</p>
+            </div>
+            <div className="flex justify-between">
+              <p className="font-medium">Status:</p>
+              <p className={`font-bold ${getCalorieStatusColor()}`}>{getCalorieStatus()}</p>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" size="sm" onClick={copyResults} className="flex items-center">
+                {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
+                {copied ? "Copied!" : "Copy Results"}
+              </Button>
+              <Button variant="outline" size="sm" onClick={shareLink} className="flex items-center">
+                <Share className="h-4 w-4 mr-1" />
+                Share Link
+              </Button>
+              <Button variant="outline" size="sm" onClick={downloadResults}>
+                Download CSV
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-center text-sm text-wellness-purple">
+          <p>
+            Remember that calorie tracking is just one aspect of a healthy lifestyle.
+          </p>
+          <p className="mt-2">
+            Thank you for using Survive<span className="lowercase">w</span>ellness!
+          </p>
+        </div>
+      </Card>
+
+      <IntroSection calculatorId="calories" title="" description="" />
+    </div>
   );
 };
 

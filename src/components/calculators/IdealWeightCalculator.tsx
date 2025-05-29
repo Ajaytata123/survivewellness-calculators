@@ -8,8 +8,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { UnitSystem } from "@/types/calculatorTypes";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
-import { Copy, Share, Download } from "lucide-react";
-import { downloadResultsAsCSV, copyResultsToClipboard, shareResults } from "@/utils/downloadUtils";
 import IntroSection from "@/components/calculator/IntroSection";
 
 interface IdealWeightCalcProps {
@@ -90,43 +88,6 @@ const IdealWeightCalculator: React.FC<IdealWeightCalcProps> = ({ unitSystem, onU
     onUnitSystemChange(value as UnitSystem);
     setHeight("");
     setResults(null);
-  };
-
-  const prepareResults = () => {
-    if (!results) return null;
-    return {
-      title: "Ideal Weight Calculator",
-      date: new Date().toLocaleDateString(),
-      unitSystem,
-      userName: userName || "User",
-      results: {
-        "Robinson Formula": `${results.robinson} ${unitSystem === "metric" ? "kg" : "lbs"}`,
-        "Miller Formula": `${results.miller} ${unitSystem === "metric" ? "kg" : "lbs"}`,
-        "Devine Formula": `${results.devine} ${unitSystem === "metric" ? "kg" : "lbs"}`,
-        "Hamwi Formula": `${results.hamwi} ${unitSystem === "metric" ? "kg" : "lbs"}`,
-        "Average Ideal Weight": `${results.average} ${unitSystem === "metric" ? "kg" : "lbs"}`,
-        "Height": `${height} ${unitSystem === "metric" ? "cm" : "inches"}`,
-        "Gender": gender
-      }
-    };
-  };
-
-  const handleCopyResults = () => {
-    if (!results) return;
-    const resultsData = prepareResults();
-    if (resultsData) copyResultsToClipboard(resultsData);
-  };
-
-  const handleShareResults = () => {
-    if (!results) return;
-    const resultsData = prepareResults();
-    if (resultsData) shareResults(resultsData);
-  };
-
-  const handleDownloadResults = () => {
-    if (!results) return;
-    const resultsData = prepareResults();
-    if (resultsData) downloadResultsAsCSV(resultsData, "Ideal-Weight-Calculator");
   };
 
   return (
@@ -211,69 +172,38 @@ const IdealWeightCalculator: React.FC<IdealWeightCalcProps> = ({ unitSystem, onU
         </Button>
 
         {results && (
-          <div className="results-container bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+          <div className="bg-gray-50 p-4 rounded-md">
             <div className="text-center mb-4">
               <h3 className="text-xl font-bold">Your Ideal Weight Results</h3>
               {userName && <p className="text-sm mt-2">Results for: {userName}</p>}
             </div>
 
             <div className="grid grid-cols-2 gap-3 mb-4">
-              <div className="bg-white dark:bg-gray-700 p-3 rounded-md text-center">
-                <p className="text-sm text-gray-700 dark:text-gray-300">Robinson Formula</p>
+              <div className="bg-white p-3 rounded-md text-center">
+                <p className="text-sm text-gray-700">Robinson Formula</p>
                 <p className="text-lg font-bold">{results.robinson} {unitSystem === "metric" ? "kg" : "lbs"}</p>
               </div>
-              <div className="bg-white dark:bg-gray-700 p-3 rounded-md text-center">
-                <p className="text-sm text-gray-700 dark:text-gray-300">Miller Formula</p>
+              <div className="bg-white p-3 rounded-md text-center">
+                <p className="text-sm text-gray-700">Miller Formula</p>
                 <p className="text-lg font-bold">{results.miller} {unitSystem === "metric" ? "kg" : "lbs"}</p>
               </div>
-              <div className="bg-white dark:bg-gray-700 p-3 rounded-md text-center">
-                <p className="text-sm text-gray-700 dark:text-gray-300">Devine Formula</p>
+              <div className="bg-white p-3 rounded-md text-center">
+                <p className="text-sm text-gray-700">Devine Formula</p>
                 <p className="text-lg font-bold">{results.devine} {unitSystem === "metric" ? "kg" : "lbs"}</p>
               </div>
-              <div className="bg-white dark:bg-gray-700 p-3 rounded-md text-center">
-                <p className="text-sm text-gray-700 dark:text-gray-300">Hamwi Formula</p>
+              <div className="bg-white p-3 rounded-md text-center">
+                <p className="text-sm text-gray-700">Hamwi Formula</p>
                 <p className="text-lg font-bold">{results.hamwi} {unitSystem === "metric" ? "kg" : "lbs"}</p>
               </div>
             </div>
 
-            <div className="bg-wellness-softPurple/50 dark:bg-wellness-softPurple/30 p-4 rounded-md mb-4 text-center">
-              <p className="text-sm text-gray-700 dark:text-gray-300">Average Ideal Weight</p>
+            <div className="bg-wellness-softPurple p-4 rounded-md mb-4 text-center">
+              <p className="text-sm text-gray-700">Average Ideal Weight</p>
               <p className="text-2xl font-bold text-wellness-purple">{results.average} {unitSystem === "metric" ? "kg" : "lbs"}</p>
             </div>
 
-            <div className="mt-4 mb-2">
-              <p className="text-gray-600 dark:text-gray-400 mb-3">Based on multiple validated medical formulas</p>
-              <div className="flex flex-wrap gap-3 justify-start">
-                <Button 
-                  variant="outline" 
-                  className="flex items-center gap-2 bg-[#e6f7ff] text-[#0ea5e9] border-[#0ea5e9] hover:bg-[#d1edff]"
-                  onClick={handleCopyResults}
-                >
-                  <Copy className="h-4 w-4" />
-                  Copy Results
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="flex items-center gap-2 bg-[#eee6ff] text-[#8b5cf6] border-[#8b5cf6] hover:bg-[#e2d9f5]"
-                  onClick={handleShareResults}
-                >
-                  <Share className="h-4 w-4" />
-                  Share Link
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="flex items-center gap-2 bg-[#e6fff0] text-[#10b981] border-[#10b981] hover:bg-[#d1f7e4]"
-                  onClick={handleDownloadResults}
-                >
-                  <Download className="h-4 w-4" />
-                  Download CSV
-                </Button>
-              </div>
-            </div>
-            
-            <div className="text-center">
-              <p className="text-purple-500 dark:text-purple-400 font-medium mb-1">Thank you for using Survivewellness!</p>
-              <p className="text-sm text-gray-500">For more calculators please visit our dedicated calculators section</p>
+            <div className="mt-6 text-center text-sm text-wellness-purple">
+              <p>Thank you for using Survive<span className="lowercase">w</span>ellness!</p>
             </div>
           </div>
         )}

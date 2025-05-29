@@ -1,4 +1,3 @@
-
 import React from 'react';
 import InfoSection from './InfoSection';
 
@@ -21,20 +20,6 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
             "Widely accepted medical standard"
           ],
           usage: "Enter your height and weight to get your BMI category and health recommendations."
-        };
-
-      case 'idealweight':
-        return {
-          title: "Understanding Ideal Weight Calculations",
-          description: "Ideal weight calculators use validated medical formulas to estimate a healthy weight range based on your height and gender. Different formulas may give slightly different results.",
-          iconName: "Scale",
-          benefits: [
-            "Evidence-based weight targets",
-            "Multiple formula comparison", 
-            "Gender-specific calculations",
-            "Health goal setting support"
-          ],
-          usage: "Enter your height and gender to get ideal weight estimates from multiple medical formulas."
         };
       
       case 'heartrate':

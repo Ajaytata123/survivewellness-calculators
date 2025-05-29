@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Search } from "@/components/ui/search";
 import { CalculatorInfo, CalculatorCategory, getCategoryName } from '@/types/calculator';

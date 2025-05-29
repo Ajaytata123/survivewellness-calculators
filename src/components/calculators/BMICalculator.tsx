@@ -7,12 +7,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BMICalcProps } from "@/types/calculatorTypes";
 import { calculateBMI, getBMICategory } from "@/utils/calculationUtils";
 import { validateWeight } from "@/utils/validationUtils";
-import { showErrorToast } from "@/utils/notificationUtils";
+import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
 import IntroSectionTemplate from "@/components/calculator/IntroSectionTemplate";
 import { HeightInputField } from "@/components/ui/height-input-field";
-import ResultActions from "@/components/calculator/ResultActions";
-import { Download, Copy, Share } from "lucide-react";
+import { Copy, Share, Download } from "lucide-react";
 import { downloadResultsAsCSV, copyResultsToClipboard, shareResults } from "@/utils/downloadUtils";
+import IntroSection from "@/components/calculator/IntroSection";
 
 // Add the BMI Calculator with required changes
 const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange }) => {
@@ -33,13 +33,11 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
     const newErrors: {height?: string; weight?: string} = {};
     let hasErrors = false;
 
-    // Validate height
     if (!height || parseFloat(height) <= 0) {
       newErrors.height = "Please enter a valid height";
       hasErrors = true;
     }
 
-    // Validate weight
     if (!weight || parseFloat(weight) <= 0) {
       newErrors.weight = "Please enter a valid weight";
       hasErrors = true;
@@ -60,8 +58,8 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
       const bmiCategoryResult = getBMICategory(bmiValue);
       
       setBmi(bmiValue);
-      setCategory(bmiCategoryResult.category); // Use the category string
-      setBmiColor(bmiCategoryResult.color); // Store the color for UI
+      setCategory(bmiCategoryResult.category);
+      setBmiColor(bmiCategoryResult.color);
       
     } catch (error) {
       console.error("Error calculating BMI:", error);
@@ -78,61 +76,37 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
     setBmiColor("");
   };
 
-  const handleShareResults = () => {
-    if (bmi === null) return;
-
-    const results = {
+  const prepareResults = () => {
+    return {
       title: "BMI Calculator",
       date: new Date().toLocaleDateString(),
       unitSystem: unitSystem,
       userName: userName || "User",
       results: {
-        "BMI Value": bmi.toFixed(1),
+        "BMI Value": bmi?.toFixed(1) || "",
         "BMI Category": category,
         "Height": `${height} ${unitSystem === "metric" ? "cm" : "inches"}`,
         "Weight": `${weight} ${unitSystem === "metric" ? "kg" : "pounds"}`
       }
     };
-
-    shareResults(results);
   };
 
   const handleCopyResults = () => {
     if (bmi === null) return;
+    const resultsData = prepareResults();
+    copyResultsToClipboard(resultsData);
+  };
 
-    const results = {
-      title: "BMI Calculator",
-      date: new Date().toLocaleDateString(),
-      unitSystem: unitSystem,
-      userName: userName || "User",
-      results: {
-        "BMI Value": bmi.toFixed(1),
-        "BMI Category": category,
-        "Height": `${height} ${unitSystem === "metric" ? "cm" : "inches"}`,
-        "Weight": `${weight} ${unitSystem === "metric" ? "kg" : "pounds"}`
-      }
-    };
-
-    copyResultsToClipboard(results);
+  const handleShareResults = () => {
+    if (bmi === null) return;
+    const resultsData = prepareResults();
+    shareResults(resultsData);
   };
 
   const handleDownloadResults = () => {
     if (bmi === null) return;
-
-    const results = {
-      title: "BMI Calculator",
-      date: new Date().toLocaleDateString(),
-      unitSystem: unitSystem,
-      userName: userName || "User",
-      results: {
-        "BMI Value": bmi.toFixed(1),
-        "BMI Category": category,
-        "Height": `${height} ${unitSystem === "metric" ? "cm" : "inches"}`,
-        "Weight": `${weight} ${unitSystem === "metric" ? "kg" : "pounds"}`
-      }
-    };
-
-    downloadResultsAsCSV(results, "BMI-Calculator");
+    const resultsData = prepareResults();
+    downloadResultsAsCSV(resultsData, "BMI-Calculator");
   };
 
   return (
@@ -239,11 +213,12 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
               </div>
             </div>
             
-            <div className="mt-6 space-y-4">
-              <div className="flex flex-wrap gap-3 justify-center">
+            <div className="mt-4 mb-2">
+              <p className="text-gray-600 dark:text-gray-400 mb-3">Reference: U.S. National Institutes of Health (NIH)</p>
+              <div className="flex flex-wrap gap-3 justify-start">
                 <Button 
                   variant="outline" 
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 bg-[#e6f7ff] text-[#0ea5e9] border-[#0ea5e9] hover:bg-[#d1edff]"
                   onClick={handleCopyResults}
                 >
                   <Copy className="h-4 w-4" />
@@ -251,15 +226,15 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 bg-[#eee6ff] text-[#8b5cf6] border-[#8b5cf6] hover:bg-[#e2d9f5]"
                   onClick={handleShareResults}
                 >
                   <Share className="h-4 w-4" />
-                  Share Results
+                  Share Link
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 bg-[#e6fff0] text-[#10b981] border-[#10b981] hover:bg-[#d1f7e4]"
                   onClick={handleDownloadResults}
                 >
                   <Download className="h-4 w-4" />
@@ -267,16 +242,16 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
                 </Button>
               </div>
             </div>
+            
+            <div className="text-center">
+              <p className="text-purple-500 dark:text-purple-400 font-medium mb-1">Thank you for using Survivewellness!</p>
+              <p className="text-sm text-gray-500">For more calculators please visit our dedicated calculators section</p>
+            </div>
           </div>
         )}
       </Card>
 
-      {/* Add info section at the bottom */}
-      <IntroSectionTemplate
-        title="What is BMI (Body Mass Index)?"
-        calculatorName="BMI"
-        description="BMI is a simple screening tool that measures body fat based on height and weight. It helps assess whether you're underweight, normal weight, overweight, or obese."
-      />
+      <IntroSection calculatorId="bmi" title="" description="" />
     </div>
   );
 };

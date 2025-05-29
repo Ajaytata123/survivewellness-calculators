@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Search } from "@/components/ui/search";
@@ -82,35 +83,6 @@ export const CalculatorSidebar = ({
     }
   }, [activeCalculator, calculators]);
 
-  // Fixed scroll behavior - prevent jumping to top and maintain position
-  useEffect(() => {
-    if (activeItemRef.current && sidebarRef.current) {
-      const sidebar = sidebarRef.current;
-      const activeItem = activeItemRef.current;
-      
-      // Get current scroll position
-      const currentScrollTop = sidebar.scrollTop;
-      const sidebarHeight = sidebar.clientHeight;
-      const activeItemTop = activeItem.offsetTop;
-      const activeItemHeight = activeItem.offsetHeight;
-      
-      // Check if active item is visible in viewport
-      const itemVisibleTop = activeItemTop - currentScrollTop;
-      const itemVisibleBottom = itemVisibleTop + activeItemHeight;
-      
-      // Only scroll if item is not fully visible
-      if (itemVisibleTop < 100 || itemVisibleBottom > sidebarHeight - 100) {
-        const targetScroll = Math.max(0, activeItemTop - (sidebarHeight / 2) + (activeItemHeight / 2));
-        
-        // Use smooth scrolling with reduced movement
-        sidebar.scrollTo({
-          top: targetScroll,
-          behavior: 'smooth'
-        });
-      }
-    }
-  }, [activeCalculator]); // Only depend on activeCalculator
-  
   // Mobile sidebar
   const MobileSidebar = () => (
     <Sheet>

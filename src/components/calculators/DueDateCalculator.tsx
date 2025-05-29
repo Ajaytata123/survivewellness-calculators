@@ -158,230 +158,234 @@ const DueDateCalculator: React.FC<DueDateCalcProps> = ({ unitSystem }) => {
   const currentWeek = calculateCurrentWeek();
 
   return (
-    <Card className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">Due Date Calculator</h2>
-      
-      <IntroSection 
-        title="What is a Due Date Calculator?"
-        description="This calculator helps expectant mothers estimate their baby's due date based either on the first day of their last menstrual period (LMP) or their conception date. It also provides a pregnancy calendar showing your three trimesters."
-      />
-      
-      <div className="space-y-4 mb-6">
-        <div className="space-y-2">
-          <Label htmlFor="userName">Your Name (optional)</Label>
-          <Input
-            id="userName"
-            type="text"
-            placeholder="Enter your name"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
+    <div className="space-y-6">
+      <Card className="p-6">
+        <h2 className="text-2xl font-bold mb-4 text-center">Due Date Calculator</h2>
+        
+        <IntroSection 
+          title="What is a Due Date Calculator?"
+          description="This calculator helps expectant mothers estimate their baby's due date based either on the first day of their last menstrual period (LMP) or their conception date. It also provides a pregnancy calendar showing your three trimesters."
+        />
+        
+        <div className="space-y-4 mb-6">
+          <div className="space-y-2">
+            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Input
+              id="userName"
+              type="text"
+              placeholder="Enter your name"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Calculation Method</Label>
+            <RadioGroup
+              value={calculationType}
+              onValueChange={(value) => {
+                setCalculationType(value as "lmp" | "conception");
+                setErrors({});
+              }}
+              className="grid grid-cols-2 gap-4"
+            >
+              <div className="flex items-center space-x-2 bg-gray-100 dark:bg-gray-800 p-3 rounded-md">
+                <RadioGroupItem value="lmp" id="method-lmp" />
+                <div>
+                  <Label htmlFor="method-lmp">Last Menstrual Period</Label>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">If you know when your last period started</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2 bg-gray-100 dark:bg-gray-800 p-3 rounded-md">
+                <RadioGroupItem value="conception" id="method-conception" />
+                <div>
+                  <Label htmlFor="method-conception">Conception Date</Label>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">If you know your ovulation date</p>
+                </div>
+              </div>
+            </RadioGroup>
+          </div>
+
+          {calculationType === "lmp" ? (
+            <DatePicker
+              date={lmpDate}
+              onDateChange={setLmpDate}
+              label="First Day of Last Menstrual Period"
+              placeholder="Select date"
+              id="lmpDate"
+              error={errors.lmpDate}
+            />
+          ) : (
+            <DatePicker
+              date={conceptionDate}
+              onDateChange={setConceptionDate}
+              label="Conception Date"
+              placeholder="Select date"
+              id="conceptionDate"
+              error={errors.conceptionDate}
+            />
+          )}
         </div>
 
-        <div className="space-y-2">
-          <Label>Calculation Method</Label>
-          <RadioGroup
-            value={calculationType}
-            onValueChange={(value) => {
-              setCalculationType(value as "lmp" | "conception");
-              setErrors({});
-            }}
-            className="grid grid-cols-2 gap-4"
-          >
-            <div className="flex items-center space-x-2 bg-gray-100 dark:bg-gray-800 p-3 rounded-md">
-              <RadioGroupItem value="lmp" id="method-lmp" />
-              <div>
-                <Label htmlFor="method-lmp">Last Menstrual Period</Label>
-                <p className="text-xs text-gray-500 dark:text-gray-400">If you know when your last period started</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 bg-gray-100 dark:bg-gray-800 p-3 rounded-md">
-              <RadioGroupItem value="conception" id="method-conception" />
-              <div>
-                <Label htmlFor="method-conception">Conception Date</Label>
-                <p className="text-xs text-gray-500 dark:text-gray-400">If you know your ovulation date</p>
-              </div>
-            </div>
-          </RadioGroup>
-        </div>
+        <Button onClick={calculateDueDate} className="w-full mb-6">
+          Calculate Due Date
+        </Button>
 
-        {calculationType === "lmp" ? (
-          <DatePicker
-            date={lmpDate}
-            onDateChange={setLmpDate}
-            label="First Day of Last Menstrual Period"
-            placeholder="Select date"
-            id="lmpDate"
-            error={errors.lmpDate}
-          />
-        ) : (
-          <DatePicker
-            date={conceptionDate}
-            onDateChange={setConceptionDate}
-            label="Conception Date"
-            placeholder="Select date"
-            id="conceptionDate"
-            error={errors.conceptionDate}
-          />
-        )}
-      </div>
-
-      <Button onClick={calculateDueDate} className="w-full mb-6">
-        Calculate Due Date
-      </Button>
-
-      {dueDate && (
-        <div id="duedate-results" className="results-container">
-          <div className="text-center mb-6">
-            <h3 className="text-xl font-bold">Your Pregnancy Timeline</h3>
-            {userName && <p className="text-sm mb-2">Results for: {userName}</p>}
-            
-            <div className="result-highlight p-6 mt-4 rounded-lg">
-              <p className="text-gray-600 dark:text-gray-400">Estimated Due Date</p>
-              <p className="text-3xl font-bold text-wellness-pink dark:text-wellness-pink/90">
-                {format(dueDate, "MMMM d, yyyy")}
-              </p>
+        {dueDate && (
+          <div id="duedate-results" className="results-container">
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-bold">Your Pregnancy Timeline</h3>
+              {userName && <p className="text-sm mb-2">Results for: {userName}</p>}
               
-              {currentWeek !== null && (
-                <>
-                  <p className="mt-4 text-gray-600 dark:text-gray-400">Current Week</p>
-                  <div className="text-2xl font-bold">
-                    {currentWeek} {currentWeek === 1 ? "week" : "weeks"}
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 mt-2">
-                    <div 
-                      className="h-4 rounded-full bg-wellness-purple" 
-                      style={{ width: `${Math.min(100, (currentWeek / 40) * 100)}%` }}
-                    />
-                  </div>
-                  <p className="text-sm mt-1 text-gray-500 dark:text-gray-400">
-                    {Math.max(0, 40 - currentWeek)} weeks remaining
-                  </p>
-                </>
-              )}
+              <div className="result-highlight p-6 mt-4 rounded-lg">
+                <p className="text-gray-600 dark:text-gray-400">Estimated Due Date</p>
+                <p className="text-3xl font-bold text-wellness-pink dark:text-wellness-pink/90">
+                  {format(dueDate, "MMMM d, yyyy")}
+                </p>
+                
+                {currentWeek !== null && (
+                  <>
+                    <p className="mt-4 text-gray-600 dark:text-gray-400">Current Week</p>
+                    <div className="text-2xl font-bold">
+                      {currentWeek} {currentWeek === 1 ? "week" : "weeks"}
+                    </div>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 mt-2">
+                      <div 
+                        className="h-4 rounded-full bg-wellness-purple" 
+                        style={{ width: `${Math.min(100, (currentWeek / 40) * 100)}%` }}
+                      />
+                    </div>
+                    <p className="text-sm mt-1 text-gray-500 dark:text-gray-400">
+                      {Math.max(0, 40 - currentWeek)} weeks remaining
+                    </p>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
 
-          <div className="space-y-2 mb-6">
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-              <h4 className="font-semibold mb-2">Trimester Breakdown</h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-3 bg-wellness-softPink/30 dark:bg-wellness-softPink/20 rounded-md">
-                  <p className="text-sm font-medium">First Trimester</p>
-                  <p className="font-bold">
-                    Weeks 1-13<br/>
-                    {calculationType === "lmp" && lmpDate
-                      ? `${format(lmpDate, "MMM d")} - ${format(addWeeks(lmpDate, 13), "MMM d")}`
-                      : conceptionDate
-                        ? `${format(subDays(conceptionDate, 14), "MMM d")} - ${format(addWeeks(subDays(conceptionDate, 14), 13), "MMM d")}`
-                        : ""
-                    }
-                  </p>
-                </div>
-                <div className="p-3 bg-wellness-softPurple/30 dark:bg-wellness-softPurple/20 rounded-md">
-                  <p className="text-sm font-medium">Second Trimester</p>
-                  <p className="font-bold">
-                    Weeks 14-27<br/>
-                    {calculationType === "lmp" && lmpDate
-                      ? `${format(addWeeks(lmpDate, 14), "MMM d")} - ${format(addWeeks(lmpDate, 27), "MMM d")}`
-                      : conceptionDate
-                        ? `${format(addWeeks(subDays(conceptionDate, 14), 14), "MMM d")} - ${format(addWeeks(subDays(conceptionDate, 14), 27), "MMM d")}`
-                        : ""
-                    }
-                  </p>
-                </div>
-                <div className="p-3 bg-wellness-softOrange/30 dark:bg-wellness-softOrange/20 rounded-md">
-                  <p className="text-sm font-medium">Third Trimester</p>
-                  <p className="font-bold">
-                    Weeks 28-40<br/>
-                    {calculationType === "lmp" && lmpDate
-                      ? `${format(addWeeks(lmpDate, 28), "MMM d")} - ${format(dueDate, "MMM d")}`
-                      : conceptionDate
-                        ? `${format(addWeeks(subDays(conceptionDate, 14), 28), "MMM d")} - ${format(dueDate, "MMM d")}`
-                        : ""
-                    }
-                  </p>
+            <div className="space-y-2 mb-6">
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+                <h4 className="font-semibold mb-2">Trimester Breakdown</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-3 bg-wellness-softPink/30 dark:bg-wellness-softPink/20 rounded-md">
+                    <p className="text-sm font-medium">First Trimester</p>
+                    <p className="font-bold">
+                      Weeks 1-13<br/>
+                      {calculationType === "lmp" && lmpDate
+                        ? `${format(lmpDate, "MMM d")} - ${format(addWeeks(lmpDate, 13), "MMM d")}`
+                        : conceptionDate
+                          ? `${format(subDays(conceptionDate, 14), "MMM d")} - ${format(addWeeks(subDays(conceptionDate, 14), 13), "MMM d")}`
+                          : ""
+                      }
+                    </p>
+                  </div>
+                  <div className="p-3 bg-wellness-softPurple/30 dark:bg-wellness-softPurple/20 rounded-md">
+                    <p className="text-sm font-medium">Second Trimester</p>
+                    <p className="font-bold">
+                      Weeks 14-27<br/>
+                      {calculationType === "lmp" && lmpDate
+                        ? `${format(addWeeks(lmpDate, 14), "MMM d")} - ${format(addWeeks(lmpDate, 27), "MMM d")}`
+                        : conceptionDate
+                          ? `${format(addWeeks(subDays(conceptionDate, 14), 14), "MMM d")} - ${format(addWeeks(subDays(conceptionDate, 14), 27), "MMM d")}`
+                          : ""
+                      }
+                    </p>
+                  </div>
+                  <div className="p-3 bg-wellness-softOrange/30 dark:bg-wellness-softOrange/20 rounded-md">
+                    <p className="text-sm font-medium">Third Trimester</p>
+                    <p className="font-bold">
+                      Weeks 28-40<br/>
+                      {calculationType === "lmp" && lmpDate
+                        ? `${format(addWeeks(lmpDate, 28), "MMM d")} - ${format(dueDate, "MMM d")}`
+                        : conceptionDate
+                          ? `${format(addWeeks(subDays(conceptionDate, 14), 28), "MMM d")} - ${format(dueDate, "MMM d")}`
+                          : ""
+                      }
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg">
-            <h4 className="font-semibold mb-2">Pregnancy Calendar</h4>
-            <Calendar
-              month={calendarMonth}
-              onMonthChange={setCalendarMonth}
-              modifiers={modifiers}
-              modifiersClassNames={modifiersClassNames}
-              showOutsideDays={false}
-              className="w-full"
+            <div className="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg">
+              <h4 className="font-semibold mb-2">Pregnancy Calendar</h4>
+              <Calendar
+                month={calendarMonth}
+                onMonthChange={setCalendarMonth}
+                modifiers={modifiers}
+                modifiersClassNames={modifiersClassNames}
+                showOutsideDays={false}
+                className="w-full"
+              />
+              
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-2 text-xs">
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-wellness-softPink mr-2"></div>
+                  <span>First Trimester</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-wellness-softPurple mr-2"></div>
+                  <span>Second Trimester</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-wellness-softOrange mr-2"></div>
+                  <span>Third Trimester</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-wellness-pink mr-2"></div>
+                  <span>Due Date</span>
+                </div>
+              </div>
+            </div>
+
+            <ResultActions
+              title="Due Date Calculator"
+              results={{
+                "Estimated Due Date": format(dueDate, "MMMM d, yyyy"),
+                "Calculation Method": calculationType === "lmp" ? "Last Menstrual Period" : "Conception Date",
+                ...(calculationType === "lmp"
+                  ? { "Last Menstrual Period": lmpDate ? format(lmpDate, "MMMM d, yyyy") : "" }
+                  : { "Conception Date": conceptionDate ? format(conceptionDate, "MMMM d, yyyy") : "" }
+                ),
+                "First Trimester": calculationType === "lmp" && lmpDate
+                  ? `${format(lmpDate, "MMM d")} - ${format(addWeeks(lmpDate, 13), "MMM d")}`
+                  : conceptionDate
+                    ? `${format(subDays(conceptionDate, 14), "MMM d")} - ${format(addWeeks(subDays(conceptionDate, 14), 13), "MMM d")}`
+                    : "",
+                "Second Trimester": calculationType === "lmp" && lmpDate
+                  ? `${format(addWeeks(lmpDate, 14), "MMM d")} - ${format(addWeeks(lmpDate, 27), "MMM d")}`
+                  : conceptionDate
+                    ? `${format(addWeeks(subDays(conceptionDate, 14), 14), "MMM d")} - ${format(addWeeks(subDays(conceptionDate, 14), 27), "MMM d")}`
+                    : "",
+                "Third Trimester": calculationType === "lmp" && lmpDate
+                  ? `${format(addWeeks(lmpDate, 28), "MMM d")} - ${format(dueDate, "MMM d")}`
+                  : conceptionDate
+                    ? `${format(addWeeks(subDays(conceptionDate, 14), 28), "MMM d")} - ${format(dueDate, "MMM d")}`
+                    : ""
+              }}
+              fileName="Due-Date-Calculator"
+              userName={userName}
+              unitSystem={unitSystem}
             />
             
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-2 text-xs">
-              <div className="flex items-center">
-                <div className="w-4 h-4 rounded-full bg-wellness-softPink mr-2"></div>
-                <span>First Trimester</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-4 h-4 rounded-full bg-wellness-softPurple mr-2"></div>
-                <span>Second Trimester</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-4 h-4 rounded-full bg-wellness-softOrange mr-2"></div>
-                <span>Third Trimester</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-4 h-4 rounded-full bg-wellness-pink mr-2"></div>
-                <span>Due Date</span>
-              </div>
-            </div>
+            <KnowMoreButton 
+              calculatorName="Due Date Calculator"
+              calculatorId="duedate"
+            />
+            
+            <p className="disclaimer-text">
+              This calculator provides an estimate based on standard pregnancy durations. Individual pregnancies may vary, and your healthcare provider may adjust your due date based on ultrasound measurements or other factors.
+            </p>
+            
+            <p className="thank-you-text">
+              Thank you for using SurviveWellness!
+            </p>
           </div>
+        )}
+      </Card>
 
-          <ResultActions
-            title="Due Date Calculator"
-            results={{
-              "Estimated Due Date": format(dueDate, "MMMM d, yyyy"),
-              "Calculation Method": calculationType === "lmp" ? "Last Menstrual Period" : "Conception Date",
-              ...(calculationType === "lmp"
-                ? { "Last Menstrual Period": lmpDate ? format(lmpDate, "MMMM d, yyyy") : "" }
-                : { "Conception Date": conceptionDate ? format(conceptionDate, "MMMM d, yyyy") : "" }
-              ),
-              "First Trimester": calculationType === "lmp" && lmpDate
-                ? `${format(lmpDate, "MMM d")} - ${format(addWeeks(lmpDate, 13), "MMM d")}`
-                : conceptionDate
-                  ? `${format(subDays(conceptionDate, 14), "MMM d")} - ${format(addWeeks(subDays(conceptionDate, 14), 13), "MMM d")}`
-                  : "",
-              "Second Trimester": calculationType === "lmp" && lmpDate
-                ? `${format(addWeeks(lmpDate, 14), "MMM d")} - ${format(addWeeks(lmpDate, 27), "MMM d")}`
-                : conceptionDate
-                  ? `${format(addWeeks(subDays(conceptionDate, 14), 14), "MMM d")} - ${format(addWeeks(subDays(conceptionDate, 14), 27), "MMM d")}`
-                  : "",
-              "Third Trimester": calculationType === "lmp" && lmpDate
-                ? `${format(addWeeks(lmpDate, 28), "MMM d")} - ${format(dueDate, "MMM d")}`
-                : conceptionDate
-                  ? `${format(addWeeks(subDays(conceptionDate, 14), 28), "MMM d")} - ${format(dueDate, "MMM d")}`
-                  : ""
-            }}
-            fileName="Due-Date-Calculator"
-            userName={userName}
-            unitSystem={unitSystem}
-          />
-          
-          <KnowMoreButton 
-            calculatorName="Due Date Calculator"
-            calculatorId="duedate"
-          />
-          
-          <p className="disclaimer-text">
-            This calculator provides an estimate based on standard pregnancy durations. Individual pregnancies may vary, and your healthcare provider may adjust your due date based on ultrasound measurements or other factors.
-          </p>
-          
-          <p className="thank-you-text">
-            Thank you for using SurviveWellness!
-          </p>
-        </div>
-      )}
-    </Card>
+      <IntroSection calculatorId="duedate" title="" description="" />
+    </div>
   );
 };
 

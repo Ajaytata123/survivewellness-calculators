@@ -165,13 +165,13 @@ export const CalculatorSidebar = ({
   const DesktopSidebar = () => (
     <SidebarProvider defaultOpen={!isCollapsed}>
       <Sidebar className={cn(
-        "hidden md:flex border-r transition-all duration-300 h-screen overflow-hidden",
+        "hidden md:flex border-r transition-all duration-300",
         isCollapsed ? "md:w-16" : "md:w-64"
       )}>
-        <SidebarContent className="h-full flex flex-col">
-          <SidebarGroup className="flex-1 overflow-hidden">
+        <SidebarContent>
+          <SidebarGroup>
             {!isCollapsed && (
-              <div className="px-2 pt-2 pb-4 flex-shrink-0">
+              <div className="px-2 pt-2 pb-4">
                 <Search 
                   placeholder="Search calculators..." 
                   value={searchQuery}
@@ -191,7 +191,7 @@ export const CalculatorSidebar = ({
               </Button>
             </div>
             
-            <div className="flex-1 overflow-y-auto px-2" ref={sidebarRef}>
+            <div className="overflow-y-auto max-h-[calc(100vh-100px)] relative" ref={sidebarRef}>
               {categoryOrder.map(category => {
                 const CategoryIcon = getCategoryIcon(category);
                 const isGroupCollapsed = collapsedCategories[category];
@@ -242,7 +242,7 @@ export const CalculatorSidebar = ({
                                 ref={isActive ? activeItemRef : null}
                                 onClick={() => onCalculatorSelect(calculator.id)}
                                 className={cn(
-                                  "w-full text-left px-3 py-1.5 text-sm rounded-md flex items-center my-1 transition-colors",
+                                  "w-full text-left px-3 py-1.5 text-sm rounded-md flex items-center my-1",
                                   isCollapsed ? "justify-center" : "",
                                   isActive
                                     ? `bg-${calculator.color}/20 text-${calculator.color}`

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import InfoSection from './InfoSection';
 
@@ -81,7 +82,7 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
         };
 
       case 'stepcounter':
-      case 'step':
+      case 'steps':
         return {
           title: "Step Counter Benefits",
           description: "Step counting helps track daily physical activity and motivates you to reach fitness goals. It's a simple way to monitor your activity level and improve overall health.",
@@ -126,7 +127,7 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
         };
 
       case 'calorietracker':
-      case 'calorie':
+      case 'calories':
         return {
           title: "Calorie Tracking Benefits",
           description: "Calorie tracking helps monitor your daily energy intake and expenditure, supporting weight management and nutritional goals.",

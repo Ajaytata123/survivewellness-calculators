@@ -32,6 +32,120 @@ const WellnessCalculatorHub: React.FC = () => {
     if (hash && calculators.some(calc => calc.id === hash)) {
       setActiveCalculator(hash);
     }
+
+    // Listen for calculator button clicks for iframe integration
+    const handleCalculatorButtonClick = (event: Event) => {
+      const target = event.target as HTMLElement;
+      const buttonId = target.id;
+      
+      // Map button IDs to calculator IDs
+      const buttonToCalculatorMap: { [key: string]: string } = {
+        'SurviveWellnessBMI': 'bmi',
+        'SurviveWellnessBMR': 'bmr',
+        'SurviveWellnessBodyFat': 'bodyfat',
+        'SurviveWellnessIdealWeight': 'idealweight',
+        'SurviveWellnessObesityRisk': 'obesity',
+        'SurviveWellnessAge': 'age',
+        'SurviveWellnessHeartRate': 'heartrate',
+        'SurviveWellnessVO2Max': 'vo2max',
+        'SurviveWellnessWorkout': 'workout',
+        'SurviveWellnessSteps': 'steps',
+        'SurviveWellnessMacro': 'macro',
+        'SurviveWellnessWater': 'water',
+        'SurviveWellnessFasting': 'fasting',
+        'SurviveWellnessCalories': 'calories',
+        'SurviveWellnessMealPlan': 'mealplan',
+        'SurviveWellnessPregnancy': 'pregnancy',
+        'SurviveWellnessAlcohol': 'alcohol',
+        'SurviveWellnessSmoking': 'smoking',
+        'SurviveWellnessStress': 'stress',
+        'SurviveWellnessOvulation': 'ovulation',
+        'SurviveWellnessDueDate': 'duedate',
+        'SurviveWellnessPeriod': 'menstrual',
+        'SurviveWellnessMenopause': 'menopause',
+        'SurviveWellnessBreastCancer': 'breastcancer',
+        'SurviveWellnessOsteoporosis': 'osteoporosis',
+        'SurviveWellnessIron': 'iron'
+      };
+
+      if (buttonToCalculatorMap[buttonId]) {
+        setActiveCalculator(buttonToCalculatorMap[buttonId]);
+        // Update URL hash
+        window.location.hash = buttonToCalculatorMap[buttonId];
+      }
+    };
+
+    // Add event listeners for all calculator buttons
+    Object.keys({
+      'SurviveWellnessBMI': 'bmi',
+      'SurviveWellnessBMR': 'bmr',
+      'SurviveWellnessBodyFat': 'bodyfat',
+      'SurviveWellnessIdealWeight': 'idealweight',
+      'SurviveWellnessObesityRisk': 'obesity',
+      'SurviveWellnessAge': 'age',
+      'SurviveWellnessHeartRate': 'heartrate',
+      'SurviveWellnessVO2Max': 'vo2max',
+      'SurviveWellnessWorkout': 'workout',
+      'SurviveWellnessSteps': 'steps',
+      'SurviveWellnessMacro': 'macro',
+      'SurviveWellnessWater': 'water',
+      'SurviveWellnessFasting': 'fasting',
+      'SurviveWellnessCalories': 'calories',
+      'SurviveWellnessMealPlan': 'mealplan',
+      'SurviveWellnessPregnancy': 'pregnancy',
+      'SurviveWellnessAlcohol': 'alcohol',
+      'SurviveWellnessSmoking': 'smoking',
+      'SurviveWellnessStress': 'stress',
+      'SurviveWellnessOvulation': 'ovulation',
+      'SurviveWellnessDueDate': 'duedate',
+      'SurviveWellnessPeriod': 'menstrual',
+      'SurviveWellnessMenopause': 'menopause',
+      'SurviveWellnessBreastCancer': 'breastcancer',
+      'SurviveWellnessOsteoporosis': 'osteoporosis',
+      'SurviveWellnessIron': 'iron'
+    }).forEach(buttonId => {
+      const button = document.getElementById(buttonId);
+      if (button) {
+        button.addEventListener('click', handleCalculatorButtonClick);
+      }
+    });
+
+    // Cleanup event listeners
+    return () => {
+      Object.keys({
+        'SurviveWellnessBMI': 'bmi',
+        'SurviveWellnessBMR': 'bmr',
+        'SurviveWellnessBodyFat': 'bodyfat',
+        'SurviveWellnessIdealWeight': 'idealweight',
+        'SurviveWellnessObesityRisk': 'obesity',
+        'SurviveWellnessAge': 'age',
+        'SurviveWellnessHeartRate': 'heartrate',
+        'SurviveWellnessVO2Max': 'vo2max',
+        'SurviveWellnessWorkout': 'workout',
+        'SurviveWellnessSteps': 'steps',
+        'SurviveWellnessMacro': 'macro',
+        'SurviveWellnessWater': 'water',
+        'SurviveWellnessFasting': 'fasting',
+        'SurviveWellnessCalories': 'calories',
+        'SurviveWellnessMealPlan': 'mealplan',
+        'SurviveWellnessPregnancy': 'pregnancy',
+        'SurviveWellnessAlcohol': 'alcohol',
+        'SurviveWellnessSmoking': 'smoking',
+        'SurviveWellnessStress': 'stress',
+        'SurviveWellnessOvulation': 'ovulation',
+        'SurviveWellnessDueDate': 'duedate',
+        'SurviveWellnessPeriod': 'menstrual',
+        'SurviveWellnessMenopause': 'menopause',
+        'SurviveWellnessBreastCancer': 'breastcancer',
+        'SurviveWellnessOsteoporosis': 'osteoporosis',
+        'SurviveWellnessIron': 'iron'
+      }).forEach(buttonId => {
+        const button = document.getElementById(buttonId);
+        if (button) {
+          button.removeEventListener('click', handleCalculatorButtonClick);
+        }
+      });
+    };
   }, []);
 
   // Update hash when calculator changes

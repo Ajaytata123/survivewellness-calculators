@@ -24,6 +24,7 @@ const Search = React.forwardRef<HTMLInputElement, SearchProps>(
           ref={ref}
           className={cn("pl-8", className)}
           onChange={handleChange}
+          placeholder="Search calculators..."
           {...props}
         />
       </div>

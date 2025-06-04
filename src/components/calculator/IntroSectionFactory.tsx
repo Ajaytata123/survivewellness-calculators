@@ -51,6 +51,36 @@ const IntroSectionFactory: React.FC<IntroSectionFactoryProps> = ({ calculatorId 
           usage: "Enter your age and optionally your resting heart rate to get personalized training zones."
         };
 
+      case 'stepcounter':
+      case 'steps':
+        return {
+          title: "Step Counter Benefits",
+          description: "Step counting helps track daily physical activity and motivates you to reach fitness goals. It's a simple way to monitor your activity level and improve overall health.",
+          iconName: "Activity",
+          benefits: [
+            "Daily activity tracking",
+            "Fitness goal motivation",
+            "Health improvement monitoring",
+            "Simple activity measurement"
+          ],
+          usage: "Set your daily step goals and track your progress to maintain an active lifestyle."
+        };
+
+      case 'macronutrients':
+      case 'macro':
+        return {
+          title: "Macronutrient Planning",
+          description: "Macronutrient calculators help determine the optimal balance of carbohydrates, proteins, and fats for your specific goals, whether weight loss, muscle gain, or maintenance.",
+          iconName: "Utensils",
+          benefits: [
+            "Personalized nutrition planning",
+            "Goal-specific macro ratios",
+            "Improved body composition",
+            "Enhanced performance"
+          ],
+          usage: "Enter your stats and goals to get personalized macronutrient targets for optimal nutrition."
+        };
+
       case 'duedate':
         return {
           title: "About Due Date Calculations",

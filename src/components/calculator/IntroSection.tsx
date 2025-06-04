@@ -11,7 +11,7 @@ interface IntroSectionProps {
 const IntroSection: React.FC<IntroSectionProps> = ({ calculatorId }) => {
   console.log('IntroSection rendering with calculatorId:', calculatorId);
   
-  // Always render intro sections for both mobile and desktop
+  // Always render intro sections for calculators that have data
   if (calculatorId) {
     return <InfoSectionFactory calculatorId={calculatorId} />;
   }

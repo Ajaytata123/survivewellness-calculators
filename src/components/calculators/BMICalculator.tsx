@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { BMICalcProps } from "@/types/calculatorTypes";
@@ -106,6 +105,7 @@ const BMICalculator: React.FC<BMICalcProps> = ({ unitSystem, onUnitSystemChange 
         )}
       </Card>
 
+      {/* This IntroSection will show the detailed info section */}
       <IntroSection calculatorId="bmi" title="" description="" />
     </div>
   );

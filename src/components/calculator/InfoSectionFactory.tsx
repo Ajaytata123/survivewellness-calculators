@@ -94,6 +94,7 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
         };
 
       case 'workoutplanner':
+      case 'workout':
         return {
           title: "Workout Planning Guide",
           description: "A structured workout plan helps you achieve fitness goals efficiently while preventing injury and burnout. Proper planning ensures balanced training across all fitness components.",
@@ -108,6 +109,7 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
         };
 
       case 'intermittentfasting':
+      case 'fasting':
         return {
           title: "Intermittent Fasting Methods",
           description: "Intermittent fasting involves cycling between eating and fasting periods. Different methods suit different lifestyles and can provide various health benefits.",
@@ -122,6 +124,7 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
         };
 
       case 'mealplanner':
+      case 'mealplan':
         return {
           title: "Meal Planning Benefits",
           description: "Meal planning helps ensure balanced nutrition, saves time and money, and supports health goals. It involves preparing nutritious meals in advance.",
@@ -136,6 +139,7 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
         };
 
       case 'alcoholimpact':
+      case 'alcohol':
         return {
           title: "Understanding Alcohol's Health Impact",
           description: "Alcohol consumption affects your body in various ways. Understanding these impacts helps make informed decisions about drinking habits and health.",
@@ -175,6 +179,49 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
             "Treatment timing optimization"
           ],
           usage: "Provide information about age, gender, lifestyle, and health history to evaluate your osteoporosis risk factors."
+        };
+
+      // Add more calculator info data for other calculators
+      case 'bmr':
+        return {
+          title: "Basal Metabolic Rate (BMR)",
+          description: "BMR represents the number of calories your body burns while at rest. Understanding your BMR helps in creating effective diet and exercise plans.",
+          iconName: "Activity",
+          benefits: [
+            "Accurate calorie planning",
+            "Weight management support",
+            "Metabolism understanding",
+            "Personalized nutrition goals"
+          ],
+          usage: "Enter your age, gender, height, and weight to calculate your daily caloric needs."
+        };
+
+      case 'bodyfat':
+        return {
+          title: "Body Fat Percentage Calculator",
+          description: "Body fat percentage provides a more accurate picture of your health than weight alone. It helps assess fitness progress and health risks.",
+          iconName: "Activity",
+          benefits: [
+            "More accurate than BMI",
+            "Tracks fitness progress",
+            "Health risk assessment",
+            "Body composition insights"
+          ],
+          usage: "Take body measurements and enter your details to estimate body fat percentage using validated formulas."
+        };
+
+      case 'vo2max':
+        return {
+          title: "VO2 Max Assessment",
+          description: "VO2 Max measures your cardiovascular fitness and aerobic capacity. It's the gold standard for measuring cardiorespiratory fitness.",
+          iconName: "Heart",
+          benefits: [
+            "Cardiovascular fitness assessment",
+            "Training intensity guidance",
+            "Health risk evaluation",
+            "Performance tracking"
+          ],
+          usage: "Complete the step test or enter your exercise data to estimate your VO2 Max and fitness level."
         };
 
       default:

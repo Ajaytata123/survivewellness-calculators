@@ -1,4 +1,3 @@
-
 import React from 'react';
 import InfoSection from './InfoSection';
 
@@ -6,7 +5,7 @@ interface InfoSectionFactoryProps {
   calculatorId: string;
 }
 
-const InfoSectionFactory: React.FC<IntroSectionFactoryProps> = ({ calculatorId }) => {
+const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId }) => {
   const getInfoData = (id: string) => {
     switch (id) {
       case 'bmi':

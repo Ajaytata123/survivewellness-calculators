@@ -6,7 +6,7 @@ interface InfoSectionFactoryProps {
   calculatorId: string;
 }
 
-const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId }) => {
+const InfoSectionFactory: React.FC<IntroSectionFactoryProps> = ({ calculatorId }) => {
   const getInfoData = (id: string) => {
     switch (id) {
       case 'bmi':
@@ -36,6 +36,36 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
           ],
           usage: "Enter your height and gender to get ideal weight estimates from multiple medical formulas."
         };
+
+      case 'obesityrisk':
+      case 'obesity':
+        return {
+          title: "Obesity Risk Assessment",
+          description: "Obesity risk assessment helps identify factors that may contribute to weight-related health issues. Understanding your risk profile enables proactive health management.",
+          iconName: "AlertTriangle",
+          benefits: [
+            "Early risk identification",
+            "Preventive health planning",
+            "Lifestyle modification guidance",
+            "Health awareness improvement"
+          ],
+          usage: "Provide your health information and lifestyle factors to assess your obesity risk profile."
+        };
+
+      case 'age':
+      case 'agecalculator':
+        return {
+          title: "Age Calculator Benefits",
+          description: "Age calculators provide precise age calculations in various formats, helping with planning, health assessments, and personal milestones tracking.",
+          iconName: "Calendar",
+          benefits: [
+            "Precise age calculations",
+            "Multiple date format support",
+            "Health milestone tracking",
+            "Planning assistance"
+          ],
+          usage: "Enter your birth date to get detailed age information in years, months, days, and more."
+        };
       
       case 'heartrate':
         return {
@@ -51,18 +81,138 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
           usage: "Enter your age and optionally your resting heart rate to get personalized training zones."
         };
 
-      case 'duedate':
+      case 'stepcounter':
+      case 'step':
         return {
-          title: "About Due Date Calculations",
-          description: "Due date calculators help expectant mothers track their pregnancy timeline and prepare for their baby's arrival. They provide estimated dates based on medical standards.",
+          title: "Step Counter Benefits",
+          description: "Step counting helps track daily physical activity and motivates you to reach fitness goals. It's a simple way to monitor your activity level and improve overall health.",
+          iconName: "Activity",
+          benefits: [
+            "Daily activity tracking",
+            "Fitness goal motivation",
+            "Health improvement monitoring",
+            "Simple activity measurement"
+          ],
+          usage: "Set your daily step goals and track your progress to maintain an active lifestyle."
+        };
+
+      case 'macronutrients':
+      case 'macro':
+        return {
+          title: "Macronutrient Planning",
+          description: "Macronutrient calculators help determine the optimal balance of carbohydrates, proteins, and fats for your specific goals, whether weight loss, muscle gain, or maintenance.",
+          iconName: "Utensils",
+          benefits: [
+            "Personalized nutrition planning",
+            "Goal-specific macro ratios",
+            "Improved body composition",
+            "Enhanced performance"
+          ],
+          usage: "Enter your stats and goals to get personalized macronutrient targets for optimal nutrition."
+        };
+
+      case 'waterintake':
+      case 'water':
+        return {
+          title: "Daily Water Intake Guidelines",
+          description: "Proper hydration is essential for optimal body function. Water intake calculators help determine your daily fluid needs based on various factors.",
+          iconName: "Droplet",
+          benefits: [
+            "Optimal hydration maintenance",
+            "Improved physical performance",
+            "Better cognitive function",
+            "Enhanced overall health"
+          ],
+          usage: "Enter your weight, activity level, and climate conditions to get personalized hydration recommendations."
+        };
+
+      case 'calorietracker':
+      case 'calorie':
+        return {
+          title: "Calorie Tracking Benefits",
+          description: "Calorie tracking helps monitor your daily energy intake and expenditure, supporting weight management and nutritional goals.",
+          iconName: "Target",
+          benefits: [
+            "Weight management support",
+            "Nutritional awareness",
+            "Goal achievement tracking",
+            "Healthy habit formation"
+          ],
+          usage: "Track your daily food intake and physical activities to monitor your caloric balance."
+        };
+
+      case 'smokingimpact':
+      case 'smoking':
+        return {
+          title: "Understanding Smoking's Health Impact",
+          description: "Smoking impact assessments help visualize the health and financial consequences of smoking, motivating cessation efforts and healthier choices.",
+          iconName: "AlertTriangle",
+          benefits: [
+            "Health risk awareness",
+            "Financial impact visualization",
+            "Cessation motivation",
+            "Long-term health planning"
+          ],
+          usage: "Enter your smoking habits to understand the health and financial impact on your life."
+        };
+
+      case 'stressanxiety':
+      case 'stress':
+        return {
+          title: "Stress and Anxiety Assessment",
+          description: "Stress and anxiety assessments help identify your mental health status and provide guidance for managing stress levels effectively.",
+          iconName: "Brain",
+          benefits: [
+            "Mental health awareness",
+            "Stress level identification",
+            "Coping strategy guidance",
+            "Well-being improvement"
+          ],
+          usage: "Answer questions about your current stress levels and symptoms to get personalized wellness recommendations."
+        };
+
+      case 'pregnancyweight':
+      case 'pregnancy':
+        return {
+          title: "Pregnancy Weight Tracking",
+          description: "Pregnancy weight gain tracking helps ensure healthy development for both mother and baby by monitoring weight gain within recommended ranges.",
+          iconName: "Baby",
+          benefits: [
+            "Healthy pregnancy monitoring",
+            "Risk factor identification",
+            "Nutritional guidance",
+            "Baby development support"
+          ],
+          usage: "Enter your pre-pregnancy weight and current week to track healthy weight gain during pregnancy."
+        };
+
+      case 'ovulation':
+        return {
+          title: "Ovulation Tracking",
+          description: "Ovulation calculators help predict your most fertile days, supporting family planning efforts and reproductive health awareness.",
           iconName: "Calendar",
           benefits: [
-            "Track pregnancy milestones",
-            "Plan prenatal appointments",
-            "Prepare for delivery",
-            "Monitor fetal development stages"
+            "Fertility window identification",
+            "Family planning support",
+            "Reproductive health awareness",
+            "Cycle pattern understanding"
           ],
-          usage: "Enter either your last menstrual period date or conception date to get your estimated due date and pregnancy timeline."
+          usage: "Enter your menstrual cycle information to predict your most fertile days."
+        };
+
+      case 'period':
+      case 'menstrual':
+        return {
+          title: "Period Tracking Benefits",
+          description: "Period tracking helps you understand your menstrual cycle, predict future periods, and monitor reproductive health patterns.",
+          iconName: "Calendar",
+          benefits: [
+            "Cycle prediction accuracy",
+            "Health pattern monitoring",
+            "PMS preparation",
+            "Reproductive health awareness"
+          ],
+          usage: "Enter your last period date and cycle length to predict future periods and fertile windows."
         };
 
       case 'menopause':
@@ -77,6 +227,20 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
             "Make informed health decisions"
           ],
           usage: "Provide information about your age, menstrual history, and family background to get an estimated menopause timeline."
+        };
+
+      case 'duedate':
+        return {
+          title: "About Due Date Calculations",
+          description: "Due date calculators help expectant mothers track their pregnancy timeline and prepare for their baby's arrival. They provide estimated dates based on medical standards.",
+          iconName: "Calendar",
+          benefits: [
+            "Track pregnancy milestones",
+            "Plan prenatal appointments",
+            "Prepare for delivery",
+            "Monitor fetal development stages"
+          ],
+          usage: "Enter either your last menstrual period date or conception date to get your estimated due date and pregnancy timeline."
         };
 
       case 'iron':
@@ -181,7 +345,6 @@ const InfoSectionFactory: React.FC<InfoSectionFactoryProps> = ({ calculatorId })
           usage: "Provide information about age, gender, lifestyle, and health history to evaluate your osteoporosis risk factors."
         };
 
-      // Add more calculator info data for other calculators
       case 'bmr':
         return {
           title: "Basal Metabolic Rate (BMR)",

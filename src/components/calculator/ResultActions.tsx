@@ -16,6 +16,7 @@ interface ResultActionsProps {
   userName?: string;
   unitSystem: UnitSystem;
   className?: string;
+  referenceText?: string;
 }
 
 const ResultActions: React.FC<ResultActionsProps> = ({
@@ -24,7 +25,8 @@ const ResultActions: React.FC<ResultActionsProps> = ({
   fileName,
   userName,
   unitSystem,
-  className
+  className,
+  referenceText
 }) => {
   const prepareResults = (): ResultForDownload => {
     return {
@@ -54,7 +56,9 @@ const ResultActions: React.FC<ResultActionsProps> = ({
   return (
     <div className={`space-y-6 ${className || ''}`}>
       <div className="mt-4 mb-2">
-        <p className="text-gray-600 dark:text-gray-400 mb-3">Reference: U.S. National Institutes of Health (NIH)</p>
+        {referenceText && (
+          <p className="text-gray-600 dark:text-gray-400 mb-3">{referenceText}</p>
+        )}
         <div className="flex flex-wrap gap-3 justify-start">
           <Button 
             variant="outline" 

@@ -111,7 +111,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   const renderCalculatorCard = (calc: CalculatorInfo) => {
     const IconComponent = getIconComponent(calc.icon);
     // Rename "Menstrual Cycle" to "Period" calculator
-    const displayName = calc.id === 'menstrualCycle' ? 'Period Calculator' : calc.name;
+    const displayName = calc.id === 'menstrualCycle' || calc.id === 'menstrual' ? 'Period Calculator' : calc.name;
     
     return (
       <div 
@@ -179,7 +179,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
               </button>
               <Separator orientation="vertical" className="h-4" />
               <span className="font-medium">
-                {activeCalcInfo.id === 'menstrualCycle' ? 'Period Calculator' : activeCalcInfo.name}
+                {activeCalcInfo.id === 'menstrualCycle' || activeCalcInfo.id === 'menstrual' ? 'Period Calculator' : activeCalcInfo.name}
               </span>
             </div>
           </div>
@@ -210,7 +210,13 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
                       <div className="p-3">
                         <div className="grid grid-cols-2 gap-3">
                           {calculators
-                            .filter(calc => calc.category === category)
+                            .filter(calc => {
+                              // Move pregnancy calculator to women's health
+                              if (calc.id === 'pregnancy' || calc.id === 'pregnancyweight') {
+                                return category === 'women';
+                              }
+                              return calc.category === category;
+                            })
                             .map(calc => renderCalculatorCard(calc))}
                         </div>
                       </div>

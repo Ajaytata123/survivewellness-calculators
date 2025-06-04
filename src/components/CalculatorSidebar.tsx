@@ -69,7 +69,7 @@ export const CalculatorSidebar = ({
     if (activeCalc) {
       let category = activeCalc.category;
       // Move pregnancy calculator to women's health
-      if (activeCalc.id === 'pregnancy') {
+      if (activeCalc.id === 'pregnancy' || activeCalc.id === 'pregnancyweight') {
         category = 'women';
       }
       
@@ -123,7 +123,7 @@ export const CalculatorSidebar = ({
                     {filteredCalculators
                       .filter(calc => {
                         // Move pregnancy calculator to women's health
-                        if (calc.id === 'pregnancy') {
+                        if (calc.id === 'pregnancy' || calc.id === 'pregnancyweight') {
                           return category === 'women';
                         }
                         return calc.category === category;
@@ -132,7 +132,7 @@ export const CalculatorSidebar = ({
                         const IconComponent = getIconComponent(calculator.icon);
                         const isActive = activeCalculator === calculator.id;
                         // Rename "Menstrual Cycle" to "Period" calculator
-                        const displayName = calculator.id === 'menstrual' ? 'Period Calculator' : calculator.name;
+                        const displayName = calculator.id === 'menstrual' || calculator.id === 'menstrualCycle' ? 'Period Calculator' : calculator.name;
                         
                         return (
                         <button
@@ -224,7 +224,7 @@ export const CalculatorSidebar = ({
                         {filteredCalculators
                           .filter(calc => {
                             // Move pregnancy calculator to women's health
-                            if (calc.id === 'pregnancy') {
+                            if (calc.id === 'pregnancy' || calc.id === 'pregnancyweight') {
                               return category === 'women';
                             }
                             return calc.category === category;
@@ -233,7 +233,7 @@ export const CalculatorSidebar = ({
                             const IconComponent = getIconComponent(calculator.icon);
                             const isActive = activeCalculator === calculator.id;
                             // Rename "Menstrual Cycle" to "Period" calculator
-                            const displayName = calculator.id === 'menstrual' ? 'Period Calculator' : calculator.name;
+                            const displayName = calculator.id === 'menstrual' || calculator.id === 'menstrualCycle' ? 'Period Calculator' : calculator.name;
                             
                             return (
                               <button

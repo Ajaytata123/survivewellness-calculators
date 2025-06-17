@@ -31,8 +31,15 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   
   const categoryName = getCategoryName(activeCalc.category);
 
-  // Rename "Menstrual Cycle" to "Period" calculator
-  const displayName = activeCalc.id === 'menstrualCycle' ? 'Period Calculator' : activeCalc.name;
+  // Rename calculators consistently
+  const getDisplayName = (calc: CalculatorInfo) => {
+    if (calc.id === 'menstrualCycle' || calc.id === 'menstrual' || calc.id === 'period') {
+      return 'Period Calculator';
+    }
+    return calc.name;
+  };
+  
+  const displayName = getDisplayName(activeCalc);
   
   return (
     <ShadcnBreadcrumb className={cn("py-2 px-0", className)}>

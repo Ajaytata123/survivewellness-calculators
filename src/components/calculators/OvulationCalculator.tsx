@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -304,31 +305,13 @@ const OvulationCalculator: React.FC<OvulationCalcProps> = ({ unitSystem }) => {
             fileName="Ovulation-Calculator"
             userName={userName}
             unitSystem={unitSystem}
+            referenceText="This calculator provides estimates based on average cycle patterns. Individual cycles may vary, especially if you have irregular periods. Consult a healthcare provider for medical advice."
           />
           
           <KnowMoreButton 
             calculatorName="Ovulation Calculator"
             calculatorId="ovulation"
           />
-
-          <div className="intro-section mt-6">
-            <h4 className="text-base font-medium text-wellness-blue mb-2">Understanding Your Fertility Window</h4>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-              Your fertility window is the time during your menstrual cycle when pregnancy is possible. This window includes the day of ovulation and the five days before it.
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              Sperm can survive in the female reproductive tract for up to 5 days, which is why the days before ovulation are included in your fertile window.
-            </p>
-          </div>
-          
-          <p className="disclaimer-text">
-            This calculator provides estimates based on average cycle patterns.
-            Individual cycles may vary, especially if you have irregular periods.
-          </p>
-          
-          <p className="thank-you-text">
-            Thank you for using SurviveWellness!
-          </p>
         </div>
       )}
       

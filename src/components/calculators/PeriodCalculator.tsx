@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -115,18 +116,6 @@ const PeriodCalculator: React.FC<BaseCalcProps> = ({ unitSystem }) => {
     setTimeout(() => {
       document.getElementById('period-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
-  };
-
-  const getDayClassName = (date: Date): string | undefined => {
-    const matchingDay = periodDays.find(
-      (day) => day.date.toDateString() === date.toDateString()
-    );
-    
-    if (matchingDay) {
-      return `rdp-day_${matchingDay.type}`;
-    }
-    
-    return undefined;
   };
 
   const modifiers = {
@@ -300,20 +289,13 @@ const PeriodCalculator: React.FC<BaseCalcProps> = ({ unitSystem }) => {
             fileName="Period-Calculator"
             userName={userName}
             unitSystem={unitSystem}
+            referenceText="This calculator provides estimates based on the information you provided. Individual cycles may vary, and many factors can affect your period. Consult a healthcare provider for medical advice."
           />
           
           <KnowMoreButton 
             calculatorName="Period Calculator"
             calculatorId="period"
           />
-          
-          <p className="disclaimer-text text-xs text-gray-500 mt-4 pt-4 border-t border-dashed border-gray-200">
-            This calculator provides estimates based on the information you provided. Individual cycles may vary, and many factors can affect your period. Consult a healthcare provider for medical advice.
-          </p>
-          
-          <p className="thank-you-text text-sm text-center text-wellness-blue mt-4">
-            Thank you for using SurviveWellness!
-          </p>
         </div>
       )}
       

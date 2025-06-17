@@ -61,6 +61,14 @@ export const CalculatorSidebar = ({
     }));
   };
 
+  // Get display name for calculators
+  const getDisplayName = (calc: CalcInfo) => {
+    if (calc.id === 'menstrualCycle' || calc.id === 'menstrual' || calc.id === 'period') {
+      return 'Period Calculator';
+    }
+    return calc.name;
+  };
+
   // Determine which category contains the active calculator and expand it
   useEffect(() => {
     if (!activeCalculator) return;
@@ -165,8 +173,7 @@ export const CalculatorSidebar = ({
                       .map(calculator => {
                         const IconComponent = getIconComponent(calculator.icon);
                         const isActive = activeCalculator === calculator.id;
-                        // Rename "Menstrual Cycle" to "Period" calculator
-                        const displayName = calculator.id === 'menstrual' || calculator.id === 'menstrualCycle' ? 'Period Calculator' : calculator.name;
+                        const displayName = getDisplayName(calculator);
                         
                         return (
                         <button
@@ -266,8 +273,7 @@ export const CalculatorSidebar = ({
                           .map(calculator => {
                             const IconComponent = getIconComponent(calculator.icon);
                             const isActive = activeCalculator === calculator.id;
-                            // Rename "Menstrual Cycle" to "Period" calculator
-                            const displayName = calculator.id === 'menstrual' || calculator.id === 'menstrualCycle' ? 'Period Calculator' : calculator.name;
+                            const displayName = getDisplayName(calculator);
                             
                             return (
                               <button

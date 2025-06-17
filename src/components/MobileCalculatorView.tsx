@@ -79,10 +79,20 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     }
   }, [searchQuery, calculators, activeCategory]);
 
-  // When a calculator is selected, automatically switch to calculator tab
+  // When a calculator is selected, automatically switch to calculator tab and scroll to top
   const handleCalculatorSelect = (id: string) => {
     onCalculatorSelect(id);
     setActiveTab("calculator");
+    
+    // Scroll to top of the view to ensure user sees calculator from beginning
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Also scroll the mobile container to top
+      const mobileContainer = document.querySelector('.mobile-calculator-container');
+      if (mobileContainer) {
+        mobileContainer.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 100);
   };
 
   // Group calculators by category for search results
@@ -146,7 +156,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full h-full mobile-calculator-container">
       <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 shadow-sm p-4">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "browse" | "calculator")} className="w-auto">
           <TabsList className="grid w-[180px] grid-cols-2">
@@ -186,7 +196,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
         )}
       </div>
 
-      <div className="flex-1 p-4 pb-16">
+      <div className="flex-1 p-4 pb-16 overflow-y-auto">
         {activeTab === "browse" ? (
           <div className="animate-fade-in">
             {!searchQuery ? (

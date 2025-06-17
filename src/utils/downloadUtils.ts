@@ -1,6 +1,6 @@
 
 import { ResultForDownload } from "@/types/calculatorTypes";
-import { showCopyToast } from "./notificationUtils";
+import { showCopyToast, showDownloadToast, showShareToast } from "./notificationUtils";
 
 // Function to prepare results for download in CSV format
 export const prepareResultsForCSV = (results: ResultForDownload): string => {
@@ -39,6 +39,9 @@ export const downloadResultsAsCSV = (results: ResultForDownload, calculatorName:
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+    
+    // Show success notification
+    showDownloadToast();
   } catch (error) {
     console.error("Error generating CSV:", error);
   }
@@ -67,31 +70,49 @@ export const prepareResultsAsText = (results: ResultForDownload): string => {
 };
 
 // Function to share results with web share API
-export const shareResults = (results: ResultForDownload): void => {
-  if (navigator.share) {
-    const textResults = prepareResultsAsText(results);
-    const calculatorPath = results.title.toLowerCase().replace(/\s+/g, '-');
-    navigator
-      .share({
-        title: `${results.title} Results from Survivewellness`,
-        text: textResults,
-      })
-      .catch((error) => console.error("Error sharing results:", error));
-  } else {
-    copyResultsToClipboard(results);
-  }
+export const shareResults = (results: ResultForDownload): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (navigator.share) {
+      const textResults = prepareResultsAsText(results);
+      navigator
+        .share({
+          title: `${results.title} Results from Survivewellness`,
+          text: textResults,
+        })
+        .then(() => {
+          showShareToast();
+          resolve();
+        })
+        .catch((error) => {
+          console.error("Error sharing results:", error);
+          // Fallback to copy
+          copyResultsToClipboard(results);
+          resolve();
+        });
+    } else {
+      // Fallback to copy
+      copyResultsToClipboard(results);
+      resolve();
+    }
+  });
 };
 
 // Function to copy results to clipboard
-export const copyResultsToClipboard = (results: ResultForDownload): void => {
-  const textToCopy = prepareResultsAsText(results);
-  
-  navigator.clipboard.writeText(textToCopy)
-    .then(() => {
-      showCopyToast();
-      console.log("Results copied to clipboard");
-    })
-    .catch(err => console.error("Could not copy text: ", err));
+export const copyResultsToClipboard = (results: ResultForDownload): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const textToCopy = prepareResultsAsText(results);
+    
+    navigator.clipboard.writeText(textToCopy)
+      .then(() => {
+        showCopyToast();
+        console.log("Results copied to clipboard");
+        resolve();
+      })
+      .catch(err => {
+        console.error("Could not copy text: ", err);
+        reject(err);
+      });
+  });
 };
 
 // Create a shareable link with encoded parameters

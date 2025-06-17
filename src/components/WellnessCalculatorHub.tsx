@@ -20,6 +20,19 @@ const WellnessCalculatorHub: React.FC = () => {
       // For mobile, reset search when a calculator is selected
       setSearchQuery("");
     }
+    
+    // Always scroll to top when calculator is selected
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Also scroll the main content area to top for desktop
+      if (!isMobile) {
+        const mainContent = document.querySelector('.calculator-display-area');
+        if (mainContent) {
+          mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    }, 100);
   };
 
   const handleUnitSystemChange = (system: UnitSystem) => {

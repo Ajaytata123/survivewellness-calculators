@@ -84,15 +84,23 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     onCalculatorSelect(id);
     setActiveTab("calculator");
     
-    // Scroll to top of the view to ensure user sees calculator from beginning
+    // Immediately scroll to top and ensure calculator content is visible from beginning
     setTimeout(() => {
+      // Scroll page to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      // Also scroll the mobile container to top
+      
+      // Scroll mobile container to top
       const mobileContainer = document.querySelector('.mobile-calculator-container');
       if (mobileContainer) {
         mobileContainer.scrollTo({ top: 0, behavior: 'smooth' });
       }
-    }, 100);
+      
+      // Also scroll the calculator display container to top
+      const calculatorContent = document.querySelector('.calculator-content');
+      if (calculatorContent) {
+        calculatorContent.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 50);
   };
 
   // Group calculators by category for search results
@@ -196,7 +204,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
         )}
       </div>
 
-      <div className="flex-1 p-4 pb-16 overflow-y-auto">
+      <div className="flex-1 p-4 pb-16 overflow-y-auto calculator-content">
         {activeTab === "browse" ? (
           <div className="animate-fade-in">
             {!searchQuery ? (

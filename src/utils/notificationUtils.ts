@@ -43,3 +43,9 @@ export const showDownloadToast = (): void => {
   });
 };
 
+// Function for share confirmation toast
+export const showShareToast = (): void => {
+  toast.success("Results shared successfully!", {
+    duration: 2000,
+  });
+};

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -6,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UnitSystem } from "@/types/calculatorTypes";
-import { downloadResultsAsCSV, copyResultsToClipboard, createShareableLink } from "@/utils/downloadUtils";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
-import { Check, Copy, Share } from "lucide-react";
 import IntroSection from "@/components/calculator/IntroSection";
+import ResultActions from "@/components/calculator/ResultActions";
+import KnowMoreButton from "@/components/calculator/KnowMoreButton";
 
 interface PregnancyWeightCalcProps {
   unitSystem: UnitSystem;
@@ -32,7 +33,6 @@ const PregnancyWeightCalculator: React.FC<PregnancyWeightCalcProps> = ({ unitSys
       third: string;
     };
   } | null>(null);
-  const [copied, setCopied] = useState(false);
 
   const handleUnitChange = (value: string) => {
     onUnitSystemChange(value as UnitSystem);
@@ -152,6 +152,13 @@ const PregnancyWeightCalculator: React.FC<PregnancyWeightCalcProps> = ({ unitSys
         }
       });
     }
+
+    showSuccessToast("Weight gain calculated successfully!");
+    
+    // Scroll to results
+    setTimeout(() => {
+      document.getElementById('pregnancy-weight-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   };
 
   const getBMICategory = (bmi: number): string => {
@@ -159,82 +166,6 @@ const PregnancyWeightCalculator: React.FC<PregnancyWeightCalcProps> = ({ unitSys
     if (bmi < 25) return "Normal weight";
     if (bmi < 30) return "Overweight";
     return "Obese";
-  };
-
-  const downloadResults = () => {
-    if (!weightGainResult || prePregnancyBMI === null) return;
-
-    const unit = unitSystem === "imperial" ? "lbs" : "kg";
-    const heightUnit = unitSystem === "imperial" ? "inches" : "cm";
-
-    const results = {
-      title: "Pregnancy Weight Gain Calculator",
-      results: {
-        "Pre-Pregnancy Weight": `${prePregnancyWeight} ${unit}`,
-        "Height": `${height} ${heightUnit}`,
-        "Pre-Pregnancy BMI": prePregnancyBMI.toString(),
-        "BMI Category": getBMICategory(prePregnancyBMI),
-        "Multiple Pregnancy": isMultiples ? "Yes" : "No",
-        "Recommended Weight Gain": `${weightGainResult.recommended} ${unit}`,
-        "Weight Gain Range": `${weightGainResult.min}-${weightGainResult.max} ${unit}`,
-        "First Trimester": weightGainResult.trimesterBreakdown.first,
-        "Second Trimester": weightGainResult.trimesterBreakdown.second,
-        "Third Trimester": weightGainResult.trimesterBreakdown.third
-      },
-      date: new Date().toLocaleDateString(),
-      unitSystem,
-      userName: userName || undefined,
-    };
-
-    downloadResultsAsCSV(results, "Pregnancy-Weight-Calculator");
-    showSuccessToast("Results downloaded successfully!");
-  };
-
-  const copyResults = () => {
-    if (!weightGainResult || prePregnancyBMI === null) return;
-
-    const unit = unitSystem === "imperial" ? "lbs" : "kg";
-    const heightUnit = unitSystem === "imperial" ? "inches" : "cm";
-
-    const results = {
-      title: "Pregnancy Weight Gain Calculator",
-      results: {
-        "Pre-Pregnancy Weight": `${prePregnancyWeight} ${unit}`,
-        "Height": `${height} ${heightUnit}`,
-        "Pre-Pregnancy BMI": prePregnancyBMI.toString(),
-        "BMI Category": getBMICategory(prePregnancyBMI),
-        "Multiple Pregnancy": isMultiples ? "Yes" : "No",
-        "Recommended Weight Gain": `${weightGainResult.recommended} ${unit}`,
-        "Weight Gain Range": `${weightGainResult.min}-${weightGainResult.max} ${unit}`,
-        "First Trimester": weightGainResult.trimesterBreakdown.first,
-        "Second Trimester": weightGainResult.trimesterBreakdown.second,
-        "Third Trimester": weightGainResult.trimesterBreakdown.third
-      },
-      date: new Date().toLocaleDateString(),
-      unitSystem,
-      userName: userName || undefined,
-    };
-
-    copyResultsToClipboard(results);
-    setCopied(true);
-    showSuccessToast("Results copied to clipboard!");
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const shareLink = () => {
-    if (!weightGainResult) return;
-    
-    const params = {
-      weight: prePregnancyWeight,
-      height,
-      multiples: isMultiples ? "yes" : "no",
-      system: unitSystem,
-      name: userName || ""
-    };
-    
-    const link = createShareableLink("pregnancy", params);
-    navigator.clipboard.writeText(link);
-    showSuccessToast("Shareable link copied to clipboard!");
   };
 
   return (
@@ -337,117 +268,117 @@ const PregnancyWeightCalculator: React.FC<PregnancyWeightCalcProps> = ({ unitSys
         </Button>
 
         {weightGainResult && prePregnancyBMI !== null && (
-          <div className="bg-gray-50 p-4 rounded-md">
-            <div className="text-center mb-3">
-              <h3 className="text-xl font-bold">Your Pregnancy Weight Gain</h3>
-              {userName && <p className="text-sm mb-2">Results for: {userName}</p>}
-              <div className="bg-wellness-softPink inline-block px-4 py-1 rounded-full">
-                <p className="text-pink-800 font-medium">
-                  {isMultiples ? "Multiple Pregnancy" : "Single Pregnancy"}
-                </p>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-              <div className="bg-white p-3 rounded-md shadow-sm">
-                <p className="text-sm text-gray-700">Pre-Pregnancy BMI</p>
-                <p className="font-bold text-lg">{prePregnancyBMI}</p>
-                <p className="text-sm text-wellness-blue">{getBMICategory(prePregnancyBMI)}</p>
-              </div>
-              <div className="bg-wellness-softPurple p-3 rounded-md">
-                <p className="text-sm text-gray-700">Recommended Weight Gain</p>
-                <p className="font-bold text-lg">
-                  {weightGainResult.recommended} {unitSystem === "imperial" ? "lbs" : "kg"}
-                </p>
-              </div>
-            </div>
-            
-            <div className="bg-white p-3 rounded-md shadow-sm mb-4">
-              <h4 className="font-medium mb-2">Healthy Weight Gain Range</h4>
-              <div className="flex justify-between items-center">
-                <p className="text-sm text-gray-600">Minimum</p>
-                <p className="text-sm text-gray-600">Target</p>
-                <p className="text-sm text-gray-600">Maximum</p>
-              </div>
-              <div className="w-full bg-gray-200 h-2 rounded-full mt-2 mb-1 relative">
-                <div 
-                  className="h-2 bg-wellness-purple rounded-full"
-                  style={{ 
-                    width: '100%',
-                  }}
-                ></div>
-                <div
-                  className="absolute h-6 w-6 bg-wellness-purple rounded-full flex items-center justify-center text-white text-xs -top-2"
-                  style={{
-                    left: `${((weightGainResult.recommended - weightGainResult.min) / (weightGainResult.max - weightGainResult.min)) * 100}%`,
-                    transform: 'translateX(-50%)'
-                  }}
-                >
-                  ✓
+          <div id="pregnancy-weight-results" className="results-container">
+            <div className="bg-gray-50 p-4 rounded-md">
+              <div className="text-center mb-3">
+                <h3 className="text-xl font-bold">Your Pregnancy Weight Gain</h3>
+                {userName && <p className="text-sm mb-2">Results for: {userName}</p>}
+                <div className="bg-wellness-softPink inline-block px-4 py-1 rounded-full">
+                  <p className="text-pink-800 font-medium">
+                    {isMultiples ? "Multiple Pregnancy" : "Single Pregnancy"}
+                  </p>
                 </div>
               </div>
-              <div className="flex justify-between text-sm mt-4">
-                <p className="font-medium">
-                  {weightGainResult.min} {unitSystem === "imperial" ? "lbs" : "kg"}
-                </p>
-                <p className="font-medium">
-                  {weightGainResult.recommended} {unitSystem === "imperial" ? "lbs" : "kg"}
-                </p>
-                <p className="font-medium">
-                  {weightGainResult.max} {unitSystem === "imperial" ? "lbs" : "kg"}
-                </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                <div className="bg-white p-3 rounded-md shadow-sm">
+                  <p className="text-sm text-gray-700">Pre-Pregnancy BMI</p>
+                  <p className="font-bold text-lg">{prePregnancyBMI}</p>
+                  <p className="text-sm text-wellness-blue">{getBMICategory(prePregnancyBMI)}</p>
+                </div>
+                <div className="bg-wellness-softPurple p-3 rounded-md">
+                  <p className="text-sm text-gray-700">Recommended Weight Gain</p>
+                  <p className="font-bold text-lg">
+                    {weightGainResult.recommended} {unitSystem === "imperial" ? "lbs" : "kg"}
+                  </p>
+                </div>
               </div>
-            </div>
+              
+              <div className="bg-white p-3 rounded-md shadow-sm mb-4">
+                <h4 className="font-medium mb-2">Healthy Weight Gain Range</h4>
+                <div className="flex justify-between items-center">
+                  <p className="text-sm text-gray-600">Minimum</p>
+                  <p className="text-sm text-gray-600">Target</p>
+                  <p className="text-sm text-gray-600">Maximum</p>
+                </div>
+                <div className="w-full bg-gray-200 h-2 rounded-full mt-2 mb-1 relative">
+                  <div 
+                    className="h-2 bg-wellness-purple rounded-full"
+                    style={{ 
+                      width: '100%',
+                    }}
+                  ></div>
+                  <div
+                    className="absolute h-6 w-6 bg-wellness-purple rounded-full flex items-center justify-center text-white text-xs -top-2"
+                    style={{
+                      left: `${((weightGainResult.recommended - weightGainResult.min) / (weightGainResult.max - weightGainResult.min)) * 100}%`,
+                      transform: 'translateX(-50%)'
+                    }}
+                  >
+                    ✓
+                  </div>
+                </div>
+                <div className="flex justify-between text-sm mt-4">
+                  <p className="font-medium">
+                    {weightGainResult.min} {unitSystem === "imperial" ? "lbs" : "kg"}
+                  </p>
+                  <p className="font-medium">
+                    {weightGainResult.recommended} {unitSystem === "imperial" ? "lbs" : "kg"}
+                  </p>
+                  <p className="font-medium">
+                    {weightGainResult.max} {unitSystem === "imperial" ? "lbs" : "kg"}
+                  </p>
+                </div>
+              </div>
 
-            <div className="bg-white p-3 rounded-md shadow-sm mb-4">
-              <h4 className="font-medium mb-2">Trimester Breakdown</h4>
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <p className="text-sm">First Trimester</p>
-                  <p className="font-medium">{weightGainResult.trimesterBreakdown.first}</p>
-                </div>
-                <div className="flex justify-between items-center">
-                  <p className="text-sm">Second Trimester</p>
-                  <p className="font-medium">{weightGainResult.trimesterBreakdown.second}</p>
-                </div>
-                <div className="flex justify-between items-center">
-                  <p className="text-sm">Third Trimester</p>
-                  <p className="font-medium">{weightGainResult.trimesterBreakdown.third}</p>
+              <div className="bg-white p-3 rounded-md shadow-sm mb-4">
+                <h4 className="font-medium mb-2">Trimester Breakdown</h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm">First Trimester</p>
+                    <p className="font-medium">{weightGainResult.trimesterBreakdown.first}</p>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm">Second Trimester</p>
+                    <p className="font-medium">{weightGainResult.trimesterBreakdown.second}</p>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm">Third Trimester</p>
+                    <p className="font-medium">{weightGainResult.trimesterBreakdown.third}</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="mt-4">
-              <div className="flex flex-wrap gap-2">
-                <Button variant="outline" size="sm" onClick={copyResults} className="flex items-center">
-                  {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
-                  {copied ? "Copied!" : "Copy Results"}
-                </Button>
-                <Button variant="outline" size="sm" onClick={shareLink} className="flex items-center">
-                  <Share className="h-4 w-4 mr-1" />
-                  Share Link
-                </Button>
-                <Button variant="outline" size="sm" onClick={downloadResults}>
-                  Download CSV
-                </Button>
-              </div>
-            </div>
-            
-            <div className="mt-6 text-center text-sm text-wellness-purple">
-              <p>
-                This calculator provides general guidelines based on recommendations from 
-                the American College of Obstetricians and Gynecologists (ACOG). Always 
-                consult with your healthcare provider for personalized advice.
-              </p>
-              <p className="mt-2">
-                Thank you for using Survive<span className="lowercase">w</span>ellness!
-              </p>
+              <ResultActions
+                title="Pregnancy Weight Calculator"
+                results={{
+                  "Pre-Pregnancy Weight": `${prePregnancyWeight} ${unitSystem === "imperial" ? "lbs" : "kg"}`,
+                  "Height": `${height} ${unitSystem === "imperial" ? "inches" : "cm"}`,
+                  "Pre-Pregnancy BMI": prePregnancyBMI.toString(),
+                  "BMI Category": getBMICategory(prePregnancyBMI),
+                  "Multiple Pregnancy": isMultiples ? "Yes" : "No",
+                  "Recommended Weight Gain": `${weightGainResult.recommended} ${unitSystem === "imperial" ? "lbs" : "kg"}`,
+                  "Weight Gain Range": `${weightGainResult.min}-${weightGainResult.max} ${unitSystem === "imperial" ? "lbs" : "kg"}`,
+                  "First Trimester": weightGainResult.trimesterBreakdown.first,
+                  "Second Trimester": weightGainResult.trimesterBreakdown.second,
+                  "Third Trimester": weightGainResult.trimesterBreakdown.third
+                }}
+                fileName="Pregnancy-Weight-Calculator"
+                userName={userName}
+                unitSystem={unitSystem}
+                referenceText="This calculator provides general guidelines based on recommendations from the American College of Obstetricians and Gynecologists (ACOG). Always consult with your healthcare provider for personalized advice."
+              />
+              
+              <KnowMoreButton 
+                calculatorName="Pregnancy Weight Calculator"
+                calculatorId="pregnancyweight"
+              />
             </div>
           </div>
         )}
       </Card>
 
-      <IntroSection calculatorId="pregnancy" title="" description="" />
+      <IntroSection calculatorId="pregnancyweight" title="" description="" />
     </div>
   );
 };

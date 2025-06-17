@@ -1,6 +1,6 @@
 
 import { ResultForDownload } from "@/types/calculatorTypes";
-import { showCopyToast, showDownloadToast, showShareToast } from "./notificationUtils";
+import { showCopyToast, showDownloadToast, showShareToast, showErrorToast } from "./notificationUtils";
 
 // Function to prepare results for download in CSV format
 export const prepareResultsForCSV = (results: ResultForDownload): string => {
@@ -40,10 +40,13 @@ export const downloadResultsAsCSV = (results: ResultForDownload, calculatorName:
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
     
-    // Show success notification
-    showDownloadToast();
+    // Show success notification with slight delay for mobile
+    setTimeout(() => {
+      showDownloadToast();
+    }, 100);
   } catch (error) {
     console.error("Error generating CSV:", error);
+    showErrorToast("Error downloading results. Please try again.");
   }
 };
 
@@ -80,7 +83,9 @@ export const shareResults = (results: ResultForDownload): Promise<void> => {
           text: textResults,
         })
         .then(() => {
-          showShareToast();
+          setTimeout(() => {
+            showShareToast();
+          }, 100);
           resolve();
         })
         .catch((error) => {
@@ -102,17 +107,63 @@ export const copyResultsToClipboard = (results: ResultForDownload): Promise<void
   return new Promise((resolve, reject) => {
     const textToCopy = prepareResultsAsText(results);
     
-    navigator.clipboard.writeText(textToCopy)
-      .then(() => {
-        showCopyToast();
-        console.log("Results copied to clipboard");
-        resolve();
-      })
-      .catch(err => {
-        console.error("Could not copy text: ", err);
-        reject(err);
-      });
+    // For mobile compatibility, try different clipboard methods
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(textToCopy)
+        .then(() => {
+          setTimeout(() => {
+            showCopyToast();
+          }, 100);
+          console.log("Results copied to clipboard");
+          resolve();
+        })
+        .catch(err => {
+          console.error("Clipboard API failed, trying fallback method:", err);
+          // Fallback method for older browsers or mobile
+          fallbackCopyTextToClipboard(textToCopy, resolve, reject);
+        });
+    } else {
+      // Fallback method for older browsers or mobile
+      fallbackCopyTextToClipboard(textToCopy, resolve, reject);
+    }
   });
+};
+
+// Fallback copy method for mobile compatibility
+const fallbackCopyTextToClipboard = (text: string, resolve: () => void, reject: (error: any) => void) => {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  
+  // Avoid scrolling to bottom
+  textArea.style.top = "0";
+  textArea.style.left = "0";
+  textArea.style.position = "fixed";
+  textArea.style.opacity = "0";
+  
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  
+  try {
+    const successful = document.execCommand('copy');
+    if (successful) {
+      setTimeout(() => {
+        showCopyToast();
+      }, 100);
+      console.log('Fallback: Copying text command was successful');
+      resolve();
+    } else {
+      console.error('Fallback: Copying text command was unsuccessful');
+      showErrorToast("Unable to copy results. Please try again.");
+      reject(new Error('Copy command unsuccessful'));
+    }
+  } catch (err) {
+    console.error('Fallback: Oops, unable to copy', err);
+    showErrorToast("Unable to copy results. Please try again.");
+    reject(err);
+  } finally {
+    document.body.removeChild(textArea);
+  }
 };
 
 // Create a shareable link with encoded parameters

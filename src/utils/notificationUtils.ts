@@ -5,6 +5,7 @@ import { toast } from "sonner";
 export const showSuccessToast = (message: string): void => {
   toast.success(message, {
     duration: 3000,
+    position: "top-center",
   });
 };
 
@@ -12,6 +13,7 @@ export const showSuccessToast = (message: string): void => {
 export const showErrorToast = (message: string): void => {
   toast.error(message, {
     duration: 4000,
+    position: "top-center",
   });
 };
 
@@ -19,6 +21,7 @@ export const showErrorToast = (message: string): void => {
 export const showInfoToast = (message: string): void => {
   toast.info(message, {
     duration: 3000,
+    position: "top-center",
   });
 };
 
@@ -26,6 +29,7 @@ export const showInfoToast = (message: string): void => {
 export const showWarningToast = (message: string): void => {
   toast.warning(message, {
     duration: 4000,
+    position: "top-center",
   });
 };
 
@@ -33,6 +37,7 @@ export const showWarningToast = (message: string): void => {
 export const showCopyToast = (): void => {
   toast.success("Results copied to clipboard!", {
     duration: 2000,
+    position: "top-center",
   });
 };
 
@@ -40,6 +45,7 @@ export const showCopyToast = (): void => {
 export const showDownloadToast = (): void => {
   toast.success("Results downloaded successfully!", {
     duration: 2000,
+    position: "top-center",
   });
 };
 
@@ -47,5 +53,6 @@ export const showDownloadToast = (): void => {
 export const showShareToast = (): void => {
   toast.success("Results shared successfully!", {
     duration: 2000,
+    position: "top-center",
   });
 };

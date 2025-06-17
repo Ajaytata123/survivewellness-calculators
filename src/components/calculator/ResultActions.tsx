@@ -77,7 +77,7 @@ const ResultActions: React.FC<ResultActionsProps> = ({
         <div className="flex flex-wrap gap-3 justify-start">
           <Button 
             variant="outline" 
-            className="flex items-center gap-2 bg-[#e6f7ff] text-[#0ea5e9] border-[#0ea5e9] hover:bg-[#d1edff]"
+            className="flex items-center gap-2 bg-[#e6f7ff] text-[#0ea5e9] border-[#0ea5e9] hover:bg-[#d1edff] touch-manipulation"
             onClick={handleCopyResults}
             type="button"
           >
@@ -86,7 +86,7 @@ const ResultActions: React.FC<ResultActionsProps> = ({
           </Button>
           <Button 
             variant="outline" 
-            className="flex items-center gap-2 bg-[#eee6ff] text-[#8b5cf6] border-[#8b5cf6] hover:bg-[#e2d9f5]"
+            className="flex items-center gap-2 bg-[#eee6ff] text-[#8b5cf6] border-[#8b5cf6] hover:bg-[#e2d9f5] touch-manipulation"
             onClick={handleShareResults}
             type="button"
           >
@@ -95,7 +95,7 @@ const ResultActions: React.FC<ResultActionsProps> = ({
           </Button>
           <Button 
             variant="outline" 
-            className="flex items-center gap-2 bg-[#e6fff0] text-[#10b981] border-[#10b981] hover:bg-[#d1f7e4]"
+            className="flex items-center gap-2 bg-[#e6fff0] text-[#10b981] border-[#10b981] hover:bg-[#d1f7e4] touch-manipulation"
             onClick={handleDownloadResults}
             type="button"
           >

@@ -38,19 +38,34 @@ const ResultActions: React.FC<ResultActionsProps> = ({
     };
   };
 
-  const handleCopyResults = () => {
-    const resultsData = prepareResults();
-    copyResultsToClipboard(resultsData);
+  const handleCopyResults = async () => {
+    try {
+      const resultsData = prepareResults();
+      await copyResultsToClipboard(resultsData);
+      console.log('Results copied successfully');
+    } catch (error) {
+      console.error('Error copying results:', error);
+    }
   };
 
-  const handleShareResults = () => {
-    const resultsData = prepareResults();
-    shareResults(resultsData);
+  const handleShareResults = async () => {
+    try {
+      const resultsData = prepareResults();
+      await shareResults(resultsData);
+      console.log('Results shared successfully');
+    } catch (error) {
+      console.error('Error sharing results:', error);
+    }
   };
 
   const handleDownloadResults = () => {
-    const resultsData = prepareResults();
-    downloadResultsAsCSV(resultsData, fileName);
+    try {
+      const resultsData = prepareResults();
+      downloadResultsAsCSV(resultsData, fileName);
+      console.log('Results downloaded successfully');
+    } catch (error) {
+      console.error('Error downloading results:', error);
+    }
   };
 
   return (
@@ -64,6 +79,7 @@ const ResultActions: React.FC<ResultActionsProps> = ({
             variant="outline" 
             className="flex items-center gap-2 bg-[#e6f7ff] text-[#0ea5e9] border-[#0ea5e9] hover:bg-[#d1edff]"
             onClick={handleCopyResults}
+            type="button"
           >
             <Copy className="h-4 w-4" />
             Copy Results
@@ -72,6 +88,7 @@ const ResultActions: React.FC<ResultActionsProps> = ({
             variant="outline" 
             className="flex items-center gap-2 bg-[#eee6ff] text-[#8b5cf6] border-[#8b5cf6] hover:bg-[#e2d9f5]"
             onClick={handleShareResults}
+            type="button"
           >
             <Share className="h-4 w-4" />
             Share Link
@@ -80,6 +97,7 @@ const ResultActions: React.FC<ResultActionsProps> = ({
             variant="outline" 
             className="flex items-center gap-2 bg-[#e6fff0] text-[#10b981] border-[#10b981] hover:bg-[#d1f7e4]"
             onClick={handleDownloadResults}
+            type="button"
           >
             <Download className="h-4 w-4" />
             Download CSV

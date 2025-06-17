@@ -83,6 +83,40 @@ export const CalculatorSidebar = ({
     }
   }, [activeCalculator, calculators]);
 
+  // Smooth scroll to active item without jumping to top
+  useEffect(() => {
+    if (activeItemRef.current && sidebarRef.current && !isCollapsed) {
+      // Use setTimeout to ensure DOM is updated
+      setTimeout(() => {
+        if (activeItemRef.current && sidebarRef.current) {
+          const activeElement = activeItemRef.current;
+          const container = sidebarRef.current;
+          
+          // Get the position of the active element relative to the container
+          const elementTop = activeElement.offsetTop;
+          const elementHeight = activeElement.offsetHeight;
+          const containerHeight = container.clientHeight;
+          const containerScrollTop = container.scrollTop;
+          
+          // Check if element is visible in the current view
+          const isVisible = elementTop >= containerScrollTop && 
+                           (elementTop + elementHeight) <= (containerScrollTop + containerHeight);
+          
+          // Only scroll if the element is not visible
+          if (!isVisible) {
+            // Calculate scroll position to center the element
+            const scrollPosition = elementTop - (containerHeight / 2) + (elementHeight / 2);
+            
+            container.scrollTo({
+              top: Math.max(0, scrollPosition),
+              behavior: 'smooth'
+            });
+          }
+        }
+      }, 100);
+    }
+  }, [activeCalculator, isCollapsed, collapsedCategories]);
+
   // Mobile sidebar
   const MobileSidebar = () => (
     <Sheet>
@@ -191,7 +225,7 @@ export const CalculatorSidebar = ({
               </Button>
             </div>
             
-            <div className="flex-1 overflow-y-auto px-2" ref={sidebarRef}>
+            <div className="flex-1 overflow-y-auto px-2 scroll-smooth" ref={sidebarRef}>
               {categoryOrder.map(category => {
                 const CategoryIcon = getCategoryIcon(category);
                 const isGroupCollapsed = collapsedCategories[category];

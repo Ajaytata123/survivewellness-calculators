@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { CalculatorSidebar } from "./CalculatorSidebar";
 import CalculatorDisplay from "./CalculatorDisplay";
@@ -19,17 +20,19 @@ const WellnessCalculatorHub: React.FC = () => {
       setSearchQuery("");
     }
     
-    // Smooth scroll to top without causing layout shifts
-    setTimeout(() => {
-      if (!isMobile) {
+    // Update URL hash without causing layout shifts
+    window.history.replaceState(null, '', `#${calculatorId}`);
+    
+    // Smooth scroll without layout shifts
+    if (!isMobile) {
+      requestAnimationFrame(() => {
         const mainContent = document.querySelector('#desktop-calculator-' + calculatorId + '-container');
-        if (mainContent && mainContent.parentElement) {
-          mainContent.parentElement.scrollTo({ top: 0, behavior: 'smooth' });
+        const parentContainer = mainContent?.closest('.flex-1');
+        if (parentContainer) {
+          parentContainer.scrollTo({ top: 0, behavior: 'smooth' });
         }
-      } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    }, 50);
+      });
+    }
   };
 
   const handleUnitSystemChange = (system: UnitSystem) => {

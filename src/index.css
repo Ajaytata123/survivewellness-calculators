@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700&family=Merriweather:wght@400;500;700&display=swap');
 
 @tailwind base;
@@ -89,26 +90,30 @@
 @layer base {
   * {
     @apply border-border;
+    box-sizing: border-box;
   }
 
   body {
     @apply bg-background text-foreground;
     font-family: 'Poppins', 'Nunito', sans-serif;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins', serif;
   }
 
-  /* Prevent layout shifts and ensure smooth transitions */
-  * {
-    box-sizing: border-box;
+  /* Prevent all layout shifts and ensure stable positioning */
+  html {
+    scroll-behavior: smooth;
   }
 
-  /* Stable layout utilities */
+  /* Completely stable layout utilities */
   .stable-layout {
-    contain: layout style;
+    contain: layout style paint;
     will-change: auto;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   /* Modern Input Styling */
@@ -169,15 +174,18 @@
     @apply bg-white rounded-xl shadow-md border border-violet-100 p-4 transition-all duration-200;
   }
 
-  /* Layout utilities to prevent shifts */
+  /* Layout utilities to prevent shifts - CRITICAL FOR STABILITY */
   .fixed-layout {
-    contain: layout;
+    contain: layout size style paint;
     transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: auto;
   }
 
   .no-layout-shift {
     backface-visibility: hidden;
     transform: translateZ(0);
+    contain: layout style paint;
   }
 
   /* Spacing Utilities */
@@ -255,6 +263,8 @@
   .action-button {
     @apply flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border-2 border-gray-200 hover:border-violet-300 hover:bg-violet-50 text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md;
     touch-action: manipulation;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   .action-button-primary {
@@ -264,6 +274,8 @@
   /* Know more button with modern styling */
   .know-more-button {
     @apply bg-gradient-to-r from-cyan-400 to-cyan-500 text-white hover:from-cyan-500 hover:to-cyan-600 px-6 py-3 rounded-xl text-sm font-semibold flex items-center gap-2 mt-6 transition-all duration-200 shadow-lg hover:shadow-xl;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 }
 
@@ -300,33 +312,39 @@
   @apply data-[state=active]:bg-white data-[state=active]:text-violet-600 data-[state=active]:shadow-sm rounded-lg font-semibold;
 }
 
-/* Smooth transitions for all interactive elements */
+/* CRITICAL: Prevent any layout shifts or reflow */
 * {
-  @apply transition-colors duration-200;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
-/* Enhanced focus states */
+/* Enhanced focus states without layout shifts */
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
   @apply ring-2 ring-violet-300 ring-offset-2 outline-none;
+  transform: translateZ(0);
 }
 
-/* Prevent layout shifts on all interactive elements */
+/* Ensure completely smooth transitions without layout impact */
 button, input, select, textarea {
   transform: translateZ(0);
   backface-visibility: hidden;
-}
-
-/* Ensure smooth scrolling without layout shifts */
-html {
-  scroll-behavior: smooth;
+  contain: layout style paint;
 }
 
 /* Stable container queries */
 @container (min-width: 768px) {
   .desktop-layout {
-    contain: layout style;
+    contain: layout style paint;
+    transform: translateZ(0);
   }
+}
+
+/* Force hardware acceleration for all interactive elements */
+.sidebar-card, .modern-card, .calculator-area, .action-button {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: auto;
 }

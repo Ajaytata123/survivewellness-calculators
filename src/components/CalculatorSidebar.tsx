@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Search } from "@/components/ui/search";
@@ -280,9 +281,9 @@ export const CalculatorSidebar = ({
     </Sheet>
   );
 
-  // Desktop sidebar with stable layout
+  // Desktop sidebar with completely stable layout
   const DesktopSidebar = () => (
-    <div className="h-full bg-[#F9F7FD] rounded-xl shadow-md border border-violet-100 flex flex-col overflow-hidden">
+    <div className="h-full flex flex-col overflow-hidden bg-[#F9F7FD] rounded-xl shadow-md border border-violet-100">
       {/* Fixed Search Section */}
       <div className="flex-shrink-0 p-4 border-b border-violet-100">
         <Search 
@@ -293,8 +294,8 @@ export const CalculatorSidebar = ({
         />
       </div>
       
-      {/* Scrollable Categories */}
-      <div className="flex-1 overflow-y-auto px-2 py-4" ref={sidebarRef}>
+      {/* Scrollable Categories - Fixed height to prevent layout shifts */}
+      <div className="flex-1 overflow-y-auto px-2 py-4" style={{ height: 'calc(100vh - 200px)' }}>
         {categoryOrder.map(category => {
           const CategoryIcon = getCategoryIcon(category);
           const isGroupCollapsed = collapsedCategories[category];
@@ -307,10 +308,10 @@ export const CalculatorSidebar = ({
                 onClick={() => toggleCategory(category)}
               >
                 <div className={`flex items-center font-['Poppins'] font-semibold text-${categoryColors[category]}`}>
-                  <CategoryIcon className="h-5 w-5 mr-3" />
+                  <CategoryIcon className="h-5 w-5 mr-3 flex-shrink-0" />
                   <span className="text-sm">{categoryNames[category]}</span>
                 </div>
-                <div className="text-gray-400 group-hover:text-violet-500 transition-colors">
+                <div className="text-gray-400 group-hover:text-violet-500 transition-colors flex-shrink-0">
                   {isGroupCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
                 </div>
               </div>

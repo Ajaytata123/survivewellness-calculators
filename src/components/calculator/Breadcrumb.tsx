@@ -16,6 +16,7 @@ interface BreadcrumbProps {
   calculators: CalculatorInfo[];
   activeCalculator: string;
   onCalculatorSelect: (id: string) => void;
+  onCategorySelect?: (category: string) => void;
   className?: string;
 }
 
@@ -23,6 +24,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   calculators,
   activeCalculator,
   onCalculatorSelect,
+  onCategorySelect,
   className
 }) => {
   const activeCalc = calculators.find(calc => calc.id === activeCalculator);
@@ -40,6 +42,18 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   };
   
   const displayName = getDisplayName(activeCalc);
+
+  const handleCategoryClick = () => {
+    if (onCategorySelect) {
+      onCategorySelect(activeCalc.category);
+    } else {
+      // Fallback: Navigate to first calculator in category
+      const firstCalcOfCategory = calculators.find(calc => calc.category === activeCalc.category);
+      if (firstCalcOfCategory) {
+        onCalculatorSelect(firstCalcOfCategory.id);
+      }
+    }
+  };
   
   return (
     <ShadcnBreadcrumb className={cn("py-2 px-0", className)}>
@@ -58,14 +72,8 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
         
         <BreadcrumbItem>
           <BreadcrumbLink 
-            className="text-gray-600 dark:text-gray-300 cursor-pointer"
-            onClick={() => {
-              // Find first calculator of this category and navigate to it
-              const firstCalcOfCategory = calculators.find(calc => calc.category === activeCalc.category);
-              if (firstCalcOfCategory) {
-                onCalculatorSelect(firstCalcOfCategory.id);
-              }
-            }}
+            className="text-gray-600 dark:text-gray-300 cursor-pointer hover:text-violet-600 hover:underline"
+            onClick={handleCategoryClick}
             id={`breadcrumb-category-${activeCalc.category}`}
           >
             {categoryName}

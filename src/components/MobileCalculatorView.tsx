@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Search } from "@/components/ui/search";
 import { CalculatorInfo, CalculatorCategory, getCategoryName } from '@/types/calculator';
@@ -40,13 +41,32 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     women: true
   });
 
-  // Filter calculators based on search query
-  const filteredCalculators = calculators.filter(calc => 
-    calc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    calc.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Enhanced search to include "Period" for menstrual/ovulation calculators
+  const filteredCalculators = calculators.filter(calc => {
+    const searchLower = searchQuery.toLowerCase();
+    const calcName = calc.name.toLowerCase();
+    const displayName = getDisplayName(calc).toLowerCase();
+    
+    // Special handling for Period Calculator search
+    if (searchLower.includes('period') || searchLower.includes('p')) {
+      if (calc.id === 'menstrualCycle' || calc.id === 'menstrual' || calc.id === 'ovulation') {
+        return true;
+      }
+    }
+    
+    return calcName.includes(searchLower) || 
+           displayName.includes(searchLower) ||
+           calc.category.toLowerCase().includes(searchLower);
+  });
 
   const activeCalcInfo = calculators.find(calc => calc.id === activeCalculator);
+
+  const getDisplayName = (calc: CalculatorInfo) => {
+    if (calc.id === 'menstrualCycle' || calc.id === 'menstrual' || calc.id === 'period') {
+      return 'Period Calculator';
+    }
+    return calc.name;
+  };
 
   useEffect(() => {
     if (!searchQuery) {
@@ -114,7 +134,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   // Function to render calculator cards with proper IDs
   const renderCalculatorCard = (calc: CalculatorInfo) => {
     const IconComponent = getIconComponent(calc.icon);
-    const displayName = calc.id === 'menstrualCycle' || calc.id === 'menstrual' ? 'Period Calculator' : calc.name;
+    const displayName = getDisplayName(calc);
     
     return (
       <div 
@@ -183,7 +203,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
               </button>
               <Separator orientation="vertical" className="h-4" />
               <span className="font-medium text-gray-800">
-                {activeCalcInfo.id === 'menstrualCycle' || activeCalcInfo.id === 'menstrual' ? 'Period Calculator' : activeCalcInfo.name}
+                {getDisplayName(activeCalcInfo)}
               </span>
             </div>
           </div>

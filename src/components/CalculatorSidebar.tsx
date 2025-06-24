@@ -14,6 +14,8 @@ interface CalculatorSidebarProps {
   calculators: CalcInfo[];
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  highlightedCategory?: string;
+  onCategoryHighlight?: (category: string | undefined) => void;
 }
 
 export const CalculatorSidebar = ({ 
@@ -21,21 +23,37 @@ export const CalculatorSidebar = ({
   onCalculatorSelect, 
   calculators, 
   searchQuery, 
-  setSearchQuery 
+  setSearchQuery,
+  highlightedCategory,
+  onCategoryHighlight
 }: CalculatorSidebarProps) => {
   const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLButtonElement>(null);
+  const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
+  // Enhanced search to include "Period" for menstrual/ovulation calculators
   const filteredCalculators = searchQuery 
-    ? calculators.filter(calc => 
-        calc.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    ? calculators.filter(calc => {
+        const searchLower = searchQuery.toLowerCase();
+        const calcName = calc.name.toLowerCase();
+        const displayName = getDisplayName(calc).toLowerCase();
+        
+        // Special handling for Period Calculator search
+        if (searchLower.includes('period') || searchLower.includes('p')) {
+          if (calc.id === 'menstrualCycle' || calc.id === 'menstrual' || calc.id === 'ovulation') {
+            return true;
+          }
+        }
+        
+        return calcName.includes(searchLower) || displayName.includes(searchLower);
+      })
     : calculators;
 
   const categoryOrder: CalculatorCategory[] = ["body", "fitness", "nutrition", "wellness", "women"];
   const categoryNames: Record<CalculatorCategory, string> = {
     body: "Body Composition",
-    fitness: "Fitness & Exercise",
+    fitness: "Fitness & Exercise", 
     nutrition: "Nutrition & Diet",
     wellness: "Wellness & Lifestyle",
     women: "Women's Health"
@@ -63,36 +81,68 @@ export const CalculatorSidebar = ({
     return calc.name;
   };
 
-  // Scroll to active item without jumping to top
+  // Enhanced scroll function with better stability
   const scrollToActiveItem = () => {
     if (activeItemRef.current && sidebarRef.current) {
       const activeElement = activeItemRef.current;
       const sidebarElement = sidebarRef.current;
       
-      // Get current scroll position
       const currentScrollTop = sidebarElement.scrollTop;
       const sidebarHeight = sidebarElement.clientHeight;
-      
-      // Get active element position
       const activeElementTop = activeElement.offsetTop;
       const activeElementHeight = activeElement.offsetHeight;
       
-      // Only scroll if element is not visible
-      if (activeElementTop < currentScrollTop || 
-          activeElementTop + activeElementHeight > currentScrollTop + sidebarHeight) {
-        
-        // Smooth scroll to center the active element
-        const scrollPosition = activeElementTop - (sidebarHeight / 2) + (activeElementHeight / 2);
+      // More precise visibility check
+      const elementVisibleTop = activeElementTop - currentScrollTop;
+      const elementVisibleBottom = elementVisibleTop + activeElementHeight;
+      
+      // Only scroll if element is not fully visible with some padding
+      const padding = 60;
+      if (elementVisibleTop < padding || elementVisibleBottom > sidebarHeight - padding) {
+        const optimalScrollPosition = activeElementTop - (sidebarHeight / 2) + (activeElementHeight / 2);
         
         sidebarElement.scrollTo({
-          top: Math.max(0, scrollPosition),
+          top: Math.max(0, Math.min(optimalScrollPosition, sidebarElement.scrollHeight - sidebarHeight)),
           behavior: 'smooth'
         });
       }
     }
   };
 
-  // Get calculator from URL hash if present
+  // Scroll to category when highlighted via breadcrumb
+  const scrollToCategory = (category: string) => {
+    const categoryElement = categoryRefs.current[category];
+    if (categoryElement && sidebarRef.current) {
+      const sidebarElement = sidebarRef.current;
+      const categoryTop = categoryElement.offsetTop;
+      
+      sidebarElement.scrollTo({
+        top: Math.max(0, categoryTop - 100),
+        behavior: 'smooth'
+      });
+      
+      // Expand the category if collapsed
+      setCollapsedCategories(prev => ({
+        ...prev,
+        [category]: false
+      }));
+    }
+  };
+
+  // Handle category highlighting from breadcrumb
+  useEffect(() => {
+    if (highlightedCategory) {
+      scrollToCategory(highlightedCategory);
+      
+      // Clear highlight after 3 seconds
+      const timer = setTimeout(() => {
+        onCategoryHighlight?.(undefined);
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [highlightedCategory, onCategoryHighlight]);
+
   useEffect(() => {
     // Get calculator from URL hash if present
     const hash = window.location.hash.substring(1);
@@ -231,10 +281,10 @@ export const CalculatorSidebar = ({
         [category]: false,
       }));
       
-      // Scroll to active item after a brief delay to ensure DOM is updated
+      // Enhanced scroll timing
       setTimeout(() => {
         scrollToActiveItem();
-      }, 100);
+      }, 150);
     }
   }, [activeCalculator, calculators]);
 
@@ -259,11 +309,17 @@ export const CalculatorSidebar = ({
           {categoryOrder.map(category => {
             const CategoryIcon = getCategoryIcon(category);
             const isCollapsed = collapsedCategories[category];
+            const isHighlighted = highlightedCategory === category;
             
             return (
               <div key={category} className="mb-2" id={`mobile-category-${category}`}>
                 <div 
-                  className="flex items-center justify-between p-2 cursor-pointer hover:bg-gray-100 rounded-md transition-colors"
+                  className={cn(
+                    "flex items-center justify-between p-2 cursor-pointer rounded-md transition-colors",
+                    isHighlighted 
+                      ? "bg-violet-100 border-2 border-violet-300" 
+                      : "hover:bg-gray-100"
+                  )}
                   onClick={() => toggleCategory(category)}
                 >
                   <div className={`flex items-center text-${categoryColors[category]}`}>
@@ -314,7 +370,7 @@ export const CalculatorSidebar = ({
     </Sheet>
   );
 
-  // Desktop sidebar with stable scroll behavior
+  // Desktop sidebar with enhanced scroll stability
   const DesktopSidebar = () => (
     <div className="h-full flex flex-col overflow-hidden bg-[#F9F7FD] rounded-xl shadow-md border border-violet-100">
       {/* Fixed Search Section */}
@@ -327,21 +383,35 @@ export const CalculatorSidebar = ({
         />
       </div>
       
-      {/* Scrollable Categories - Maintain scroll position */}
+      {/* Scrollable Categories */}
       <div 
         className="flex-1 overflow-y-auto px-2 py-4 scroll-smooth" 
-        style={{ height: 'calc(100vh - 200px)' }}
+        style={{ 
+          height: 'calc(100vh - 200px)',
+          scrollBehavior: 'smooth'
+        }}
         ref={sidebarRef}
       >
         {categoryOrder.map(category => {
           const CategoryIcon = getCategoryIcon(category);
           const isGroupCollapsed = collapsedCategories[category];
+          const isHighlighted = highlightedCategory === category;
           
           return (
-            <div key={category} className="mb-4" id={`desktop-category-${category}`}>
-              {/* Category Header */}
+            <div 
+              key={category} 
+              className="mb-4" 
+              id={`desktop-category-${category}`}
+              ref={el => categoryRefs.current[category] = el}
+            >
+              {/* Category Header with highlighting */}
               <div 
-                className="flex items-center justify-between p-3 cursor-pointer rounded-lg hover:bg-white hover:shadow-sm transition-all duration-200 group"
+                className={cn(
+                  "flex items-center justify-between p-3 cursor-pointer rounded-lg transition-all duration-200 group",
+                  isHighlighted 
+                    ? "bg-violet-100 border-2 border-violet-300 shadow-sm" 
+                    : "hover:bg-white hover:shadow-sm"
+                )}
                 onClick={() => toggleCategory(category)}
               >
                 <div className={`flex items-center font-['Poppins'] font-semibold text-${categoryColors[category]}`}>

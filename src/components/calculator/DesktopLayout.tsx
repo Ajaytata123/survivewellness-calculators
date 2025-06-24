@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { CalculatorInfo } from "@/types/calculator";
 import { CalculatorSidebar } from "../CalculatorSidebar";
 import CalculatorDisplay from "../CalculatorDisplay";
@@ -25,7 +25,12 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
   unitSystem,
   onUnitSystemChange,
 }) => {
+  const [highlightedCategory, setHighlightedCategory] = useState<string | undefined>();
   const calculatorInfo = calculators.find(calc => calc.id === activeCalculator);
+
+  const handleCategorySelect = (category: string) => {
+    setHighlightedCategory(category);
+  };
   
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -38,6 +43,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
             calculators={calculators}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
+            highlightedCategory={highlightedCategory}
+            onCategoryHighlight={setHighlightedCategory}
           />
         </div>
       </div>
@@ -52,6 +59,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
                 calculators={calculators}
                 activeCalculator={activeCalculator}
                 onCalculatorSelect={onCalculatorSelect}
+                onCategorySelect={handleCategorySelect}
                 className="flex items-center text-sm"
               />
             )}

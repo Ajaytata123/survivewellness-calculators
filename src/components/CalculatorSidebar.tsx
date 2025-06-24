@@ -23,13 +23,9 @@ export const CalculatorSidebar = ({
   searchQuery, 
   setSearchQuery 
 }: CalculatorSidebarProps) => {
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLButtonElement>(null);
-  
-  // Track which category contains the active calculator
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const filteredCalculators = searchQuery 
     ? calculators.filter(calc => 
@@ -60,7 +56,6 @@ export const CalculatorSidebar = ({
     }));
   };
 
-  // Get display name for calculators
   const getDisplayName = (calc: CalcInfo) => {
     if (calc.id === 'menstrualCycle' || calc.id === 'menstrual' || calc.id === 'period') {
       return 'Period Calculator';
@@ -198,54 +193,16 @@ export const CalculatorSidebar = ({
     const activeCalc = calculators.find(calc => calc.id === activeCalculator);
     if (activeCalc) {
       let category = activeCalc.category;
-      // Move pregnancy calculator to women's health
       if (activeCalc.id === 'pregnancy' || activeCalc.id === 'pregnancyweight') {
         category = 'women';
       }
       
-      setActiveCategory(category);
-      
-      // Ensure the category containing the active calculator is expanded
       setCollapsedCategories(prev => ({
         ...prev,
-        [category]: false, // Make sure it's not collapsed
+        [category]: false,
       }));
     }
   }, [activeCalculator, calculators]);
-
-  // Smooth scroll to active item without jumping to top
-  useEffect(() => {
-    if (activeItemRef.current && sidebarRef.current && !isCollapsed) {
-      // Use setTimeout to ensure DOM is updated
-      setTimeout(() => {
-        if (activeItemRef.current && sidebarRef.current) {
-          const activeElement = activeItemRef.current;
-          const container = sidebarRef.current;
-          
-          // Get the position of the active element relative to the container
-          const elementTop = activeElement.offsetTop;
-          const elementHeight = activeElement.offsetHeight;
-          const containerHeight = container.clientHeight;
-          const containerScrollTop = container.scrollTop;
-          
-          // Check if element is visible in the current view
-          const isVisible = elementTop >= containerScrollTop && 
-                           (elementTop + elementHeight) <= (containerScrollTop + containerHeight);
-          
-          // Only scroll if the element is not visible
-          if (!isVisible) {
-            // Calculate scroll position to center the element
-            const scrollPosition = elementTop - (containerHeight / 2) + (elementHeight / 2);
-            
-            container.scrollTo({
-              top: Math.max(0, scrollPosition),
-              behavior: 'smooth'
-            });
-          }
-        }
-      }, 100);
-    }
-  }, [activeCalculator, isCollapsed, collapsedCategories]);
 
   // Mobile sidebar
   const MobileSidebar = () => (
@@ -264,15 +221,15 @@ export const CalculatorSidebar = ({
             onSearch={setSearchQuery}
           />
         </div>
-        <div className="px-2 py-2 overflow-y-auto max-h-[85vh]" ref={sidebarRef}>
+        <div className="px-2 py-2 h-[85vh] overflow-y-auto" ref={sidebarRef}>
           {categoryOrder.map(category => {
             const CategoryIcon = getCategoryIcon(category);
             const isCollapsed = collapsedCategories[category];
             
             return (
-              <div key={category} className="sidebar-category mb-2" id={`mobile-category-${category}`}>
+              <div key={category} className="mb-2" id={`mobile-category-${category}`}>
                 <div 
-                  className="sidebar-category-header flex items-center justify-between p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
+                  className="flex items-center justify-between p-2 cursor-pointer hover:bg-gray-100 rounded-md transition-colors"
                   onClick={() => toggleCategory(category)}
                 >
                   <div className={`flex items-center text-${categoryColors[category]}`}>
@@ -283,10 +240,9 @@ export const CalculatorSidebar = ({
                 </div>
                 
                 {!isCollapsed && (
-                  <div className="sidebar-category-content">
+                  <div className="ml-2">
                     {filteredCalculators
                       .filter(calc => {
-                        // Move pregnancy calculator to women's health
                         if (calc.id === 'pregnancy' || calc.id === 'pregnancyweight') {
                           return category === 'women';
                         }
@@ -304,10 +260,10 @@ export const CalculatorSidebar = ({
                           ref={isActive ? activeItemRef : null}
                           onClick={() => onCalculatorSelect(calculator.id)}
                           className={cn(
-                            "w-full text-left px-3 py-1.5 text-sm rounded-md flex items-center my-1",
+                            "w-full text-left px-3 py-1.5 text-sm rounded-md flex items-center my-1 transition-colors",
                             isActive
                               ? `bg-${calculator.color}/20 text-${calculator.color}`
-                              : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                              : "hover:bg-gray-100"
                           )}
                         >
                           <IconComponent className="h-4 w-4 mr-2 text-gray-500" />
@@ -324,11 +280,11 @@ export const CalculatorSidebar = ({
     </Sheet>
   );
 
-  // Desktop sidebar with new design
+  // Desktop sidebar with stable layout
   const DesktopSidebar = () => (
-    <div className="bg-[#F9F7FD] rounded-xl shadow-md border border-violet-100 overflow-hidden">
-      {/* Search Section */}
-      <div className="p-4 border-b border-violet-100">
+    <div className="h-full bg-[#F9F7FD] rounded-xl shadow-md border border-violet-100 flex flex-col overflow-hidden">
+      {/* Fixed Search Section */}
+      <div className="flex-shrink-0 p-4 border-b border-violet-100">
         <Search 
           placeholder="Search calculators..." 
           value={searchQuery}
@@ -337,8 +293,8 @@ export const CalculatorSidebar = ({
         />
       </div>
       
-      {/* Categories */}
-      <div className="h-[calc(100vh-12rem)] overflow-y-auto px-2 py-4" ref={sidebarRef}>
+      {/* Scrollable Categories */}
+      <div className="flex-1 overflow-y-auto px-2 py-4" ref={sidebarRef}>
         {categoryOrder.map(category => {
           const CategoryIcon = getCategoryIcon(category);
           const isGroupCollapsed = collapsedCategories[category];
@@ -364,7 +320,6 @@ export const CalculatorSidebar = ({
                 <div className="ml-4 space-y-1">
                   {filteredCalculators
                     .filter(calc => {
-                      // Move pregnancy calculator to women's health
                       if (calc.id === 'pregnancy' || calc.id === 'pregnancyweight') {
                         return category === 'women';
                       }
@@ -405,7 +360,7 @@ export const CalculatorSidebar = ({
   return (
     <>
       <MobileSidebar />
-      <div className="hidden md:block">
+      <div className="hidden md:block h-full">
         <DesktopSidebar />
       </div>
     </>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { CalculatorSidebar } from "./CalculatorSidebar";
 import CalculatorDisplay from "./CalculatorDisplay";
@@ -17,22 +16,20 @@ const WellnessCalculatorHub: React.FC = () => {
   const handleCalculatorSelect = (calculatorId: string) => {
     setActiveCalculator(calculatorId);
     if (isMobile) {
-      // For mobile, reset search when a calculator is selected
       setSearchQuery("");
     }
     
-    // Always scroll to top when calculator is selected
+    // Smooth scroll to top without causing layout shifts
     setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      
-      // Also scroll the main content area to top for desktop
       if (!isMobile) {
-        const mainContent = document.querySelector('.calculator-display-area');
-        if (mainContent) {
-          mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+        const mainContent = document.querySelector('#desktop-calculator-' + calculatorId + '-container');
+        if (mainContent && mainContent.parentElement) {
+          mainContent.parentElement.scrollTo({ top: 0, behavior: 'smooth' });
         }
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-    }, 100);
+    }, 50);
   };
 
   const handleUnitSystemChange = (system: UnitSystem) => {
@@ -40,18 +37,15 @@ const WellnessCalculatorHub: React.FC = () => {
   };
 
   useEffect(() => {
-    // Get calculator from URL hash if present
     const hash = window.location.hash.substring(1);
     if (hash && calculators.some(calc => calc.id === hash)) {
       setActiveCalculator(hash);
     }
 
-    // Listen for calculator button clicks for iframe integration
     const handleCalculatorButtonClick = (event: Event) => {
       const target = event.target as HTMLElement;
       const buttonId = target.id;
       
-      // Map button IDs to calculator IDs
       const buttonToCalculatorMap: { [key: string]: string } = {
         'SurviveWellnessBMI': 'bmi',
         'SurviveWellnessBMR': 'bmr',
@@ -83,12 +77,10 @@ const WellnessCalculatorHub: React.FC = () => {
 
       if (buttonToCalculatorMap[buttonId]) {
         setActiveCalculator(buttonToCalculatorMap[buttonId]);
-        // Update URL hash
         window.location.hash = buttonToCalculatorMap[buttonId];
       }
     };
 
-    // Add event listeners for all calculator buttons
     Object.keys({
       'SurviveWellnessBMI': 'bmi',
       'SurviveWellnessBMR': 'bmr',
@@ -123,7 +115,6 @@ const WellnessCalculatorHub: React.FC = () => {
       }
     });
 
-    // Cleanup event listeners
     return () => {
       Object.keys({
         'SurviveWellnessBMI': 'bmi',
@@ -161,7 +152,6 @@ const WellnessCalculatorHub: React.FC = () => {
     };
   }, []);
 
-  // Update hash when calculator changes
   useEffect(() => {
     if (activeCalculator) {
       window.location.hash = activeCalculator;
@@ -170,7 +160,7 @@ const WellnessCalculatorHub: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header Section */}
+      {/* Fixed Header Section */}
       <div className="bg-gradient-to-r from-violet-50 to-purple-50 border-b border-gray-100">
         <div className="text-center py-8 px-4 max-w-6xl mx-auto">
           <h1 className="text-4xl font-bold mb-3 text-gray-800 font-['Poppins']">

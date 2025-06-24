@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Search } from "@/components/ui/search";
 import { CalculatorInfo, CalculatorCategory, getCategoryName } from '@/types/calculator';
@@ -79,28 +78,15 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     }
   }, [searchQuery, calculators, activeCategory]);
 
-  // When a calculator is selected, automatically switch to calculator tab and scroll to top
+  // When a calculator is selected, switch to calculator tab and ensure clean start
   const handleCalculatorSelect = (id: string) => {
     onCalculatorSelect(id);
     setActiveTab("calculator");
     
-    // Immediately scroll to top and ensure calculator content is visible from beginning
-    setTimeout(() => {
-      // Scroll page to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      
-      // Scroll mobile container to top
-      const mobileContainer = document.querySelector('.mobile-calculator-container');
-      if (mobileContainer) {
-        mobileContainer.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      
-      // Also scroll the calculator display container to top
-      const calculatorContent = document.querySelector('.calculator-content');
-      if (calculatorContent) {
-        calculatorContent.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    }, 50);
+    // Force immediate scroll to top and reset view
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    window.scrollTo(0, 0);
   };
 
   // Group calculators by category for search results
@@ -128,7 +114,6 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   // Function to render calculator cards with proper IDs
   const renderCalculatorCard = (calc: CalculatorInfo) => {
     const IconComponent = getIconComponent(calc.icon);
-    // Rename "Menstrual Cycle" to "Period" calculator
     const displayName = calc.id === 'menstrualCycle' || calc.id === 'menstrual' ? 'Period Calculator' : calc.name;
     
     return (
@@ -164,8 +149,9 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col w-full h-full mobile-calculator-container">
-      <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 shadow-sm p-4">
+    <div className="flex flex-col h-screen w-full bg-white overflow-hidden">
+      {/* Fixed Header - No scrolling */}
+      <div className="flex-shrink-0 bg-white shadow-sm border-b p-4 z-10">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "browse" | "calculator")} className="w-auto">
           <TabsList className="grid w-[180px] grid-cols-2">
             <TabsTrigger value="browse" id="mobile-browse-tab">Browse</TabsTrigger>
@@ -188,7 +174,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
             <div className="flex items-center space-x-2 px-1">
               <button 
                 onClick={() => setActiveTab("browse")}
-                className="text-sm text-wellness-purple hover:underline flex items-center"
+                className="text-sm text-violet-600 hover:underline flex items-center font-medium"
                 aria-label="Back to calculator list"
                 id="mobile-back-button"
               >
@@ -196,7 +182,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
                 Back
               </button>
               <Separator orientation="vertical" className="h-4" />
-              <span className="font-medium">
+              <span className="font-medium text-gray-800">
                 {activeCalcInfo.id === 'menstrualCycle' || activeCalcInfo.id === 'menstrual' ? 'Period Calculator' : activeCalcInfo.name}
               </span>
             </div>
@@ -204,9 +190,10 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
         )}
       </div>
 
-      <div className="flex-1 p-4 pb-16 overflow-y-auto calculator-content">
+      {/* Main Content - Full height, no external scroll */}
+      <div className="flex-1 overflow-hidden">
         {activeTab === "browse" ? (
-          <div className="animate-fade-in">
+          <div className="h-full overflow-y-auto p-4">
             {!searchQuery ? (
               <div className="space-y-4">
                 {categories.map((category) => (
@@ -229,7 +216,6 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
                         <div className="grid grid-cols-2 gap-3">
                           {calculators
                             .filter(calc => {
-                              // Move pregnancy calculator to women's health
                               if (calc.id === 'pregnancy' || calc.id === 'pregnancyweight') {
                                 return category === 'women';
                               }
@@ -264,12 +250,14 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
             )}
           </div>
         ) : (
-          <div className="animate-fade-in">
-            <CalculatorDisplay
-              activeCalculator={activeCalculator}
-              unitSystem={unitSystem}
-              onUnitSystemChange={onUnitSystemChange}
-            />
+          <div className="h-full bg-white">
+            <div className="h-full overflow-y-auto">
+              <CalculatorDisplay
+                activeCalculator={activeCalculator}
+                unitSystem={unitSystem}
+                onUnitSystemChange={onUnitSystemChange}
+              />
+            </div>
           </div>
         )}
       </div>

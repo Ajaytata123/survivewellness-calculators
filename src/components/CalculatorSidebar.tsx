@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Search } from "@/components/ui/search";
@@ -62,6 +61,35 @@ export const CalculatorSidebar = ({
       return 'Period Calculator';
     }
     return calc.name;
+  };
+
+  // Scroll to active item without jumping to top
+  const scrollToActiveItem = () => {
+    if (activeItemRef.current && sidebarRef.current) {
+      const activeElement = activeItemRef.current;
+      const sidebarElement = sidebarRef.current;
+      
+      // Get current scroll position
+      const currentScrollTop = sidebarElement.scrollTop;
+      const sidebarHeight = sidebarElement.clientHeight;
+      
+      // Get active element position
+      const activeElementTop = activeElement.offsetTop;
+      const activeElementHeight = activeElement.offsetHeight;
+      
+      // Only scroll if element is not visible
+      if (activeElementTop < currentScrollTop || 
+          activeElementTop + activeElementHeight > currentScrollTop + sidebarHeight) {
+        
+        // Smooth scroll to center the active element
+        const scrollPosition = activeElementTop - (sidebarHeight / 2) + (activeElementHeight / 2);
+        
+        sidebarElement.scrollTo({
+          top: Math.max(0, scrollPosition),
+          behavior: 'smooth'
+        });
+      }
+    }
   };
 
   // Get calculator from URL hash if present
@@ -202,6 +230,11 @@ export const CalculatorSidebar = ({
         ...prev,
         [category]: false,
       }));
+      
+      // Scroll to active item after a brief delay to ensure DOM is updated
+      setTimeout(() => {
+        scrollToActiveItem();
+      }, 100);
     }
   }, [activeCalculator, calculators]);
 
@@ -281,7 +314,7 @@ export const CalculatorSidebar = ({
     </Sheet>
   );
 
-  // Desktop sidebar with completely stable layout
+  // Desktop sidebar with stable scroll behavior
   const DesktopSidebar = () => (
     <div className="h-full flex flex-col overflow-hidden bg-[#F9F7FD] rounded-xl shadow-md border border-violet-100">
       {/* Fixed Search Section */}
@@ -294,8 +327,12 @@ export const CalculatorSidebar = ({
         />
       </div>
       
-      {/* Scrollable Categories - Fixed height to prevent layout shifts */}
-      <div className="flex-1 overflow-y-auto px-2 py-4" style={{ height: 'calc(100vh - 200px)' }}>
+      {/* Scrollable Categories - Maintain scroll position */}
+      <div 
+        className="flex-1 overflow-y-auto px-2 py-4 scroll-smooth" 
+        style={{ height: 'calc(100vh - 200px)' }}
+        ref={sidebarRef}
+      >
         {categoryOrder.map(category => {
           const CategoryIcon = getCategoryIcon(category);
           const isGroupCollapsed = collapsedCategories[category];

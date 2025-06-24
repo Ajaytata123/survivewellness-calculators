@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Merriweather:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700&family=Merriweather:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -93,109 +93,169 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', 'Nunito', sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading;
+    font-family: 'Poppins', serif;
   }
 
-  input:focus-visible {
-    @apply outline-none ring-2 ring-primary/50;
+  /* Modern Input Styling */
+  input, textarea, select {
+    @apply rounded-xl border-2 border-gray-200 px-4 py-3 focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all duration-200;
+  }
+
+  input:focus-visible, textarea:focus-visible, select:focus-visible {
+    @apply outline-none ring-2 ring-violet-200 border-violet-400;
+  }
+
+  /* Modern Button Styling */
+  .btn-primary {
+    @apply bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl;
+  }
+
+  .btn-secondary {
+    @apply bg-cyan-400 hover:bg-cyan-500 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl;
   }
 
   /* Form validation highlighting */
   .input-error {
-    @apply border-red-500 ring-1 ring-red-500 focus-visible:ring-red-500/50 !important;
+    @apply border-red-400 ring-2 ring-red-100 focus-visible:ring-red-200 focus-visible:border-red-500 !important;
   }
 
   .error-message {
-    @apply text-sm text-red-500 mt-1;
+    @apply text-sm text-red-500 mt-2 font-medium;
   }
 }
 
 @layer utilities {
   .glass-morphism {
-    @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)];
+    @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-[0_8px_32px_-2px_rgba(0,0,0,0.1)];
   }
   
   .text-gradient {
-    @apply bg-gradient-to-br from-wellness-purple via-wellness-pink to-wellness-blue bg-clip-text text-transparent;
+    @apply bg-gradient-to-br from-violet-600 via-purple-600 to-blue-600 bg-clip-text text-transparent;
   }
 
   .result-highlight {
-    @apply bg-wellness-softPurple/50 dark:bg-wellness-softPurple/30 p-2 rounded-md transition-all;
+    @apply bg-violet-50 border border-violet-200 p-4 rounded-xl transition-all shadow-sm;
   }
 
   .category-bg {
-    @apply bg-gray-50/80 dark:bg-gray-800/80 rounded-lg;
+    @apply bg-gray-50 rounded-xl border border-gray-100;
   }
 
   .calculator-area {
-    @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm transition-colors duration-200;
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 transition-colors duration-200;
+  }
+
+  /* Custom Card Styling */
+  .modern-card {
+    @apply bg-white rounded-2xl shadow-lg border border-gray-100 p-6 transition-all duration-200 hover:shadow-xl;
+  }
+
+  .sidebar-card {
+    @apply bg-white rounded-xl shadow-md border border-violet-100 p-4 transition-all duration-200;
+  }
+
+  /* Spacing Utilities */
+  .section-spacing {
+    @apply mb-8;
+  }
+
+  .input-group {
+    @apply mb-6;
+  }
+
+  .form-section {
+    @apply bg-gray-50 rounded-xl p-6 mb-6 border border-gray-100;
   }
 
   /* Custom height inputs */
   .height-input-container {
-    @apply grid gap-2;
+    @apply grid gap-3;
   }
 
   .height-input-option {
-    @apply bg-white dark:bg-gray-900 border rounded-lg p-3;
+    @apply bg-white border-2 border-gray-200 rounded-xl p-4 hover:border-violet-300 transition-all duration-200;
   }
 
   .disclaimer-text {
-    @apply text-sm text-gray-500 dark:text-gray-400 italic mt-4;
+    @apply text-sm text-gray-500 italic mt-6 p-4 bg-gray-50 rounded-xl border border-gray-100;
   }
 
   .thank-you-text {
-    @apply text-wellness-purple dark:text-wellness-purple/90 font-medium text-center mt-6;
+    @apply text-violet-600 font-semibold text-center mt-8 p-4 bg-violet-50 rounded-xl border border-violet-200;
   }
 
   .intro-section {
-    @apply bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg mb-6 text-sm;
+    @apply bg-gradient-to-r from-violet-50 to-purple-50 p-6 rounded-xl mb-8 border border-violet-100;
   }
 
   .breadcrumb {
-    @apply flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4;
+    @apply flex items-center text-sm text-gray-500 mb-6 font-medium;
   }
 
   .breadcrumb-separator {
-    @apply mx-2;
+    @apply mx-2 text-gray-300;
   }
 
   .breadcrumb-item {
-    @apply hover:text-wellness-purple dark:hover:text-wellness-purple/90 transition-colors;
+    @apply hover:text-violet-600 transition-colors cursor-pointer;
   }
 
   .breadcrumb-active {
-    @apply text-wellness-purple dark:text-wellness-purple/90 font-medium;
+    @apply text-violet-600 font-semibold;
   }
   
   .sidebar-category {
-    @apply border-b last:border-b-0 dark:border-gray-700;
+    @apply border-b-0 last:border-b-0;
   }
 
   .sidebar-category-header {
-    @apply flex items-center justify-between p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md;
+    @apply flex items-center justify-between p-3 cursor-pointer hover:bg-white hover:shadow-sm rounded-xl transition-all duration-200;
   }
 
   .sidebar-category-content {
-    @apply py-1;
+    @apply py-2;
+  }
+
+  /* Results container with new styling */
+  .results-container {
+    @apply bg-gradient-to-br from-violet-50 to-purple-50 rounded-xl p-6 mt-6 border border-violet-200 shadow-sm;
+  }
+
+  /* Action buttons with modern styling */
+  .action-buttons {
+    @apply flex flex-wrap gap-3 mt-6;
+  }
+
+  .action-button {
+    @apply flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border-2 border-gray-200 hover:border-violet-300 hover:bg-violet-50 text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md;
+  }
+
+  .action-button-primary {
+    @apply bg-violet-100 border-violet-300 text-violet-700 hover:bg-violet-200;
+  }
+
+  /* Know more button with modern styling */
+  .know-more-button {
+    @apply bg-gradient-to-r from-cyan-400 to-cyan-500 text-white hover:from-cyan-500 hover:to-cyan-600 px-6 py-3 rounded-xl text-sm font-semibold flex items-center gap-2 mt-6 transition-all duration-200 shadow-lg hover:shadow-xl;
   }
 }
 
 /* Custom Calendar Day Styling for Menstrual Cycle Calendar */
 .rdp-day_period {
-  @apply bg-wellness-pink/90 text-white;
+  @apply bg-pink-500 text-white rounded-lg;
 }
 
 .rdp-day_ovulation {
-  @apply bg-wellness-purple/90 text-white;
+  @apply bg-violet-500 text-white rounded-lg;
 }
 
 .rdp-day_fertile {
-  @apply bg-wellness-softBlue/90 text-wellness-blue;
+  @apply bg-cyan-400 text-white rounded-lg;
 }
 
 /* Make full page scroll on mobile */
@@ -211,28 +271,22 @@
 
 /* Custom tab style for unit switcher */
 .unit-tabs .tabs-list {
-  @apply p-1 bg-gray-100 dark:bg-gray-800 rounded-lg;
+  @apply p-1 bg-gray-100 rounded-xl border border-gray-200;
 }
 
 .unit-tabs .tabs-trigger {
-  @apply data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 data-[state=active]:text-primary;
+  @apply data-[state=active]:bg-white data-[state=active]:text-violet-600 data-[state=active]:shadow-sm rounded-lg font-semibold;
 }
 
-/* Action buttons style */
-.action-button {
-  @apply flex items-center gap-1 px-3 py-1.5 rounded-md bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm font-medium transition-colors;
+/* Smooth transitions for all interactive elements */
+* {
+  @apply transition-colors duration-200;
 }
 
-.action-button-primary {
-  @apply bg-wellness-purple/20 hover:bg-wellness-purple/30 text-wellness-purple dark:text-wellness-purple/90;
-}
-
-/* Results container */
-.results-container {
-  @apply bg-gray-50 dark:bg-gray-800/50 rounded-md p-4 mt-4;
-}
-
-/* Know more button */
-.know-more-button {
-  @apply bg-wellness-blue/20 text-wellness-blue hover:bg-wellness-blue/30 px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 mt-4 transition-colors;
+/* Enhanced focus states */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  @apply ring-2 ring-violet-300 ring-offset-2 outline-none;
 }

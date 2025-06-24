@@ -28,35 +28,43 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
   const calculatorInfo = calculators.find(calc => calc.id === activeCalculator);
   
   return (
-    <div className="flex">
-      <div className="md:w-64 flex-shrink-0 overflow-y-auto">
-        <CalculatorSidebar 
-          activeCalculator={activeCalculator} 
-          onCalculatorSelect={onCalculatorSelect} 
-          calculators={calculators}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-        />
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Sidebar */}
+      <div className="w-80 flex-shrink-0 p-6">
+        <div className="sticky top-6">
+          <CalculatorSidebar 
+            activeCalculator={activeCalculator} 
+            onCalculatorSelect={onCalculatorSelect} 
+            calculators={calculators}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
+        </div>
       </div>
       
-      <div className="flex-1 p-2 sm:p-4 md:p-6 bg-white dark:bg-gray-900 transition-colors duration-300">
-        <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 pt-2 pb-4 mb-4">
-          {calculatorInfo && (
-            <Breadcrumb 
-              calculators={calculators}
+      {/* Main Content Area */}
+      <div className="flex-1 p-6 pr-8">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 min-h-[calc(100vh-3rem)]">
+          {/* Breadcrumb Section */}
+          <div className="sticky top-0 z-10 bg-white rounded-t-2xl border-b border-gray-100 px-6 py-4">
+            {calculatorInfo && (
+              <Breadcrumb 
+                calculators={calculators}
+                activeCalculator={activeCalculator}
+                onCalculatorSelect={onCalculatorSelect}
+                className="flex items-center text-sm"
+              />
+            )}
+          </div>
+          
+          {/* Calculator Content */}
+          <div className="p-6 calculator-display-area overflow-y-auto" id={`desktop-calculator-${activeCalculator}-container`}>
+            <CalculatorDisplay 
               activeCalculator={activeCalculator}
-              onCalculatorSelect={onCalculatorSelect}
-              className="hidden md:flex" // Only show on desktop
+              unitSystem={unitSystem}
+              onUnitSystemChange={onUnitSystemChange}
             />
-          )}
-        </div>
-        
-        <div className="calculator-area p-4 transition-all duration-500 transform" id={`desktop-calculator-${activeCalculator}-container`}>
-          <CalculatorDisplay 
-            activeCalculator={activeCalculator}
-            unitSystem={unitSystem}
-            onUnitSystemChange={onUnitSystemChange}
-          />
+          </div>
         </div>
       </div>
     </div>

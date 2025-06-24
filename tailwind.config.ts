@@ -120,8 +120,9 @@ export default {
 				'enter': 'fade-in 0.3s ease-out, scale-in 0.2s ease-out'
 			},
 			fontFamily: {
-				sans: ['Nunito', 'sans-serif'],
-				heading: ['Merriweather', 'serif']
+				sans: ['Poppins', 'Nunito', 'sans-serif'],
+				heading: ['Poppins', 'Merriweather', 'serif'],
+				body: ['Poppins', 'Nunito', 'sans-serif']
 			}
 		}
 	},

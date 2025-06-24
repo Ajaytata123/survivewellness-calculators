@@ -169,12 +169,17 @@ const WellnessCalculatorHub: React.FC = () => {
   }, [activeCalculator]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
-      <div className="text-center py-6 px-4 max-w-4xl mx-auto">
-        <h1 className="text-2xl md:text-3xl font-bold mb-2 text-wellness-purple">SurviveWellness Calculator Hub</h1>
-        <p className="text-gray-600 dark:text-gray-300 text-sm md:text-base">
-          Explore our professional health and wellness calculators to track your fitness progress
-        </p>
+    <div className="min-h-screen bg-white">
+      {/* Header Section */}
+      <div className="bg-gradient-to-r from-violet-50 to-purple-50 border-b border-gray-100">
+        <div className="text-center py-8 px-4 max-w-6xl mx-auto">
+          <h1 className="text-4xl font-bold mb-3 text-gray-800 font-['Poppins']">
+            SurviveWellness Calculator Hub
+          </h1>
+          <p className="text-gray-600 text-lg font-['Poppins'] max-w-2xl mx-auto leading-relaxed">
+            Explore our comprehensive collection of professional health and wellness calculators to track your fitness progress and make informed decisions
+          </p>
+        </div>
       </div>
       
       {isMobile ? (

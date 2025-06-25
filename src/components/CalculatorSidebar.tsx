@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Search } from "@/components/ui/search";
@@ -32,25 +31,43 @@ export const CalculatorSidebar = ({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLButtonElement>(null);
   const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Enhanced search to include "Period" for menstrual/ovulation calculators
-  const filteredCalculators = searchQuery 
-    ? calculators.filter(calc => {
-        const searchLower = searchQuery.toLowerCase();
+  const getDisplayName = (calc: CalcInfo) => {
+    if (calc.id === 'menstrualCycle' || calc.id === 'menstrual' || calc.id === 'period') {
+      return 'Period Calculator';
+    }
+    return calc.name;
+  };
+
+  // Enhanced search with better error handling
+  const getFilteredCalculators = () => {
+    if (!searchQuery.trim()) {
+      return calculators;
+    }
+
+    try {
+      const searchLower = searchQuery.toLowerCase().trim();
+      
+      return calculators.filter(calc => {
         const calcName = calc.name.toLowerCase();
         const displayName = getDisplayName(calc).toLowerCase();
         
         // Special handling for Period Calculator search
-        if (searchLower.includes('period') || searchLower.includes('p')) {
+        if (searchLower.includes('period') || searchLower === 'p') {
           if (calc.id === 'menstrualCycle' || calc.id === 'menstrual' || calc.id === 'ovulation') {
             return true;
           }
         }
         
         return calcName.includes(searchLower) || displayName.includes(searchLower);
-      })
-    : calculators;
+      });
+    } catch (error) {
+      console.error('Search filtering error:', error);
+      return calculators;
+    }
+  };
+
+  const filteredCalculators = getFilteredCalculators();
 
   const categoryOrder: CalculatorCategory[] = ["body", "fitness", "nutrition", "wellness", "women"];
   const categoryNames: Record<CalculatorCategory, string> = {
@@ -76,54 +93,31 @@ export const CalculatorSidebar = ({
     }));
   };
 
-  const getDisplayName = (calc: CalcInfo) => {
-    if (calc.id === 'menstrualCycle' || calc.id === 'menstrual' || calc.id === 'period') {
-      return 'Period Calculator';
-    }
-    return calc.name;
-  };
-
-  // Improved scroll function with debouncing and better positioning
+  // Improved scroll function with better stability
   const scrollToActiveItem = () => {
-    if (scrollTimeoutRef.current) {
-      clearTimeout(scrollTimeoutRef.current);
-    }
-    
-    scrollTimeoutRef.current = setTimeout(() => {
-      if (activeItemRef.current && sidebarRef.current) {
-        const activeElement = activeItemRef.current;
-        const sidebarElement = sidebarRef.current;
-        
-        const sidebarRect = sidebarElement.getBoundingClientRect();
-        const activeRect = activeElement.getBoundingClientRect();
-        
-        // Calculate relative position
+    if (activeItemRef.current && sidebarRef.current) {
+      const activeElement = activeItemRef.current;
+      const sidebarElement = sidebarRef.current;
+      
+      // Get positions
+      const sidebarRect = sidebarElement.getBoundingClientRect();
+      const activeRect = activeElement.getBoundingClientRect();
+      
+      // Calculate if element is in view
+      const isInView = activeRect.top >= sidebarRect.top && 
+                       activeRect.bottom <= sidebarRect.bottom;
+      
+      // Only scroll if not in view
+      if (!isInView) {
         const relativeTop = activeRect.top - sidebarRect.top + sidebarElement.scrollTop;
-        const sidebarHeight = sidebarElement.clientHeight;
-        const activeHeight = activeRect.height;
+        const targetScrollTop = relativeTop - (sidebarElement.clientHeight / 2) + (activeRect.height / 2);
         
-        // Only scroll if element is not in view
-        const currentScrollTop = sidebarElement.scrollTop;
-        const elementTop = relativeTop - currentScrollTop;
-        const elementBottom = elementTop + activeHeight;
-        
-        const buffer = 80; // Buffer zone
-        
-        if (elementTop < buffer) {
-          // Element is above viewport
-          sidebarElement.scrollTo({
-            top: relativeTop - buffer,
-            behavior: 'smooth'
-          });
-        } else if (elementBottom > sidebarHeight - buffer) {
-          // Element is below viewport
-          sidebarElement.scrollTo({
-            top: relativeTop - sidebarHeight + activeHeight + buffer,
-            behavior: 'smooth'
-          });
-        }
+        sidebarElement.scrollTo({
+          top: Math.max(0, targetScrollTop),
+          behavior: 'smooth'
+        });
       }
-    }, 100);
+    }
   };
 
   // Scroll to category when highlighted via breadcrumb
@@ -301,21 +295,12 @@ export const CalculatorSidebar = ({
         [category]: false,
       }));
       
-      // Improved scroll timing with proper delay
+      // Scroll to active item after a delay
       setTimeout(() => {
         scrollToActiveItem();
-      }, 200);
+      }, 300);
     }
   }, [activeCalculator, calculators]);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-    };
-  }, []);
 
   // Mobile sidebar
   const MobileSidebar = () => (
@@ -341,7 +326,7 @@ export const CalculatorSidebar = ({
             const isHighlighted = highlightedCategory === category;
             
             return (
-              <div key={category} className="mb-2" id={`mobile-category-${category}`}>
+              <div key={category} className="mb-2">
                 <div 
                   className={cn(
                     "flex items-center justify-between p-2 cursor-pointer rounded-md transition-colors",

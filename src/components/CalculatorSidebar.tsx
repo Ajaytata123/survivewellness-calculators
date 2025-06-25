@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Search } from "@/components/ui/search";
@@ -31,6 +32,7 @@ export const CalculatorSidebar = ({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLButtonElement>(null);
   const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const scrollTimeoutRef = useRef<NodeJS.Timeout>();
 
   const getDisplayName = (calc: CalcInfo) => {
     if (calc.id === 'menstrualCycle' || calc.id === 'menstrual' || calc.id === 'period') {
@@ -93,34 +95,49 @@ export const CalculatorSidebar = ({
     }));
   };
 
-  // Improved scroll function with better stability
-  const scrollToActiveItem = () => {
-    if (activeItemRef.current && sidebarRef.current) {
-      const activeElement = activeItemRef.current;
-      const sidebarElement = sidebarRef.current;
-      
-      // Get positions
-      const sidebarRect = sidebarElement.getBoundingClientRect();
-      const activeRect = activeElement.getBoundingClientRect();
-      
-      // Calculate if element is in view
-      const isInView = activeRect.top >= sidebarRect.top && 
-                       activeRect.bottom <= sidebarRect.bottom;
-      
-      // Only scroll if not in view
-      if (!isInView) {
-        const relativeTop = activeRect.top - sidebarRect.top + sidebarElement.scrollTop;
-        const targetScrollTop = relativeTop - (sidebarElement.clientHeight / 2) + (activeRect.height / 2);
+  // Improved scroll function with debouncing to prevent jumping
+  const scrollToActiveItem = (immediate = false) => {
+    // Clear any existing timeout
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+
+    const performScroll = () => {
+      if (activeItemRef.current && sidebarRef.current) {
+        const activeElement = activeItemRef.current;
+        const sidebarElement = sidebarRef.current;
         
-        sidebarElement.scrollTo({
-          top: Math.max(0, targetScrollTop),
-          behavior: 'smooth'
-        });
+        // Get positions
+        const sidebarRect = sidebarElement.getBoundingClientRect();
+        const activeRect = activeElement.getBoundingClientRect();
+        
+        // Calculate if element is in view with more tolerance
+        const tolerance = 100;
+        const isInView = activeRect.top >= sidebarRect.top + tolerance && 
+                         activeRect.bottom <= sidebarRect.bottom - tolerance;
+        
+        // Only scroll if not in view
+        if (!isInView) {
+          const relativeTop = activeRect.top - sidebarRect.top + sidebarElement.scrollTop;
+          const targetScrollTop = relativeTop - (sidebarElement.clientHeight / 2) + (activeRect.height / 2);
+          
+          sidebarElement.scrollTo({
+            top: Math.max(0, targetScrollTop),
+            behavior: immediate ? 'auto' : 'smooth'
+          });
+        }
       }
+    };
+
+    if (immediate) {
+      performScroll();
+    } else {
+      // Debounce scroll to prevent jumping
+      scrollTimeoutRef.current = setTimeout(performScroll, 100);
     }
   };
 
-  // Scroll to category when highlighted via breadcrumb
+  // Scroll to category when highlighted via breadcrumb - without jumping to top
   const scrollToCategory = (category: string) => {
     const categoryElement = categoryRefs.current[category];
     if (categoryElement && sidebarRef.current) {
@@ -128,12 +145,20 @@ export const CalculatorSidebar = ({
       const categoryRect = categoryElement.getBoundingClientRect();
       const sidebarRect = sidebarElement.getBoundingClientRect();
       
-      const relativeTop = categoryRect.top - sidebarRect.top + sidebarElement.scrollTop;
+      // Calculate if category is already visible
+      const isVisible = categoryRect.top >= sidebarRect.top && 
+                       categoryRect.bottom <= sidebarRect.bottom;
       
-      sidebarElement.scrollTo({
-        top: Math.max(0, relativeTop - 100),
-        behavior: 'smooth'
-      });
+      // Only scroll if not visible
+      if (!isVisible) {
+        const relativeTop = categoryRect.top - sidebarRect.top + sidebarElement.scrollTop;
+        const targetScrollTop = Math.max(0, relativeTop - 100);
+        
+        sidebarElement.scrollTo({
+          top: targetScrollTop,
+          behavior: 'smooth'
+        });
+      }
       
       // Expand the category if collapsed
       setCollapsedCategories(prev => ({
@@ -295,10 +320,10 @@ export const CalculatorSidebar = ({
         [category]: false,
       }));
       
-      // Scroll to active item after a delay
+      // Scroll to active item after a delay with improved timing
       setTimeout(() => {
         scrollToActiveItem();
-      }, 300);
+      }, 200);
     }
   }, [activeCalculator, calculators]);
 
@@ -384,7 +409,7 @@ export const CalculatorSidebar = ({
     </Sheet>
   );
 
-  // Desktop sidebar with enhanced scroll stability
+  // Desktop sidebar with enhanced scroll stability and thinner scrollbar
   const DesktopSidebar = () => (
     <div className="h-full flex flex-col overflow-hidden bg-[#F9F7FD] rounded-xl shadow-md border border-violet-100">
       {/* Fixed Search Section */}
@@ -397,14 +422,34 @@ export const CalculatorSidebar = ({
         />
       </div>
       
-      {/* Scrollable Categories */}
+      {/* Scrollable Categories with custom thin scrollbar */}
       <div 
-        className="flex-1 overflow-y-auto px-2 py-4" 
+        className="flex-1 overflow-y-auto px-2 py-4 custom-scrollbar" 
         style={{ 
           height: 'calc(100vh - 200px)'
         }}
         ref={sidebarRef}
       >
+        <style jsx>{`
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+          }
+          
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 2px;
+          }
+          
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 2px;
+          }
+          
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.5);
+          }
+        `}</style>
+        
         {categoryOrder.map(category => {
           const CategoryIcon = getCategoryIcon(category);
           const isGroupCollapsed = collapsedCategories[category];
@@ -477,6 +522,15 @@ export const CalculatorSidebar = ({
       </div>
     </div>
   );
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <>

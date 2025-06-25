@@ -6,8 +6,8 @@ import CalculatorDisplay from './CalculatorDisplay';
 import { UnitSystem } from '@/types/calculatorTypes';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Separator } from './ui/separator';
-import { getIconComponent } from '@/utils/iconUtils';
-import { ChevronLeft, Home, Calendar, Activity, Heart, Scale, Utensils } from 'lucide-react';
+import { getIconComponent, getCategoryIcon } from '@/utils/iconUtils';
+import { ChevronLeft, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MobileCalculatorViewProps {
@@ -31,6 +31,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
 }) => {
   const categories: CalculatorCategory[] = ["body", "fitness", "nutrition", "wellness", "women"];
   const [activeTab, setActiveTab] = useState<"browse" | "calculator">("browse");
+  const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
 
   const getDisplayName = (calc: CalculatorInfo) => {
     if (calc.id === 'menstrualCycle' || calc.id === 'menstrual' || calc.id === 'period') {
@@ -39,7 +40,6 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     return calc.name;
   };
 
-  // Enhanced search with better error handling
   const getFilteredCalculators = () => {
     if (!searchQuery.trim()) {
       return calculators;
@@ -53,7 +53,6 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
         const displayName = getDisplayName(calc).toLowerCase();
         const categoryName = getCategoryName(calc.category).toLowerCase();
         
-        // Special handling for Period Calculator search
         if (searchLower.includes('period') || searchLower === 'p') {
           if (calc.id === 'menstrualCycle' || calc.id === 'menstrual' || calc.id === 'ovulation') {
             return true;
@@ -73,20 +72,16 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   const filteredCalculators = getFilteredCalculators();
   const activeCalcInfo = calculators.find(calc => calc.id === activeCalculator);
 
-  // When a calculator is selected, switch to calculator tab
   const handleCalculatorSelect = (id: string) => {
     onCalculatorSelect(id);
     setActiveTab("calculator");
   };
 
-  const getCategoryIcon = (category: CalculatorCategory) => {
-    switch(category) {
-      case 'body': return <Scale className="h-5 w-5" />;
-      case 'fitness': return <Activity className="h-5 w-5" />;
-      case 'nutrition': return <Utensils className="h-5 w-5" />;
-      case 'wellness': return <Heart className="h-5 w-5" />;
-      case 'women': return <Calendar className="h-5 w-5" />;
-    }
+  const toggleCategory = (category: string) => {
+    setCollapsedCategories(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
   };
 
   const getCategoryColor = (category: CalculatorCategory): string => {
@@ -100,7 +95,6 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     return colors[category] || "bg-violet-100 text-violet-700";
   };
 
-  // Function to render calculator cards
   const renderCalculatorCard = (calc: CalculatorInfo) => {
     const IconComponent = getIconComponent(calc.icon);
     const displayName = getDisplayName(calc);
@@ -126,7 +120,6 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     );
   };
 
-  // Group calculators by category for search results
   const calculatorsByCategory = React.useMemo(() => {
     const grouped: Record<CalculatorCategory, CalculatorInfo[]> = {
       body: [],
@@ -149,7 +142,6 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
 
   return (
     <div className="h-screen w-full bg-white flex flex-col">
-      {/* Fixed Header */}
       <div className="flex-shrink-0 bg-white shadow-sm border-b p-4">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "browse" | "calculator")} className="w-auto">
           <TabsList className="grid w-[180px] grid-cols-2">
@@ -187,7 +179,6 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
         )}
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 overflow-hidden">
         {activeTab === "browse" ? (
           <div className="h-full overflow-y-auto p-4">
@@ -195,18 +186,27 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
               <div className="space-y-4">
                 {categories.map((category) => (
                   <div key={category} className="border rounded-lg overflow-hidden">
-                    <div className={`flex items-center justify-between p-3 ${getCategoryColor(category)}`}>
+                    <div 
+                      className={`flex items-center justify-between p-3 cursor-pointer ${getCategoryColor(category)}`}
+                      onClick={() => toggleCategory(category)}
+                    >
                       <div className="flex items-center">
                         {getCategoryIcon(category)}
                         <span className="ml-2 font-medium">{getCategoryName(category)}</span>
                       </div>
+                      {collapsedCategories[category] ? 
+                        <ChevronDown className="h-4 w-4" /> : 
+                        <ChevronUp className="h-4 w-4" />
+                      }
                     </div>
                     
-                    <div className="p-3">
-                      <div className="grid grid-cols-2 gap-3">
-                        {calculatorsByCategory[category].map(calc => renderCalculatorCard(calc))}
+                    {!collapsedCategories[category] && (
+                      <div className="p-3">
+                        <div className="grid grid-cols-2 gap-3">
+                          {calculatorsByCategory[category].map(calc => renderCalculatorCard(calc))}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -218,7 +218,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
                   
                   return (
                     <div key={category} className="space-y-2">
-                      <h2 className={`text-md font-semibold flex items-center ${getCategoryColor(category)}`}>
+                      <h2 className={`text-md font-semibold flex items-center px-2 py-1 rounded ${getCategoryColor(category)}`}>
                         {getCategoryIcon(category)}
                         <span className="ml-2">{getCategoryName(category)}</span>
                       </h2>

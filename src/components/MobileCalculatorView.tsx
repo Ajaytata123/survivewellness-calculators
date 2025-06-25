@@ -184,31 +184,34 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
           <div className="h-full overflow-y-auto p-4">
             {!searchQuery ? (
               <div className="space-y-4">
-                {categories.map((category) => (
-                  <div key={category} className="border rounded-lg overflow-hidden">
-                    <div 
-                      className={`flex items-center justify-between p-3 cursor-pointer ${getCategoryColor(category)}`}
-                      onClick={() => toggleCategory(category)}
-                    >
-                      <div className="flex items-center">
-                        {getCategoryIcon(category)}
-                        <span className="ml-2 font-medium">{getCategoryName(category)}</span>
-                      </div>
-                      {collapsedCategories[category] ? 
-                        <ChevronDown className="h-4 w-4" /> : 
-                        <ChevronUp className="h-4 w-4" />
-                      }
-                    </div>
-                    
-                    {!collapsedCategories[category] && (
-                      <div className="p-3">
-                        <div className="grid grid-cols-2 gap-3">
-                          {calculatorsByCategory[category].map(calc => renderCalculatorCard(calc))}
+                {categories.map((category) => {
+                  const CategoryIcon = getCategoryIcon(category);
+                  return (
+                    <div key={category} className="border rounded-lg overflow-hidden">
+                      <div 
+                        className={`flex items-center justify-between p-3 cursor-pointer ${getCategoryColor(category)}`}
+                        onClick={() => toggleCategory(category)}
+                      >
+                        <div className="flex items-center">
+                          <CategoryIcon className="h-5 w-5 mr-2" />
+                          <span className="font-medium">{getCategoryName(category)}</span>
                         </div>
+                        {collapsedCategories[category] ? 
+                          <ChevronDown className="h-4 w-4" /> : 
+                          <ChevronUp className="h-4 w-4" />
+                        }
                       </div>
-                    )}
-                  </div>
-                ))}
+                      
+                      {!collapsedCategories[category] && (
+                        <div className="p-3">
+                          <div className="grid grid-cols-2 gap-3">
+                            {calculatorsByCategory[category].map(calc => renderCalculatorCard(calc))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             ) : (
               <div className="space-y-6">
@@ -216,11 +219,12 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
                   const categoryCalcs = calculatorsByCategory[category];
                   if (categoryCalcs.length === 0) return null;
                   
+                  const CategoryIcon = getCategoryIcon(category);
                   return (
                     <div key={category} className="space-y-2">
                       <h2 className={`text-md font-semibold flex items-center px-2 py-1 rounded ${getCategoryColor(category)}`}>
-                        {getCategoryIcon(category)}
-                        <span className="ml-2">{getCategoryName(category)}</span>
+                        <CategoryIcon className="h-5 w-5 mr-2" />
+                        <span>{getCategoryName(category)}</span>
                       </h2>
                       <div className="grid grid-cols-2 gap-3">
                         {categoryCalcs.map(calc => renderCalculatorCard(calc))}

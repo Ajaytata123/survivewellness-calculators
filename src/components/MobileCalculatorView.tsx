@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search } from "@/components/ui/search";
 import { CalculatorInfo, CalculatorCategory, getCategoryName } from '@/types/calculator';
 import CalculatorDisplay from './CalculatorDisplay';
@@ -32,6 +32,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   const categories: CalculatorCategory[] = ["body", "fitness", "nutrition", "wellness", "women"];
   const [activeTab, setActiveTab] = useState<"browse" | "calculator">("browse");
   const [collapsedCategories, setCollapsedCategories] = useState<Record<string, boolean>>({});
+  const calculatorContainerRef = useRef<HTMLDivElement>(null);
 
   const getDisplayName = (calc: CalculatorInfo) => {
     if (calc.id === 'menstrualCycle' || calc.id === 'menstrual' || calc.id === 'period') {
@@ -75,6 +76,13 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   const handleCalculatorSelect = (id: string) => {
     onCalculatorSelect(id);
     setActiveTab("calculator");
+    
+    // Smooth transition without jumping - reset scroll to top for calculator view
+    setTimeout(() => {
+      if (calculatorContainerRef.current) {
+        calculatorContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 100);
   };
 
   const toggleCategory = (category: string) => {
@@ -186,6 +194,9 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
               <div className="space-y-4">
                 {categories.map((category) => {
                   const CategoryIcon = getCategoryIcon(category);
+                  const categoryCalcs = calculatorsByCategory[category];
+                  if (categoryCalcs.length === 0) return null;
+                  
                   return (
                     <div key={category} className="border rounded-lg overflow-hidden">
                       <div 
@@ -205,7 +216,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
                       {!collapsedCategories[category] && (
                         <div className="p-3">
                           <div className="grid grid-cols-2 gap-3">
-                            {calculatorsByCategory[category].map(calc => renderCalculatorCard(calc))}
+                            {categoryCalcs.map(calc => renderCalculatorCard(calc))}
                           </div>
                         </div>
                       )}
@@ -242,7 +253,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
             )}
           </div>
         ) : (
-          <div className="h-full overflow-y-auto bg-white">
+          <div ref={calculatorContainerRef} className="h-full overflow-y-auto bg-white">
             <CalculatorDisplay
               activeCalculator={activeCalculator}
               unitSystem={unitSystem}

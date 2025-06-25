@@ -114,16 +114,9 @@ const HeartRateCalculator: React.FC<HeartRateCalcProps> = ({ unitSystem }) => {
     <div className="space-y-6">
       <Card className="p-6">
         <h2 className="text-2xl font-bold mb-4 text-center">Heart Rate Zone Calculator</h2>
-        <p className="text-gray-600 mb-4 text-center">
-          Calculate your training heart rate zones based on your age
+        <p className="text-gray-600 mb-6 text-center">
+          Calculate your training heart rate zones based on your age and resting heart rate
         </p>
-
-        <div className="bg-wellness-softBlue/30 p-4 rounded-md mb-6">
-          <h3 className="font-medium mb-1">What are Heart Rate Zones?</h3>
-          <p className="text-sm text-gray-600">
-            Heart rate zones are ranges that define the intensity of your workout based on your maximum heart rate. Training in different zones helps optimize cardiovascular fitness, endurance, and fat burning.
-          </p>
-        </div>
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">

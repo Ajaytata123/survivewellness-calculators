@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Search } from "@/components/ui/search";
 import { CalculatorInfo, CalculatorCategory, getCategoryName } from '@/types/calculator';
@@ -30,7 +29,6 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
   onUnitSystemChange,
 }) => {
   const categories: CalculatorCategory[] = ["body", "fitness", "nutrition", "wellness", "women"];
-  const [activeCategory, setActiveCategory] = useState<CalculatorCategory>(categories[0]);
   const [activeTab, setActiveTab] = useState<"browse" | "calculator">("browse");
   const [filteredCategories, setFilteredCategories] = useState<CalculatorCategory[]>(categories);
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
@@ -74,12 +72,10 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
       return;
     }
 
-    // Find categories that have matching calculators
     const matchingCategories = Array.from(new Set(
       filteredCalculators.map(calc => calc.category)
     )) as CalculatorCategory[];
 
-    // Also include categories that match the search directly
     categories.forEach(category => {
       const categoryName = getCategoryName(category).toLowerCase();
       if (
@@ -92,21 +88,15 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
 
     setFilteredCategories(matchingCategories);
 
-    // If current active category isn't in filtered list but we have matches, switch to first match
-    if (matchingCategories.length > 0 && !matchingCategories.includes(activeCategory)) {
-      setActiveCategory(matchingCategories[0]);
+    if (matchingCategories.length > 0 && !matchingCategories.includes(categories[0])) {
+      // Keep current expanded state
     }
-  }, [searchQuery, calculators, activeCategory]);
+  }, [searchQuery, calculators]);
 
-  // When a calculator is selected, switch to calculator tab and ensure clean start
+  // When a calculator is selected, switch to calculator tab
   const handleCalculatorSelect = (id: string) => {
     onCalculatorSelect(id);
     setActiveTab("calculator");
-    
-    // Force immediate scroll to top and reset view
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-    window.scrollTo(0, 0);
   };
 
   // Group calculators by category for search results
@@ -131,7 +121,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     }));
   };
 
-  // Function to render calculator cards with proper IDs
+  // Function to render calculator cards
   const renderCalculatorCard = (calc: CalculatorInfo) => {
     const IconComponent = getIconComponent(calc.icon);
     const displayName = getDisplayName(calc);
@@ -143,14 +133,14 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
         className={cn(
           "p-4 border rounded-lg shadow-sm cursor-pointer transition-all",
           activeCalculator === calc.id 
-            ? `border-${calc.color} bg-${calc.color}/10` 
-            : "border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-800/50"
+            ? `border-violet-500 bg-violet-50` 
+            : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
         )}
         onClick={() => handleCalculatorSelect(calc.id)}
       >
         <div className="flex flex-col items-center text-center">
-          <div className={`p-3 rounded-full bg-${calc.color}/20 mb-2`}>
-            <IconComponent className={`h-6 w-6 text-${calc.color}`} />
+          <div className="p-3 rounded-full bg-violet-100 mb-2">
+            <IconComponent className="h-6 w-6 text-violet-600" />
           </div>
           <h3 className="font-medium text-sm">{displayName}</h3>
         </div>
@@ -168,10 +158,21 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
     }
   };
 
+  const getCategoryColor = (category: CalculatorCategory): string => {
+    const colors: Record<CalculatorCategory, string> = {
+      body: "bg-violet-100 text-violet-700",
+      fitness: "bg-blue-100 text-blue-700", 
+      nutrition: "bg-green-100 text-green-700",
+      wellness: "bg-orange-100 text-orange-700",
+      women: "bg-pink-100 text-pink-700"
+    };
+    return colors[category] || "bg-violet-100 text-violet-700";
+  };
+
   return (
-    <div className="flex flex-col h-screen w-full bg-white overflow-hidden">
-      {/* Fixed Header - No scrolling */}
-      <div className="flex-shrink-0 bg-white shadow-sm border-b p-4 z-10">
+    <div className="h-screen w-full bg-white flex flex-col overflow-hidden">
+      {/* Fixed Header */}
+      <div className="flex-shrink-0 bg-white shadow-sm border-b p-4">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "browse" | "calculator")} className="w-auto">
           <TabsList className="grid w-[180px] grid-cols-2">
             <TabsTrigger value="browse" id="mobile-browse-tab">Browse</TabsTrigger>
@@ -210,7 +211,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
         )}
       </div>
 
-      {/* Main Content - Full height, no external scroll */}
+      {/* Main Content */}
       <div className="flex-1 overflow-hidden">
         {activeTab === "browse" ? (
           <div className="h-full overflow-y-auto p-4">
@@ -219,7 +220,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
                 {categories.map((category) => (
                   <div key={category} 
                        id={`mobile-category-${category}`}
-                       className="border rounded-lg overflow-hidden dark:border-gray-700">
+                       className="border rounded-lg overflow-hidden">
                     <div 
                       className={`flex items-center justify-between p-3 cursor-pointer ${getCategoryColor(category)}`}
                       onClick={() => toggleCategory(category)}
@@ -256,7 +257,7 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
                   
                   return (
                     <div key={category} className="space-y-2">
-                      <h2 className={`text-md font-semibold flex items-center text-${getCategoryColor(category)}`}>
+                      <h2 className={`text-md font-semibold flex items-center ${getCategoryColor(category)}`}>
                         {getCategoryIcon(category)}
                         <span className="ml-2">{getCategoryName(category)}</span>
                       </h2>
@@ -270,29 +271,15 @@ export const MobileCalculatorView: React.FC<MobileCalculatorViewProps> = ({
             )}
           </div>
         ) : (
-          <div className="h-full bg-white">
-            <div className="h-full overflow-y-auto">
-              <CalculatorDisplay
-                activeCalculator={activeCalculator}
-                unitSystem={unitSystem}
-                onUnitSystemChange={onUnitSystemChange}
-              />
-            </div>
+          <div className="h-full overflow-y-auto bg-white">
+            <CalculatorDisplay
+              activeCalculator={activeCalculator}
+              unitSystem={unitSystem}
+              onUnitSystemChange={onUnitSystemChange}
+            />
           </div>
         )}
       </div>
     </div>
   );
 };
-
-// Helper function to get category color
-function getCategoryColor(category: CalculatorCategory): string {
-  const colors: Record<CalculatorCategory, string> = {
-    body: "bg-wellness-softPurple/30 text-wellness-purple",
-    fitness: "bg-wellness-softBlue/30 text-wellness-blue", 
-    nutrition: "bg-wellness-softGreen/30 text-wellness-green",
-    wellness: "bg-wellness-softOrange/30 text-wellness-orange",
-    women: "bg-wellness-softPink/30 text-wellness-pink"
-  };
-  return colors[category] || "bg-wellness-softPurple/30 text-wellness-purple";
-}

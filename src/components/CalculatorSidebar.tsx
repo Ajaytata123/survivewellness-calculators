@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Search } from "@/components/ui/search";
@@ -31,6 +32,7 @@ export const CalculatorSidebar = ({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLButtonElement>(null);
   const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Enhanced search to include "Period" for menstrual/ovulation calculators
   const filteredCalculators = searchQuery 
@@ -81,32 +83,47 @@ export const CalculatorSidebar = ({
     return calc.name;
   };
 
-  // Enhanced scroll function with better stability
+  // Improved scroll function with debouncing and better positioning
   const scrollToActiveItem = () => {
-    if (activeItemRef.current && sidebarRef.current) {
-      const activeElement = activeItemRef.current;
-      const sidebarElement = sidebarRef.current;
-      
-      const currentScrollTop = sidebarElement.scrollTop;
-      const sidebarHeight = sidebarElement.clientHeight;
-      const activeElementTop = activeElement.offsetTop;
-      const activeElementHeight = activeElement.offsetHeight;
-      
-      // More precise visibility check
-      const elementVisibleTop = activeElementTop - currentScrollTop;
-      const elementVisibleBottom = elementVisibleTop + activeElementHeight;
-      
-      // Only scroll if element is not fully visible with some padding
-      const padding = 60;
-      if (elementVisibleTop < padding || elementVisibleBottom > sidebarHeight - padding) {
-        const optimalScrollPosition = activeElementTop - (sidebarHeight / 2) + (activeElementHeight / 2);
-        
-        sidebarElement.scrollTo({
-          top: Math.max(0, Math.min(optimalScrollPosition, sidebarElement.scrollHeight - sidebarHeight)),
-          behavior: 'smooth'
-        });
-      }
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
     }
+    
+    scrollTimeoutRef.current = setTimeout(() => {
+      if (activeItemRef.current && sidebarRef.current) {
+        const activeElement = activeItemRef.current;
+        const sidebarElement = sidebarRef.current;
+        
+        const sidebarRect = sidebarElement.getBoundingClientRect();
+        const activeRect = activeElement.getBoundingClientRect();
+        
+        // Calculate relative position
+        const relativeTop = activeRect.top - sidebarRect.top + sidebarElement.scrollTop;
+        const sidebarHeight = sidebarElement.clientHeight;
+        const activeHeight = activeRect.height;
+        
+        // Only scroll if element is not in view
+        const currentScrollTop = sidebarElement.scrollTop;
+        const elementTop = relativeTop - currentScrollTop;
+        const elementBottom = elementTop + activeHeight;
+        
+        const buffer = 80; // Buffer zone
+        
+        if (elementTop < buffer) {
+          // Element is above viewport
+          sidebarElement.scrollTo({
+            top: relativeTop - buffer,
+            behavior: 'smooth'
+          });
+        } else if (elementBottom > sidebarHeight - buffer) {
+          // Element is below viewport
+          sidebarElement.scrollTo({
+            top: relativeTop - sidebarHeight + activeHeight + buffer,
+            behavior: 'smooth'
+          });
+        }
+      }
+    }, 100);
   };
 
   // Scroll to category when highlighted via breadcrumb
@@ -114,10 +131,13 @@ export const CalculatorSidebar = ({
     const categoryElement = categoryRefs.current[category];
     if (categoryElement && sidebarRef.current) {
       const sidebarElement = sidebarRef.current;
-      const categoryTop = categoryElement.offsetTop;
+      const categoryRect = categoryElement.getBoundingClientRect();
+      const sidebarRect = sidebarElement.getBoundingClientRect();
+      
+      const relativeTop = categoryRect.top - sidebarRect.top + sidebarElement.scrollTop;
       
       sidebarElement.scrollTo({
-        top: Math.max(0, categoryTop - 100),
+        top: Math.max(0, relativeTop - 100),
         behavior: 'smooth'
       });
       
@@ -281,12 +301,21 @@ export const CalculatorSidebar = ({
         [category]: false,
       }));
       
-      // Enhanced scroll timing
+      // Improved scroll timing with proper delay
       setTimeout(() => {
         scrollToActiveItem();
-      }, 150);
+      }, 200);
     }
   }, [activeCalculator, calculators]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Mobile sidebar
   const MobileSidebar = () => (
@@ -352,7 +381,7 @@ export const CalculatorSidebar = ({
                           className={cn(
                             "w-full text-left px-3 py-1.5 text-sm rounded-md flex items-center my-1 transition-colors",
                             isActive
-                              ? `bg-${calculator.color}/20 text-${calculator.color}`
+                              ? "bg-violet-100 text-violet-700"
                               : "hover:bg-gray-100"
                           )}
                         >
@@ -385,10 +414,9 @@ export const CalculatorSidebar = ({
       
       {/* Scrollable Categories */}
       <div 
-        className="flex-1 overflow-y-auto px-2 py-4 scroll-smooth" 
+        className="flex-1 overflow-y-auto px-2 py-4" 
         style={{ 
-          height: 'calc(100vh - 200px)',
-          scrollBehavior: 'smooth'
+          height: 'calc(100vh - 200px)'
         }}
         ref={sidebarRef}
       >

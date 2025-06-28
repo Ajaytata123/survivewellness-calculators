@@ -45,7 +45,8 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
   };
 
   const filteredCalculators = calculatorList.filter(calc =>
-    calc.name.toLowerCase().includes(searchQuery.toLowerCase())
+    calc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    calc.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const filteredCategories = Object.entries(
@@ -58,43 +59,51 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
     }, {})
   );
 
-  const getCategoryInfo = (category: string): { name: string; colorClass: string; iconClass: string } => {
+  const getCategoryInfo = (category: string): { name: string; colorClass: string; iconClass: string; highlightClass: string } => {
+    const isHighlighted = highlightedCategory === category;
+    
     switch (category) {
       case 'body':
         return {
           name: 'Body Composition',
-          colorClass: 'text-purple-700 bg-purple-50 border-purple-200 hover:bg-purple-100',
-          iconClass: 'text-purple-600'
+          colorClass: `text-purple-700 bg-purple-50 border-purple-200 hover:bg-purple-100 ${isHighlighted ? 'ring-2 ring-purple-400 bg-purple-100' : ''}`,
+          iconClass: 'text-purple-600',
+          highlightClass: isHighlighted ? 'ring-2 ring-purple-400' : ''
         };
       case 'fitness':
         return {
           name: 'Fitness & Exercise',
-          colorClass: 'text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100',
-          iconClass: 'text-blue-600'
+          colorClass: `text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100 ${isHighlighted ? 'ring-2 ring-blue-400 bg-blue-100' : ''}`,
+          iconClass: 'text-blue-600',
+          highlightClass: isHighlighted ? 'ring-2 ring-blue-400' : ''
         };
       case 'nutrition':
         return {
           name: 'Nutrition & Diet',
-          colorClass: 'text-green-700 bg-green-50 border-green-200 hover:bg-green-100',
-          iconClass: 'text-green-600'
+          colorClass: `text-green-700 bg-green-50 border-green-200 hover:bg-green-100 ${isHighlighted ? 'ring-2 ring-green-400 bg-green-100' : ''}`,
+          iconClass: 'text-green-600',
+          highlightClass: isHighlighted ? 'ring-2 ring-green-400' : ''
         };
       case 'wellness':
         return {
           name: 'Wellness & Lifestyle',
-          colorClass: 'text-orange-700 bg-orange-50 border-orange-200 hover:bg-orange-100',
-          iconClass: 'text-orange-600'
+          colorClass: `text-orange-700 bg-orange-50 border-orange-200 hover:bg-orange-100 ${isHighlighted ? 'ring-2 ring-orange-400 bg-orange-100' : ''}`,
+          iconClass: 'text-orange-600',
+          highlightClass: isHighlighted ? 'ring-2 ring-orange-400' : ''
         };
       case 'women':
         return {
           name: 'Women\'s Health',
-          colorClass: 'text-pink-700 bg-pink-50 border-pink-200 hover:bg-pink-100',
-          iconClass: 'text-pink-600'
+          colorClass: `text-pink-700 bg-pink-50 border-pink-200 hover:bg-pink-100 ${isHighlighted ? 'ring-2 ring-pink-400 bg-pink-100' : ''}`,
+          iconClass: 'text-pink-600',
+          highlightClass: isHighlighted ? 'ring-2 ring-pink-400' : ''
         };
       default:
         return {
           name: category,
-          colorClass: 'text-gray-700 bg-gray-50 border-gray-200 hover:bg-gray-100',
-          iconClass: 'text-gray-600'
+          colorClass: `text-gray-700 bg-gray-50 border-gray-200 hover:bg-gray-100 ${isHighlighted ? 'ring-2 ring-gray-400 bg-gray-100' : ''}`,
+          iconClass: 'text-gray-600',
+          highlightClass: isHighlighted ? 'ring-2 ring-gray-400' : ''
         };
     }
   };
@@ -167,8 +176,8 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
                           variant="ghost"
                           className={`w-full justify-start p-3 text-left text-sm h-auto transition-all duration-200 rounded-md ${
                             activeCalculator === calc.id
-                              ? 'bg-purple-600 text-white shadow-md hover:bg-purple-700'
-                              : 'text-gray-700 hover:bg-gray-100 hover:text-purple-600'
+                              ? 'bg-blue-100 text-blue-800 shadow-sm hover:bg-blue-150 border border-blue-200'
+                              : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600'
                           }`}
                           onClick={() => {
                             onCalculatorSelect(calc.id);
@@ -177,7 +186,7 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
                         >
                           <div className="flex items-center space-x-3">
                             <CalculatorIcon className={`w-4 h-4 ${
-                              activeCalculator === calc.id ? 'text-white' : 'text-purple-500'
+                              activeCalculator === calc.id ? 'text-blue-600' : 'text-purple-500'
                             }`} />
                             <span className="font-medium">{calc.name}</span>
                           </div>

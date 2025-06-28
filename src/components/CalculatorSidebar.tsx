@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Search } from "@/components/ui/search";
@@ -349,6 +348,7 @@ export const CalculatorSidebar = ({
             const CategoryIcon = getCategoryIcon(category);
             const isCollapsed = collapsedCategories[category];
             const isHighlighted = highlightedCategory === category;
+            const categoryColor = categoryColors[category];
             
             return (
               <div key={category} className="mb-2">
@@ -361,7 +361,7 @@ export const CalculatorSidebar = ({
                   )}
                   onClick={() => toggleCategory(category)}
                 >
-                  <div className={`flex items-center text-${categoryColors[category]}`}>
+                  <div className={`flex items-center text-${categoryColor}`}>
                     <CategoryIcon className="h-4 w-4 mr-2" />
                     <span className="font-medium">{categoryNames[category]}</span>
                   </div>
@@ -434,21 +434,21 @@ export const CalculatorSidebar = ({
       >
         <style dangerouslySetInnerHTML={{
           __html: `
-            .custom-scrollbar::-webkit-scrollbar {
+            div[style*="scrollbarWidth"]::-webkit-scrollbar {
               width: 4px;
             }
             
-            .custom-scrollbar::-webkit-scrollbar-track {
+            div[style*="scrollbarWidth"]::-webkit-scrollbar-track {
               background: rgba(0, 0, 0, 0.05);
               border-radius: 2px;
             }
             
-            .custom-scrollbar::-webkit-scrollbar-thumb {
+            div[style*="scrollbarWidth"]::-webkit-scrollbar-thumb {
               background: rgba(139, 92, 246, 0.3);
               border-radius: 2px;
             }
             
-            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            div[style*="scrollbarWidth"]::-webkit-scrollbar-thumb:hover {
               background: rgba(139, 92, 246, 0.5);
             }
           `
@@ -458,6 +458,7 @@ export const CalculatorSidebar = ({
           const CategoryIcon = getCategoryIcon(category);
           const isGroupCollapsed = collapsedCategories[category];
           const isHighlighted = highlightedCategory === category;
+          const categoryColor = categoryColors[category];
           
           return (
             <div 
@@ -476,7 +477,7 @@ export const CalculatorSidebar = ({
                 )}
                 onClick={() => toggleCategory(category)}
               >
-                <div className={`flex items-center font-['Poppins'] font-semibold text-${categoryColors[category]}`}>
+                <div className={`flex items-center font-['Poppins'] font-semibold text-${categoryColor}`}>
                   <CategoryIcon className="h-5 w-5 mr-3 flex-shrink-0" />
                   <span className="text-sm">{categoryNames[category]}</span>
                 </div>

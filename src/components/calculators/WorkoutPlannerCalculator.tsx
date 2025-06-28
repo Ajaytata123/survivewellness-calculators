@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { UnitSystem } from "@/types/calculatorTypes";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
 import IntroSection from "@/components/calculator/IntroSection";
+import ResultActions from "@/components/calculator/ResultActions";
 
 interface WorkoutPlannerCalcProps {
   unitSystem: UnitSystem;
@@ -90,6 +91,28 @@ const WorkoutPlannerCalculator: React.FC<WorkoutPlannerCalcProps> = ({ unitSyste
 
     setWorkoutPlan({ plan, tips });
     showSuccessToast("Workout plan generated!");
+  };
+
+  const prepareResults = () => {
+    if (!workoutPlan) return {};
+    
+    const results: Record<string, string | number> = {
+      "Fitness Goal": fitnessGoal,
+      "Experience Level": experienceLevel,
+      "Available Time": `${availableTime} minutes`,
+      "Workout Days": `${workoutDays} days per week`,
+      "Equipment": equipment,
+    };
+
+    workoutPlan.plan.forEach((day, index) => {
+      results[`Day ${index + 1}`] = day;
+    });
+
+    workoutPlan.tips.forEach((tip, index) => {
+      results[`Tip ${index + 1}`] = tip;
+    });
+
+    return results;
   };
 
   return (
@@ -204,39 +227,45 @@ const WorkoutPlannerCalculator: React.FC<WorkoutPlannerCalcProps> = ({ unitSyste
         </Button>
 
         {workoutPlan && (
-          <div className="bg-gray-50 p-4 rounded-md">
-            <div className="text-center mb-4">
-              <h3 className="text-xl font-bold">Your Personalized Workout Plan</h3>
-              {userName && <p className="text-sm mt-2">Plan for: {userName}</p>}
+          <div className="results-container bg-gradient-to-br from-violet-50 to-purple-50 rounded-xl p-6 border border-violet-200 shadow-sm">
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-bold text-gray-800">Your Personalized Workout Plan</h3>
+              {userName && <p className="text-sm mt-2 text-gray-600">Plan for: {userName}</p>}
             </div>
 
-            <div className="bg-white p-4 rounded-md mb-4">
-              <h4 className="font-medium mb-3">Weekly Schedule</h4>
-              <div className="space-y-2">
-                {workoutPlan.plan.map((day, index) => (
-                  <div key={index} className="flex items-center">
-                    <span className="text-wellness-purple mr-2">•</span>
-                    <span className="text-sm">{day}</span>
-                  </div>
-                ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                <h4 className="font-semibold mb-3 text-violet-700">Weekly Schedule</h4>
+                <div className="space-y-2">
+                  {workoutPlan.plan.map((day, index) => (
+                    <div key={index} className="flex items-start">
+                      <span className="text-violet-600 mr-2 mt-1">•</span>
+                      <span className="text-sm text-gray-700">{day}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                <h4 className="font-semibold mb-3 text-green-700">Important Tips</h4>
+                <div className="space-y-2">
+                  {workoutPlan.tips.map((tip, index) => (
+                    <div key={index} className="flex items-start">
+                      <span className="text-green-600 mr-2 mt-1">✓</span>
+                      <span className="text-sm text-gray-700">{tip}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
-            <div className="bg-white p-4 rounded-md">
-              <h4 className="font-medium mb-3">Important Tips</h4>
-              <div className="space-y-2">
-                {workoutPlan.tips.map((tip, index) => (
-                  <div key={index} className="flex items-center">
-                    <span className="text-wellness-green mr-2">✓</span>
-                    <span className="text-sm">{tip}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-6 text-center text-sm text-wellness-purple">
-              <p>Thank you for using Survive<span className="lowercase">w</span>ellness!</p>
-            </div>
+            <ResultActions
+              title="Workout Planner"
+              results={prepareResults()}
+              fileName="Workout-Plan"
+              userName={userName}
+              unitSystem={unitSystem}
+            />
           </div>
         )}
       </Card>

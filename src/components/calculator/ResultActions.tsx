@@ -72,12 +72,14 @@ const ResultActions: React.FC<ResultActionsProps> = ({
     <div className={`space-y-6 ${className || ''}`}>
       <div className="mt-4 mb-2">
         {referenceText && (
-          <p className="text-gray-600 dark:text-gray-400 mb-3">{referenceText}</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-3 text-sm italic bg-gray-50 dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+            {referenceText}
+          </p>
         )}
-        <div className="flex flex-wrap gap-3 justify-start">
+        <div className="flex flex-wrap gap-3 justify-center">
           <Button 
             variant="outline" 
-            className="flex items-center gap-2 bg-[#e6f7ff] text-[#0ea5e9] border-[#0ea5e9] hover:bg-[#d1edff] touch-manipulation"
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-600 border-blue-300 hover:from-blue-100 hover:to-cyan-100 hover:border-blue-400 shadow-sm hover:shadow-md transition-all duration-200 touch-manipulation"
             onClick={handleCopyResults}
             type="button"
           >
@@ -86,7 +88,7 @@ const ResultActions: React.FC<ResultActionsProps> = ({
           </Button>
           <Button 
             variant="outline" 
-            className="flex items-center gap-2 bg-[#eee6ff] text-[#8b5cf6] border-[#8b5cf6] hover:bg-[#e2d9f5] touch-manipulation"
+            className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-violet-50 text-purple-600 border-purple-300 hover:from-purple-100 hover:to-violet-100 hover:border-purple-400 shadow-sm hover:shadow-md transition-all duration-200 touch-manipulation"
             onClick={handleShareResults}
             type="button"
           >
@@ -95,7 +97,7 @@ const ResultActions: React.FC<ResultActionsProps> = ({
           </Button>
           <Button 
             variant="outline" 
-            className="flex items-center gap-2 bg-[#e6fff0] text-[#10b981] border-[#10b981] hover:bg-[#d1f7e4] touch-manipulation"
+            className="flex items-center gap-2 bg-gradient-to-r from-green-50 to-emerald-50 text-green-600 border-green-300 hover:from-green-100 hover:to-emerald-100 hover:border-green-400 shadow-sm hover:shadow-md transition-all duration-200 touch-manipulation"
             onClick={handleDownloadResults}
             type="button"
           >
@@ -105,9 +107,9 @@ const ResultActions: React.FC<ResultActionsProps> = ({
         </div>
       </div>
       
-      <div className="text-center">
-        <p className="text-purple-500 dark:text-purple-400 font-medium mb-1">Thank you for using Survivewellness!</p>
-        <p className="text-sm text-gray-500">For more calculators please visit our dedicated calculators section</p>
+      <div className="text-center border-t border-gray-200 dark:border-gray-700 pt-4">
+        <p className="text-purple-600 dark:text-purple-400 font-semibold mb-1">Thank you for using Survivewellness!</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">For more calculators please visit our dedicated calculators section</p>
       </div>
     </div>
   );

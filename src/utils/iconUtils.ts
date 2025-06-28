@@ -4,12 +4,37 @@ import type { LucideIcon } from "lucide-react";
 import { CalculatorCategory } from "@/types/calculator";
 
 export const getIconComponent = (iconName: string): LucideIcon => {
-  // Handle special icon mappings
+  // Handle special icon mappings and ensure all calculator icons are available
   const iconMappings: Record<string, keyof typeof LucideIcons> = {
-    "Dumbbell": "Weight",
-    "Bone": "Zap",
-    "Cigarette": "Cigarette" as keyof typeof LucideIcons,
-    "Footprints": "Activity"
+    // Body category icons
+    "Body": "User",
+    "Scale": "Scale",
+    "Weight": "Weight",
+    
+    // Fitness category icons
+    "Dumbbell": "Dumbbell",
+    "Activity": "Activity",
+    "Heart": "Heart",
+    "HeartPulse": "HeartPulse",
+    
+    // Nutrition category icons
+    "Utensils": "Utensils",
+    "Droplets": "Droplets",
+    "Clock": "Clock",
+    "Calculator": "Calculator",
+    
+    // Wellness category icons
+    "Wine": "Wine",
+    "Cigarette": "Cigarette",
+    
+    // Women's health icons
+    "CalendarDays": "CalendarDays",
+    "Baby": "Baby",
+    "Calendar": "Calendar",
+    
+    // General icons
+    "Footprints": "Footprints",
+    "Bone": "Bone"
   };
   
   // Use mapping if available, otherwise use the original name

@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, ChevronDown, ChevronRight } from "lucide-react";
-import { calculatorData } from '@/data/calculatorData';
+import { calculators } from '@/data/calculatorData';
 
 const CalculatorSidebar: React.FC<{
   selectedCalculator: string | null;
@@ -15,7 +16,7 @@ const CalculatorSidebar: React.FC<{
   useEffect(() => {
     // Initialize categories to expanded if a calculator within is selected
     const initialExpandedCategories: Record<string, boolean> = {};
-    calculatorData.forEach(calc => {
+    calculators.forEach(calc => {
       if (selectedCalculator === calc.id) {
         initialExpandedCategories[calc.category] = true;
       }
@@ -30,7 +31,7 @@ const CalculatorSidebar: React.FC<{
     }));
   };
 
-  const filteredCalculators = calculatorData.filter(calc =>
+  const filteredCalculators = calculators.filter(calc =>
     calc.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -44,20 +45,38 @@ const CalculatorSidebar: React.FC<{
     }, {})
   );
 
-  const getCategoryColorClass = (category: string): string => {
+  const getCategoryInfo = (category: string): { name: string; colorClass: string } => {
     switch (category) {
-      case 'Body Composition':
-        return 'text-violet-600 border-violet-200 bg-violet-50';
-      case 'Fitness & Exercise':
-        return 'text-blue-600 border-blue-200 bg-blue-50';
-      case 'Nutrition & Diet':
-        return 'text-green-600 border-green-200 bg-green-50';
-      case 'Wellness & Lifestyle':
-        return 'text-orange-600 border-orange-200 bg-orange-50';
-      case 'Women\'s Health':
-        return 'text-pink-600 border-pink-200 bg-pink-50';
+      case 'body':
+        return {
+          name: 'Body Composition',
+          colorClass: 'text-violet-600 border-violet-200 bg-violet-50'
+        };
+      case 'fitness':
+        return {
+          name: 'Fitness & Exercise',
+          colorClass: 'text-blue-600 border-blue-200 bg-blue-50'
+        };
+      case 'nutrition':
+        return {
+          name: 'Nutrition & Diet',
+          colorClass: 'text-green-600 border-green-200 bg-green-50'
+        };
+      case 'wellness':
+        return {
+          name: 'Wellness & Lifestyle',
+          colorClass: 'text-orange-600 border-orange-200 bg-orange-50'
+        };
+      case 'women':
+        return {
+          name: 'Women\'s Health',
+          colorClass: 'text-pink-600 border-pink-200 bg-pink-50'
+        };
       default:
-        return 'text-gray-600 border-gray-200 bg-gray-50';
+        return {
+          name: category,
+          colorClass: 'text-gray-600 border-gray-200 bg-gray-50'
+        };
     }
   };
 
@@ -98,16 +117,16 @@ const CalculatorSidebar: React.FC<{
         <div className="p-2 space-y-2 custom-scrollbar">
           {filteredCategories.map(([category, calculators]) => {
             const isExpanded = expandedCategories[category];
-            const colorClass = getCategoryColorClass(category);
+            const categoryInfo = getCategoryInfo(category);
             
             return (
               <div key={category} className="space-y-1">
                 <Button
                   variant="ghost"
-                  className={`w-full justify-between p-3 h-auto font-medium text-left border rounded-lg transition-all duration-200 hover:shadow-sm ${colorClass}`}
+                  className={`w-full justify-between p-3 h-auto font-medium text-left border rounded-lg transition-all duration-200 hover:shadow-sm ${categoryInfo.colorClass}`}
                   onClick={() => toggleCategory(category)}
                 >
-                  <span className="text-sm font-semibold">{category}</span>
+                  <span className="text-sm font-semibold">{categoryInfo.name}</span>
                   {isExpanded ? (
                     <ChevronDown className="h-4 w-4 flex-shrink-0" />
                   ) : (

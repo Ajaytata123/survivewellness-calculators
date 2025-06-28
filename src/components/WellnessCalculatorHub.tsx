@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { CalculatorSidebar } from "./CalculatorSidebar";
+import CalculatorSidebar from "./CalculatorSidebar";
 import CalculatorDisplay from "./CalculatorDisplay";
 import { calculators } from "@/data/calculatorData";
 import { useIsMobile } from "@/hooks/use-mobile";

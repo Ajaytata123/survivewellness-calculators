@@ -1,7 +1,6 @@
-
 import React, { useState } from "react";
 import { CalculatorInfo } from "@/types/calculator";
-import { CalculatorSidebar } from "../CalculatorSidebar";
+import CalculatorSidebar from "../CalculatorSidebar";
 import CalculatorDisplay from "../CalculatorDisplay";
 import { UnitSystem } from "@/types/calculatorTypes";
 import Breadcrumb from "./Breadcrumb";

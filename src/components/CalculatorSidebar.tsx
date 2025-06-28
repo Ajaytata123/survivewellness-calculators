@@ -4,25 +4,41 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, ChevronDown, ChevronRight } from "lucide-react";
 import { calculators } from '@/data/calculatorData';
+import { CalculatorInfo } from "@/types/calculator";
 
-const CalculatorSidebar: React.FC<{
-  selectedCalculator: string | null;
+interface CalculatorSidebarProps {
+  activeCalculator: string;
   onCalculatorSelect: (calculatorId: string) => void;
+  calculators: CalculatorInfo[];
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  highlightedCategory?: string;
+  onCategoryHighlight?: (category: string | undefined) => void;
   onClose?: () => void;
-}> = ({ selectedCalculator, onCalculatorSelect, onClose }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+}
+
+const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({ 
+  activeCalculator, 
+  onCalculatorSelect, 
+  calculators: calculatorList,
+  searchQuery,
+  setSearchQuery,
+  highlightedCategory,
+  onCategoryHighlight,
+  onClose 
+}) => {
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     // Initialize categories to expanded if a calculator within is selected
     const initialExpandedCategories: Record<string, boolean> = {};
-    calculators.forEach(calc => {
-      if (selectedCalculator === calc.id) {
+    calculatorList.forEach(calc => {
+      if (activeCalculator === calc.id) {
         initialExpandedCategories[calc.category] = true;
       }
     });
     setExpandedCategories(initialExpandedCategories);
-  }, [selectedCalculator]);
+  }, [activeCalculator, calculatorList]);
 
   const toggleCategory = (category: string) => {
     setExpandedCategories(prev => ({
@@ -31,8 +47,8 @@ const CalculatorSidebar: React.FC<{
     }));
   };
 
-  const filteredCalculators = calculators.filter(calc =>
-    calc.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCalculators = calculatorList.filter(calc =>
+    calc.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const filteredCategories = Object.entries(
@@ -88,8 +104,8 @@ const CalculatorSidebar: React.FC<{
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
             placeholder="Search calculators..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-white/80 backdrop-blur-sm border-white/30 focus:bg-white focus:border-wellness-purple transition-all"
           />
         </div>
@@ -141,7 +157,7 @@ const CalculatorSidebar: React.FC<{
                         key={calc.id}
                         variant="ghost"
                         className={`w-full justify-start p-2 text-left text-sm h-auto transition-all duration-200 rounded-md ${
-                          selectedCalculator === calc.id
+                          activeCalculator === calc.id
                             ? 'bg-wellness-purple text-white shadow-md hover:bg-wellness-purple/90'
                             : 'text-gray-700 hover:bg-gray-50 hover:text-wellness-purple'
                         }`}
@@ -152,7 +168,7 @@ const CalculatorSidebar: React.FC<{
                       >
                         <div className="flex items-center space-x-2">
                           <div className={`w-2 h-2 rounded-full ${
-                            selectedCalculator === calc.id ? 'bg-white' : 'bg-wellness-purple/30'
+                            activeCalculator === calc.id ? 'bg-white' : 'bg-wellness-purple/30'
                           }`} />
                           <span className="font-medium">{calc.name}</span>
                         </div>

@@ -70,46 +70,53 @@ const ResultActions: React.FC<ResultActionsProps> = ({
 
   return (
     <div className={`space-y-6 ${className || ''}`}>
-      <div className="mt-4 mb-2">
+      <div className="mt-6 mb-4">
         {referenceText && (
-          <p className="text-gray-600 dark:text-gray-400 mb-3 text-sm italic bg-gray-50 dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
-            {referenceText}
-          </p>
+          <div className="mb-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl shadow-sm">
+            <p className="text-blue-800 text-sm font-medium leading-relaxed">
+              {referenceText}
+            </p>
+          </div>
         )}
-        <div className="flex flex-wrap gap-3 justify-center">
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-600 border-blue-300 hover:from-blue-100 hover:to-cyan-100 hover:border-blue-400 shadow-sm hover:shadow-md transition-all duration-200 touch-manipulation"
-            onClick={handleCopyResults}
-            type="button"
-          >
-            <Copy className="h-4 w-4" />
-            Copy Results
-          </Button>
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-violet-50 text-purple-600 border-purple-300 hover:from-purple-100 hover:to-violet-100 hover:border-purple-400 shadow-sm hover:shadow-md transition-all duration-200 touch-manipulation"
-            onClick={handleShareResults}
-            type="button"
-          >
-            <Share className="h-4 w-4" />
-            Share Link
-          </Button>
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2 bg-gradient-to-r from-green-50 to-emerald-50 text-green-600 border-green-300 hover:from-green-100 hover:to-emerald-100 hover:border-green-400 shadow-sm hover:shadow-md transition-all duration-200 touch-manipulation"
-            onClick={handleDownloadResults}
-            type="button"
-          >
-            <Download className="h-4 w-4" />
-            Download CSV
-          </Button>
+        
+        <div className="bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 rounded-xl p-6 border border-violet-200 shadow-lg">
+          <div className="flex flex-wrap gap-3 justify-center mb-4">
+            <Button 
+              variant="outline" 
+              className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-700 border-blue-300 hover:from-blue-100 hover:to-cyan-100 hover:border-blue-400 hover:text-blue-800 shadow-sm hover:shadow-md transition-all duration-300 touch-manipulation font-medium"
+              onClick={handleCopyResults}
+              type="button"
+            >
+              <Copy className="h-4 w-4" />
+              Copy Results
+            </Button>
+            <Button 
+              variant="outline" 
+              className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-violet-50 text-purple-700 border-purple-300 hover:from-purple-100 hover:to-violet-100 hover:border-purple-400 hover:text-purple-800 shadow-sm hover:shadow-md transition-all duration-300 touch-manipulation font-medium"
+              onClick={handleShareResults}
+              type="button"
+            >
+              <Share className="h-4 w-4" />
+              Share Link
+            </Button>
+            <Button 
+              variant="outline" 
+              className="flex items-center gap-2 bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border-green-300 hover:from-green-100 hover:to-emerald-100 hover:border-green-400 hover:text-green-800 shadow-sm hover:shadow-md transition-all duration-300 touch-manipulation font-medium"
+              onClick={handleDownloadResults}
+              type="button"
+            >
+              <Download className="h-4 w-4" />
+              Download CSV
+            </Button>
+          </div>
+          
+          <div className="text-center border-t border-violet-200 pt-4">
+            <div className="bg-white rounded-lg p-3 shadow-sm border border-violet-100">
+              <p className="text-purple-700 font-bold mb-1 text-lg">Thank you for using Survivewellness!</p>
+              <p className="text-sm text-gray-600">For more calculators please visit our dedicated calculators section</p>
+            </div>
+          </div>
         </div>
-      </div>
-      
-      <div className="text-center border-t border-gray-200 dark:border-gray-700 pt-4">
-        <p className="text-purple-600 dark:text-purple-400 font-semibold mb-1">Thank you for using Survivewellness!</p>
-        <p className="text-sm text-gray-500 dark:text-gray-400">For more calculators please visit our dedicated calculators section</p>
       </div>
     </div>
   );

@@ -424,31 +424,35 @@ export const CalculatorSidebar = ({
       
       {/* Scrollable Categories with custom thin scrollbar */}
       <div 
-        className="flex-1 overflow-y-auto px-2 py-4 custom-scrollbar" 
+        className="flex-1 overflow-y-auto px-2 py-4" 
         style={{ 
-          height: 'calc(100vh - 200px)'
+          height: 'calc(100vh - 200px)',
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'rgba(139, 92, 246, 0.3) rgba(0, 0, 0, 0.05)'
         }}
         ref={sidebarRef}
       >
-        <style jsx>{`
-          .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-          }
-          
-          .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 2px;
-          }
-          
-          .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.3);
-            border-radius: 2px;
-          }
-          
-          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(139, 92, 246, 0.5);
-          }
-        `}</style>
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            .custom-scrollbar::-webkit-scrollbar {
+              width: 4px;
+            }
+            
+            .custom-scrollbar::-webkit-scrollbar-track {
+              background: rgba(0, 0, 0, 0.05);
+              border-radius: 2px;
+            }
+            
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+              background: rgba(139, 92, 246, 0.3);
+              border-radius: 2px;
+            }
+            
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+              background: rgba(139, 92, 246, 0.5);
+            }
+          `
+        }} />
         
         {categoryOrder.map(category => {
           const CategoryIcon = getCategoryIcon(category);

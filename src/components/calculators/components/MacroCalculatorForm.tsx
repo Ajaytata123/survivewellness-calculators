@@ -54,7 +54,7 @@ const MacroCalculatorForm: React.FC<MacroCalculatorFormProps> = ({
   return (
     <>
       <div className="space-y-4 mb-4">
-        <Label htmlFor="name" className="text-left block mb-2">Your Name (optional)</Label>
+        <Label htmlFor="name" className="block text-left mb-2">Your Name (optional)</Label>
         <Input
           id="name"
           type="text"
@@ -72,7 +72,7 @@ const MacroCalculatorForm: React.FC<MacroCalculatorFormProps> = ({
 
         <TabsContent value="imperial" className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="height-imperial" className="text-left block mb-2 flex justify-between">
+            <Label htmlFor="height-imperial" className="block text-left mb-2 flex justify-between">
               Height (inches)
               {errors.height && <span className="text-red-500 text-sm">{errors.height}</span>}
             </Label>
@@ -89,7 +89,7 @@ const MacroCalculatorForm: React.FC<MacroCalculatorFormProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="weight-imperial" className="text-left block mb-2 flex justify-between">
+            <Label htmlFor="weight-imperial" className="block text-left mb-2 flex justify-between">
               Weight (pounds)
               {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
             </Label>
@@ -109,7 +109,7 @@ const MacroCalculatorForm: React.FC<MacroCalculatorFormProps> = ({
 
         <TabsContent value="metric" className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="height-metric" className="text-left block mb-2 flex justify-between">
+            <Label htmlFor="height-metric" className="block text-left mb-2 flex justify-between">
               Height (cm)
               {errors.height && <span className="text-red-500 text-sm">{errors.height}</span>}
             </Label>
@@ -126,7 +126,7 @@ const MacroCalculatorForm: React.FC<MacroCalculatorFormProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="weight-metric" className="text-left block mb-2 flex justify-between">
+            <Label htmlFor="weight-metric" className="block text-left mb-2 flex justify-between">
               Weight (kg)
               {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
             </Label>
@@ -146,7 +146,7 @@ const MacroCalculatorForm: React.FC<MacroCalculatorFormProps> = ({
       </Tabs>
 
       <div className="space-y-2 mb-4">
-        <Label htmlFor="age" className="text-left block mb-2 flex justify-between">
+        <Label htmlFor="age" className="block text-left mb-2 flex justify-between">
           Age
           {errors.age && <span className="text-red-500 text-sm">{errors.age}</span>}
         </Label>
@@ -164,7 +164,7 @@ const MacroCalculatorForm: React.FC<MacroCalculatorFormProps> = ({
       </div>
 
       <div className="space-y-2 mb-4">
-        <Label className="text-left block mb-2">Gender</Label>
+        <Label className="block text-left mb-2">Gender</Label>
         <RadioGroup
           value={gender}
           onValueChange={val => onGenderChange(val as "male" | "female")}
@@ -182,7 +182,7 @@ const MacroCalculatorForm: React.FC<MacroCalculatorFormProps> = ({
       </div>
 
       <div className="space-y-2 mb-4">
-        <Label htmlFor="activity" className="text-left block mb-2">Activity Level</Label>
+        <Label htmlFor="activity" className="block text-left mb-2">Activity Level</Label>
         <select
           id="activity"
           className="block w-full rounded-md border border-input px-3 py-2 bg-background"
@@ -198,7 +198,7 @@ const MacroCalculatorForm: React.FC<MacroCalculatorFormProps> = ({
       </div>
 
       <div className="space-y-2 mb-6">
-        <Label htmlFor="goal" className="text-left block mb-2">Diet Goal</Label>
+        <Label htmlFor="goal" className="block text-left mb-2">Diet Goal</Label>
         <select
           id="goal"
           className="block w-full rounded-md border border-input px-3 py-2 bg-background"

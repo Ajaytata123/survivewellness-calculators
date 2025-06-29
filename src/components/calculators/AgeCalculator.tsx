@@ -91,7 +91,7 @@ const AgeCalculator: React.FC<AgeCalcProps> = ({ unitSystem, onUnitSystemChange 
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -102,7 +102,7 @@ const AgeCalculator: React.FC<AgeCalcProps> = ({ unitSystem, onUnitSystemChange 
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="birthDate">Birth Date</Label>
+            <Label htmlFor="birthDate" className="block text-left">Birth Date</Label>
             <Input
               id="birthDate"
               type="date"

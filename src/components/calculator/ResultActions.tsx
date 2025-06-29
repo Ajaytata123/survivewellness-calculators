@@ -1,12 +1,11 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Copy, Download, Share } from 'lucide-react';
+import { Download, Share } from 'lucide-react';
 import { ResultForDownload, UnitSystem } from '@/types/calculatorTypes';
 import { 
   shareResults, 
-  downloadResultsAsCSV, 
-  copyResultsToClipboard 
+  downloadResultsAsCSV
 } from '@/utils/downloadUtils';
 
 interface ResultActionsProps {
@@ -36,16 +35,6 @@ const ResultActions: React.FC<ResultActionsProps> = ({
       userName: userName || 'User',
       results
     };
-  };
-
-  const handleCopyResults = async () => {
-    try {
-      const resultsData = prepareResults();
-      await copyResultsToClipboard(resultsData);
-      console.log('Results copied successfully');
-    } catch (error) {
-      console.error('Error copying results:', error);
-    }
   };
 
   const handleShareResults = async () => {
@@ -83,21 +72,12 @@ const ResultActions: React.FC<ResultActionsProps> = ({
           <div className="flex flex-wrap gap-3 justify-center mb-4">
             <Button 
               variant="outline" 
-              className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-700 border-blue-300 hover:from-blue-100 hover:to-cyan-100 hover:border-blue-400 hover:text-blue-800 shadow-sm hover:shadow-md transition-all duration-300 touch-manipulation font-medium"
-              onClick={handleCopyResults}
-              type="button"
-            >
-              <Copy className="h-4 w-4" />
-              Copy Results
-            </Button>
-            <Button 
-              variant="outline" 
               className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-violet-50 text-purple-700 border-purple-300 hover:from-purple-100 hover:to-violet-100 hover:border-purple-400 hover:text-purple-800 shadow-sm hover:shadow-md transition-all duration-300 touch-manipulation font-medium"
               onClick={handleShareResults}
               type="button"
             >
               <Share className="h-4 w-4" />
-              Share Link
+              Share Results
             </Button>
             <Button 
               variant="outline" 

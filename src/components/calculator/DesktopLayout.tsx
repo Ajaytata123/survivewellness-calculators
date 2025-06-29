@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { CalculatorInfo } from "@/types/calculator";
 import CalculatorSidebar from "../CalculatorSidebar";
@@ -37,13 +38,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
       <div className="fixed left-0 top-0 w-80 h-screen bg-gray-50 border-r border-gray-200 z-10">
         <div className="h-full p-6 overflow-hidden">
           <CalculatorSidebar 
-            activeCalculator={activeCalculator} 
-            onCalculatorSelect={onCalculatorSelect} 
-            calculators={calculators}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            highlightedCategory={highlightedCategory}
-            onCategoryHighlight={setHighlightedCategory}
+            selectedCalculator={activeCalculator}
+            onCalculatorSelect={onCalculatorSelect}
           />
         </div>
       </div>

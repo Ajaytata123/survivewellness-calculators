@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -144,7 +143,7 @@ export const HeightInput: React.FC<HeightInputProps> = ({
 
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>Height</Label>
+      <Label htmlFor={id} className="block text-left">Height</Label>
 
       <RadioGroup
         value={inputType}
@@ -177,7 +176,7 @@ export const HeightInput: React.FC<HeightInputProps> = ({
       ) : (
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <Label htmlFor={`${id}-feet`}>Feet</Label>
+            <Label htmlFor={`${id}-feet`} className="block text-left">Feet</Label>
             <Input
               id={`${id}-feet`}
               type="number"
@@ -188,7 +187,7 @@ export const HeightInput: React.FC<HeightInputProps> = ({
             />
           </div>
           <div>
-            <Label htmlFor={`${id}-secondary`}>
+            <Label htmlFor={`${id}-secondary`} className="block text-left">
               {unitSystem === 'imperial' ? 'Inches' : 'Centimeters'}
             </Label>
             <Input

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -113,9 +112,13 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
     }
   };
 
-  // Custom calculator name mapping
+  // Custom calculator name mapping - Updated to change "Menstrual Cycle" to "Period Calculator"
   const getCalculatorDisplayName = (calc: CalculatorInfo): string => {
     if (calc.id === 'menstrual-cycle') {
+      return 'Period Calculator';
+    }
+    // Also handle if the calculator name is "Menstrual Cycle Calculator"
+    if (calc.name === 'Menstrual Cycle Calculator' || calc.name === 'Menstrual Cycle') {
       return 'Period Calculator';
     }
     return calc.name;

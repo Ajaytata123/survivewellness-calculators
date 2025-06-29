@@ -8,27 +8,17 @@ import { CalculatorInfo } from "@/types/calculator";
 import { getIconComponent } from '@/utils/iconUtils';
 
 interface CalculatorSidebarProps {
-  activeCalculator: string;
+  selectedCalculator: string;
   onCalculatorSelect: (calculatorId: string) => void;
-  calculators: CalculatorInfo[];
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-  highlightedCategory?: string;
-  onCategoryHighlight?: (category: string | undefined) => void;
   onClose?: () => void;
 }
 
 const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({ 
-  activeCalculator, 
-  onCalculatorSelect, 
-  calculators: calculatorList,
-  searchQuery,
-  setSearchQuery,
-  highlightedCategory,
-  onCategoryHighlight,
+  selectedCalculator, 
+  onCalculatorSelect,
   onClose 
 }) => {
-  // Initialize all categories as expanded by default
+  const [searchQuery, setSearchQuery] = useState('');
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
     'body': true,
     'fitness': true,
@@ -44,7 +34,7 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
     }));
   };
 
-  const filteredCalculators = calculatorList.filter(calc =>
+  const filteredCalculators = calculators.filter(calc =>
     calc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     calc.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -60,50 +50,48 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
   );
 
   const getCategoryInfo = (category: string): { name: string; colorClass: string; iconClass: string; highlightClass: string } => {
-    const isHighlighted = highlightedCategory === category;
-    
     switch (category) {
       case 'body':
         return {
           name: 'Body Composition',
-          colorClass: `text-purple-700 bg-purple-50 border-purple-200 hover:bg-purple-100 ${isHighlighted ? 'ring-2 ring-purple-400 bg-purple-100' : ''}`,
+          colorClass: 'text-purple-700 bg-purple-50 border-purple-200 hover:bg-purple-100',
           iconClass: 'text-purple-600',
-          highlightClass: isHighlighted ? 'ring-2 ring-purple-400' : ''
+          highlightClass: ''
         };
       case 'fitness':
         return {
           name: 'Fitness & Exercise',
-          colorClass: `text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100 ${isHighlighted ? 'ring-2 ring-blue-400 bg-blue-100' : ''}`,
+          colorClass: 'text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100',
           iconClass: 'text-blue-600',
-          highlightClass: isHighlighted ? 'ring-2 ring-blue-400' : ''
+          highlightClass: ''
         };
       case 'nutrition':
         return {
           name: 'Nutrition & Diet',
-          colorClass: `text-green-700 bg-green-50 border-green-200 hover:bg-green-100 ${isHighlighted ? 'ring-2 ring-green-400 bg-green-100' : ''}`,
+          colorClass: 'text-green-700 bg-green-50 border-green-200 hover:bg-green-100',
           iconClass: 'text-green-600',
-          highlightClass: isHighlighted ? 'ring-2 ring-green-400' : ''
+          highlightClass: ''
         };
       case 'wellness':
         return {
           name: 'Wellness & Lifestyle',
-          colorClass: `text-orange-700 bg-orange-50 border-orange-200 hover:bg-orange-100 ${isHighlighted ? 'ring-2 ring-orange-400 bg-orange-100' : ''}`,
+          colorClass: 'text-orange-700 bg-orange-50 border-orange-200 hover:bg-orange-100',
           iconClass: 'text-orange-600',
-          highlightClass: isHighlighted ? 'ring-2 ring-orange-400' : ''
+          highlightClass: ''
         };
       case 'women':
         return {
           name: 'Women\'s Health',
-          colorClass: `text-pink-700 bg-pink-50 border-pink-200 hover:bg-pink-100 ${isHighlighted ? 'ring-2 ring-pink-400 bg-pink-100' : ''}`,
+          colorClass: 'text-pink-700 bg-pink-50 border-pink-200 hover:bg-pink-100',
           iconClass: 'text-pink-600',
-          highlightClass: isHighlighted ? 'ring-2 ring-pink-400' : ''
+          highlightClass: ''
         };
       default:
         return {
           name: category,
-          colorClass: `text-gray-700 bg-gray-50 border-gray-200 hover:bg-gray-100 ${isHighlighted ? 'ring-2 ring-gray-400 bg-gray-100' : ''}`,
+          colorClass: 'text-gray-700 bg-gray-50 border-gray-200 hover:bg-gray-100',
           iconClass: 'text-gray-600',
-          highlightClass: isHighlighted ? 'ring-2 ring-gray-400' : ''
+          highlightClass: ''
         };
     }
   };
@@ -123,6 +111,14 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
       default:
         return getIconComponent('Calculator');
     }
+  };
+
+  // Custom calculator name mapping
+  const getCalculatorDisplayName = (calc: CalculatorInfo): string => {
+    if (calc.id === 'menstrual-cycle') {
+      return 'Period Calculator';
+    }
+    return calc.name;
   };
 
   return (
@@ -175,8 +171,8 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
                           key={calc.id}
                           variant="ghost"
                           className={`w-full justify-start p-3 text-left text-sm h-auto transition-all duration-200 rounded-md ${
-                            activeCalculator === calc.id
-                              ? 'bg-blue-100 text-blue-800 shadow-sm hover:bg-blue-150 border border-blue-200'
+                            selectedCalculator === calc.id
+                              ? 'bg-blue-50 text-blue-700 shadow-sm hover:bg-blue-100 border border-blue-200'
                               : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600'
                           }`}
                           onClick={() => {
@@ -186,9 +182,9 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
                         >
                           <div className="flex items-center space-x-3">
                             <CalculatorIcon className={`w-4 h-4 ${
-                              activeCalculator === calc.id ? 'text-blue-600' : 'text-purple-500'
+                              selectedCalculator === calc.id ? 'text-blue-600' : 'text-purple-500'
                             }`} />
-                            <span className="font-medium">{calc.name}</span>
+                            <span className="font-medium">{getCalculatorDisplayName(calc)}</span>
                           </div>
                         </Button>
                       );

@@ -72,6 +72,47 @@ export const prepareResultsAsText = (results: ResultForDownload): string => {
   return textContent;
 };
 
+// Function to copy results to clipboard
+export const copyResultsToClipboard = (results: ResultForDownload): void => {
+  const textResults = prepareResultsAsText(results);
+  
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(textResults)
+      .then(() => {
+        console.log('Results copied to clipboard successfully');
+      })
+      .catch((error) => {
+        console.error('Failed to copy to clipboard:', error);
+        // Fallback for older browsers
+        fallbackCopyToClipboard(textResults);
+      });
+  } else {
+    // Fallback for older browsers
+    fallbackCopyToClipboard(textResults);
+  }
+};
+
+// Fallback method for copying to clipboard
+const fallbackCopyToClipboard = (text: string): void => {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.style.position = 'fixed';
+  textArea.style.left = '-999999px';
+  textArea.style.top = '-999999px';
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  
+  try {
+    document.execCommand('copy');
+    console.log('Fallback copy successful');
+  } catch (error) {
+    console.error('Fallback copy failed:', error);
+  }
+  
+  document.body.removeChild(textArea);
+};
+
 // Enhanced function to share results with web share API
 export const shareResults = (results: ResultForDownload): Promise<void> => {
   return new Promise((resolve, reject) => {

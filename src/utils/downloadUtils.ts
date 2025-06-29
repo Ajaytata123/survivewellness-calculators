@@ -1,6 +1,6 @@
 
 import { ResultForDownload } from "@/types/calculatorTypes";
-import { showCopyToast, showDownloadToast, showShareToast, showErrorToast } from "./notificationUtils";
+import { showDownloadToast, showShareToast, showErrorToast } from "./notificationUtils";
 
 // Function to prepare results for download in CSV format
 export const prepareResultsForCSV = (results: ResultForDownload): string => {
@@ -72,15 +72,18 @@ export const prepareResultsAsText = (results: ResultForDownload): string => {
   return textContent;
 };
 
-// Function to share results with web share API
+// Enhanced function to share results with web share API
 export const shareResults = (results: ResultForDownload): Promise<void> => {
   return new Promise((resolve, reject) => {
+    const textResults = prepareResultsAsText(results);
+    
+    // Check if Web Share API is supported (works on mobile and some desktop browsers)
     if (navigator.share) {
-      const textResults = prepareResultsAsText(results);
       navigator
         .share({
           title: `${results.title} Results from Survivewellness`,
           text: textResults,
+          url: window.location.href
         })
         .then(() => {
           setTimeout(() => {
@@ -89,81 +92,55 @@ export const shareResults = (results: ResultForDownload): Promise<void> => {
           resolve();
         })
         .catch((error) => {
-          console.error("Error sharing results:", error);
-          // Fallback to copy
-          copyResultsToClipboard(results);
-          resolve();
+          // If user cancels the share, don't show error
+          if (error.name !== 'AbortError') {
+            console.error("Error sharing results:", error);
+            // Fallback to clipboard
+            fallbackShare(textResults, resolve);
+          } else {
+            resolve();
+          }
         });
     } else {
-      // Fallback to copy
-      copyResultsToClipboard(results);
-      resolve();
+      // Fallback for browsers that don't support Web Share API
+      fallbackShare(textResults, resolve);
     }
   });
 };
 
-// Function to copy results to clipboard
-export const copyResultsToClipboard = (results: ResultForDownload): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    const textToCopy = prepareResultsAsText(results);
-    
-    // For mobile compatibility, try different clipboard methods
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(textToCopy)
-        .then(() => {
-          setTimeout(() => {
-            showCopyToast();
-          }, 100);
-          console.log("Results copied to clipboard");
-          resolve();
-        })
-        .catch(err => {
-          console.error("Clipboard API failed, trying fallback method:", err);
-          // Fallback method for older browsers or mobile
-          fallbackCopyTextToClipboard(textToCopy, resolve, reject);
-        });
-    } else {
-      // Fallback method for older browsers or mobile
-      fallbackCopyTextToClipboard(textToCopy, resolve, reject);
-    }
-  });
-};
-
-// Fallback copy method for mobile compatibility
-const fallbackCopyTextToClipboard = (text: string, resolve: () => void, reject: (error: any) => void) => {
-  const textArea = document.createElement("textarea");
-  textArea.value = text;
-  
-  // Avoid scrolling to bottom
-  textArea.style.top = "0";
-  textArea.style.left = "0";
-  textArea.style.position = "fixed";
-  textArea.style.opacity = "0";
-  
-  document.body.appendChild(textArea);
-  textArea.focus();
-  textArea.select();
-  
-  try {
-    const successful = document.execCommand('copy');
-    if (successful) {
-      setTimeout(() => {
-        showCopyToast();
-      }, 100);
-      console.log('Fallback: Copying text command was successful');
-      resolve();
-    } else {
-      console.error('Fallback: Copying text command was unsuccessful');
-      showErrorToast("Unable to copy results. Please try again.");
-      reject(new Error('Copy command unsuccessful'));
-    }
-  } catch (err) {
-    console.error('Fallback: Oops, unable to copy', err);
-    showErrorToast("Unable to copy results. Please try again.");
-    reject(err);
-  } finally {
-    document.body.removeChild(textArea);
+// Fallback share method for browsers without Web Share API
+const fallbackShare = (text: string, resolve: () => void) => {
+  // Try to copy to clipboard first
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        setTimeout(() => {
+          showShareToast();
+        }, 100);
+        resolve();
+      })
+      .catch(() => {
+        // Final fallback - open email client
+        openEmailClient(text);
+        resolve();
+      });
+  } else {
+    // Final fallback - open email client
+    openEmailClient(text);
+    resolve();
   }
+};
+
+// Open email client as final fallback
+const openEmailClient = (text: string) => {
+  const subject = encodeURIComponent('My Health Calculator Results from Survivewellness');
+  const body = encodeURIComponent(text);
+  const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
+  window.open(mailtoLink, '_blank');
+  
+  setTimeout(() => {
+    showShareToast();
+  }, 100);
 };
 
 // Create a shareable link with encoded parameters

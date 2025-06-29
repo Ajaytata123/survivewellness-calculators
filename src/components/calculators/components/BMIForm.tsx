@@ -38,7 +38,7 @@ const BMIForm: React.FC<BMIFormProps> = ({
   return (
     <>
       <div className="mb-6">
-        <Label htmlFor="userName">Your Name (optional)</Label>
+        <Label htmlFor="userName" className="text-left block mb-2">Your Name (optional)</Label>
         <Input
           id="userName"
           type="text"
@@ -68,7 +68,7 @@ const BMIForm: React.FC<BMIFormProps> = ({
           />
 
           <div className="space-y-2">
-            <Label htmlFor="weight-imperial">Weight (pounds)</Label>
+            <Label htmlFor="weight-imperial" className="text-left block mb-2">Weight (pounds)</Label>
             <Input
               id="weight-imperial"
               type="number"
@@ -90,7 +90,7 @@ const BMIForm: React.FC<BMIFormProps> = ({
           />
 
           <div className="space-y-2">
-            <Label htmlFor="weight-metric">Weight (kg)</Label>
+            <Label htmlFor="weight-metric" className="text-left block mb-2">Weight (kg)</Label>
             <Input
               id="weight-metric"
               type="number"

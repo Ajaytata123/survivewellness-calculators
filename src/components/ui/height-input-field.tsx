@@ -24,6 +24,7 @@ export const HeightInputField: React.FC<HeightInputFieldProps> = ({
         onHeightChange={setHeight}
         error={error}
       />
+      {error && <p className="text-red-500 text-sm">{error}</p>}
     </div>
   );
 };

@@ -12,7 +12,6 @@ import ResultActions from "@/components/calculator/ResultActions";
 import KnowMoreButton from "@/components/calculator/KnowMoreButton";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
 import { DatePicker } from "@/components/ui/date-picker";
-import "@/components/ui/period-calendar-styles.css";
 
 type CalendarDate = Date | undefined;
 
@@ -131,10 +130,10 @@ const DueDateCalculator: React.FC<DueDateCalcProps> = ({ unitSystem }) => {
   };
 
   const modifiersClassNames = {
-    trimester1: "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200",
-    trimester2: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
-    trimester3: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
-    dueDate: "bg-pink-500 text-white font-bold border-2 border-pink-600"
+    trimester1: "bg-wellness-softPink text-wellness-pink",
+    trimester2: "bg-wellness-softPurple text-wellness-purple",
+    trimester3: "bg-wellness-softOrange text-wellness-orange",
+    dueDate: "bg-wellness-pink text-white font-bold"
   };
 
   const calculateCurrentWeek = (): number | null => {
@@ -308,7 +307,7 @@ const DueDateCalculator: React.FC<DueDateCalcProps> = ({ unitSystem }) => {
               </div>
             </div>
 
-            <div className="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg border">
+            <div className="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg">
               <h4 className="font-semibold mb-2">Pregnancy Calendar</h4>
               <Calendar
                 month={calendarMonth}
@@ -316,7 +315,7 @@ const DueDateCalculator: React.FC<DueDateCalcProps> = ({ unitSystem }) => {
                 modifiers={modifiers}
                 modifiersClassNames={modifiersClassNames}
                 showOutsideDays={false}
-                className="w-full pointer-events-auto"
+                className="w-full"
               />
               
               <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-2 text-xs">

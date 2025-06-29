@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -34,62 +35,16 @@ const CalorieTrackerCalculator: React.FC<CalorieTrackerCalcProps> = ({ unitSyste
   const [newActivity, setNewActivity] = useState<{name: string, calories: string}>({name: "", calories: ""});
   const [dailyGoal, setDailyGoal] = useState<string>("2000");
   
-  // Expanded US-based food calorie presets
+  // Common food calorie presets
   const foodPresets = [
-    // Fruits
     { name: "Apple", calories: 95 },
     { name: "Banana", calories: 105 },
-    { name: "Orange", calories: 85 },
-    { name: "Grapes (1 cup)", calories: 104 },
-    { name: "Strawberries (1 cup)", calories: 49 },
-    { name: "Blueberries (1 cup)", calories: 84 },
-    
-    // Proteins
     { name: "Chicken Breast (3oz)", calories: 165 },
-    { name: "Ground Beef (3oz)", calories: 230 },
-    { name: "Salmon (3oz)", calories: 175 },
     { name: "Egg", calories: 70 },
-    { name: "Turkey Sandwich", calories: 320 },
-    { name: "Tuna (3oz)", calories: 150 },
-    
-    // Dairy
     { name: "Greek Yogurt (1 cup)", calories: 130 },
-    { name: "Cheddar Cheese (1 slice)", calories: 113 },
-    { name: "American Cheese (1 slice)", calories: 104 },
-    { name: "Milk (1 cup)", calories: 149 },
-    { name: "Cottage Cheese (1/2 cup)", calories: 110 },
-    
-    // Grains & Carbs
     { name: "Rice (1 cup, cooked)", calories: 205 },
     { name: "Bread (1 slice)", calories: 80 },
-    { name: "Oatmeal (1 cup)", calories: 154 },
-    { name: "Pasta (1 cup)", calories: 220 },
-    { name: "Quinoa (1 cup)", calories: 222 },
-    { name: "Bagel", calories: 289 },
-    
-    // Vegetables
-    { name: "Broccoli (1 cup)", calories: 25 },
-    { name: "Carrots (1 cup)", calories: 52 },
-    { name: "Spinach (1 cup)", calories: 7 },
-    { name: "Sweet Potato", calories: 112 },
-    { name: "Bell Pepper (1 cup)", calories: 30 },
-    { name: "Cucumber (1 cup)", calories: 16 },
-    
-    // Fast Food & American Classics
-    { name: "Cheeseburger", calories: 535 },
-    { name: "Big Mac", calories: 563 },
-    { name: "Pizza Slice", calories: 285 },
-    { name: "French Fries (medium)", calories: 365 },
-    { name: "Hot Dog", calories: 290 },
-    { name: "Burrito", calories: 450 },
-    
-    // Snacks & Others
-    { name: "Avocado (half)", calories: 160 },
-    { name: "Peanut Butter (2 tbsp)", calories: 188 },
-    { name: "Almonds (1 oz)", calories: 164 },
-    { name: "Granola Bar", calories: 140 },
-    { name: "Potato Chips (1 oz)", calories: 152 },
-    { name: "Cookie", calories: 142 }
+    { name: "Avocado (half)", calories: 160 }
   ];
   
   // Common activity calorie presets
@@ -312,11 +267,11 @@ const CalorieTrackerCalculator: React.FC<CalorieTrackerCalcProps> = ({ unitSyste
                     </Button>
                   </div>
                   
-                  {/* Food Presets - Show more options */}
+                  {/* Food Presets */}
                   <div>
-                    <p className="text-sm text-gray-600 mb-2">Quick Add Popular Foods:</p>
-                    <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
-                      {foodPresets.slice(0, 12).map((preset, index) => (
+                    <p className="text-sm text-gray-600 mb-2">Quick Add:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {foodPresets.slice(0, 4).map((preset, index) => (
                         <button
                           key={index}
                           onClick={() => addFoodPreset(preset)}

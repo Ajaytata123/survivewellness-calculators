@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -13,7 +14,6 @@ import ResultActions from "@/components/calculator/ResultActions";
 import KnowMoreButton from "@/components/calculator/KnowMoreButton";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
 import { DatePicker } from "@/components/ui/date-picker";
-import "@/components/ui/period-calendar-styles.css";
 
 type CalendarDate = Date | undefined;
 
@@ -262,7 +262,7 @@ const OvulationCalculator: React.FC<OvulationCalcProps> = ({ unitSystem }) => {
             </div>
           </div>
 
-          <div className="mb-6 mt-6 bg-white dark:bg-gray-800 p-4 rounded-lg border">
+          <div className="mb-6 mt-6 bg-white dark:bg-gray-800 p-4 rounded-lg">
             <Calendar
               month={calendarMonth}
               onMonthChange={setCalendarMonth}
@@ -273,20 +273,20 @@ const OvulationCalculator: React.FC<OvulationCalcProps> = ({ unitSystem }) => {
                 fertile: "rdp-day_fertile",
               }}
               showOutsideDays={false}
-              className="w-full pointer-events-auto"
+              className="w-full"
             />
             
             <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
               <div className="flex items-center">
-                <div className="w-4 h-4 rounded-full bg-pink-400 mr-2"></div>
+                <div className="w-4 h-4 rounded-full bg-wellness-pink mr-2"></div>
                 <span>Period Days</span>
               </div>
               <div className="flex items-center">
-                <div className="w-4 h-4 rounded-full bg-purple-600 mr-2"></div>
+                <div className="w-4 h-4 rounded-full bg-wellness-purple mr-2"></div>
                 <span>Ovulation Day</span>
               </div>
               <div className="flex items-center">
-                <div className="w-4 h-4 rounded-full bg-green-400 mr-2"></div>
+                <div className="w-4 h-4 rounded-full bg-wellness-softBlue mr-2"></div>
                 <span>Fertile Window</span>
               </div>
             </div>

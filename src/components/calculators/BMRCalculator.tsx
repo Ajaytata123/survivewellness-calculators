@@ -147,7 +147,7 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
         />
 
         <div className="mb-6">
-          <Label htmlFor="userName">Your Name (optional)</Label>
+          <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
           <Input
             id="userName"
             type="text"
@@ -185,7 +185,7 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
             />
 
             <div className="space-y-2">
-              <Label htmlFor="weight-imperial">Weight (pounds)</Label>
+              <Label htmlFor="weight-imperial" className="block text-left">Weight (pounds)</Label>
               <Input
                 id="weight-imperial"
                 type="number"
@@ -207,7 +207,7 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
             />
 
             <div className="space-y-2">
-              <Label htmlFor="weight-metric">Weight (kg)</Label>
+              <Label htmlFor="weight-metric" className="block text-left">Weight (kg)</Label>
               <Input
                 id="weight-metric"
                 type="number"
@@ -223,7 +223,7 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="age">Age</Label>
+            <Label htmlFor="age" className="block text-left">Age</Label>
             <Input
               id="age"
               type="number"
@@ -236,7 +236,7 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
           </div>
 
           <div className="space-y-2">
-            <Label>Gender</Label>
+            <Label className="block text-left">Gender</Label>
             <RadioGroup
               value={gender}
               onValueChange={(value) => setGender(value as "male" | "female")}
@@ -254,7 +254,7 @@ const BMRCalculator: React.FC<BMRCalcProps> = ({ unitSystem, onUnitSystemChange 
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="activity">Activity Level</Label>
+            <Label htmlFor="activity" className="block text-left">Activity Level</Label>
             <Select
               value={activity}
               onValueChange={setActivity}

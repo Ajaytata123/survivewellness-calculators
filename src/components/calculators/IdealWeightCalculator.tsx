@@ -8,8 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { UnitSystem } from "@/types/calculatorTypes";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
-import { Copy, Share, Download } from "lucide-react";
-import { downloadResultsAsCSV, copyResultsToClipboard, shareResults } from "@/utils/downloadUtils";
+import { Share, Download } from "lucide-react";
+import { downloadResultsAsCSV, shareResults } from "@/utils/downloadUtils";
 import IntroSection from "@/components/calculator/IntroSection";
 
 interface IdealWeightCalcProps {
@@ -111,10 +111,10 @@ const IdealWeightCalculator: React.FC<IdealWeightCalcProps> = ({ unitSystem, onU
     };
   };
 
-  const handleCopyResults = () => {
+  const handleDownloadResults = () => {
     if (!results) return;
     const resultsData = prepareResults();
-    if (resultsData) copyResultsToClipboard(resultsData);
+    if (resultsData) downloadResultsAsCSV(resultsData, "Ideal-Weight-Calculator");
   };
 
   const handleShareResults = () => {
@@ -123,11 +123,6 @@ const IdealWeightCalculator: React.FC<IdealWeightCalcProps> = ({ unitSystem, onU
     if (resultsData) shareResults(resultsData);
   };
 
-  const handleDownloadResults = () => {
-    if (!results) return;
-    const resultsData = prepareResults();
-    if (resultsData) downloadResultsAsCSV(resultsData, "Ideal-Weight-Calculator");
-  };
 
   return (
     <div className="space-y-6">
@@ -246,14 +241,6 @@ const IdealWeightCalculator: React.FC<IdealWeightCalcProps> = ({ unitSystem, onU
               <div className="flex flex-wrap gap-3 justify-start">
                 <Button 
                   variant="outline" 
-                  className="flex items-center gap-2 bg-[#e6f7ff] text-[#0ea5e9] border-[#0ea5e9] hover:bg-[#d1edff]"
-                  onClick={handleCopyResults}
-                >
-                  <Copy className="h-4 w-4" />
-                  Copy Results
-                </Button>
-                <Button 
-                  variant="outline" 
                   className="flex items-center gap-2 bg-[#eee6ff] text-[#8b5cf6] border-[#8b5cf6] hover:bg-[#e2d9f5]"
                   onClick={handleShareResults}
                 >
@@ -266,7 +253,7 @@ const IdealWeightCalculator: React.FC<IdealWeightCalcProps> = ({ unitSystem, onU
                   onClick={handleDownloadResults}
                 >
                   <Download className="h-4 w-4" />
-                  Download CSV
+                  Download Results
                 </Button>
               </div>
             </div>

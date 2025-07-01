@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { UnitSystem } from "@/types/calculatorTypes";
-import { downloadResultsAsCSV, copyResultsToClipboard, createShareableLink } from "@/utils/downloadUtils";
+import { downloadResultsAsCSV, createShareableLink } from "@/utils/downloadUtils";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
-import { Check, Copy, Share } from "lucide-react";
+import { Check, Share } from "lucide-react";
 
 interface MacronutrientCalcProps {
   unitSystem: UnitSystem;
@@ -187,33 +187,6 @@ const MacronutrientCalculator: React.FC<MacronutrientCalcProps> = ({ unitSystem,
     showSuccessToast("Results downloaded successfully!");
   };
 
-  const copyResults = () => {
-    if (!macroResult) return;
-
-    const results = {
-      title: "Macronutrient Calculator",
-      results: {
-        "Total Calories": `${macroResult.calories} kcal/day`,
-        "Protein": `${macroResult.protein} g/day`,
-        "Carbohydrates": `${macroResult.carbs} g/day`,
-        "Fat": `${macroResult.fat} g/day`,
-        "Height": `${height} ${unitSystem === "metric" ? "cm" : "inches"}`,
-        "Weight": `${weight} ${unitSystem === "metric" ? "kg" : "pounds"}`,
-        "Age": age,
-        "Gender": gender,
-        "Activity Level": activity,
-        "Diet Goal": goal,
-      },
-      date: new Date().toLocaleDateString(),
-      unitSystem,
-      userName: userName || undefined,
-    };
-
-    copyResultsToClipboard(results);
-    setCopied(true);
-    showSuccessToast("Results copied to clipboard!");
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   const shareLink = () => {
     if (!macroResult) return;
@@ -240,7 +213,7 @@ const MacronutrientCalculator: React.FC<MacronutrientCalcProps> = ({ unitSystem,
       </p>
 
       <div className="space-y-4 mb-4">
-        <Label htmlFor="name">Your Name (optional)</Label>
+        <Label htmlFor="name" className="block text-left">Your Name (optional)</Label>
         <Input
           id="name"
           type="text"
@@ -258,7 +231,7 @@ const MacronutrientCalculator: React.FC<MacronutrientCalcProps> = ({ unitSystem,
 
         <TabsContent value="imperial" className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="height-imperial" className="flex justify-between">
+            <Label htmlFor="height-imperial" className="block text-left flex justify-between">
               Height (inches)
               {errors.height && <span className="text-red-500 text-sm">{errors.height}</span>}
             </Label>
@@ -275,7 +248,7 @@ const MacronutrientCalculator: React.FC<MacronutrientCalcProps> = ({ unitSystem,
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="weight-imperial" className="flex justify-between">
+            <Label htmlFor="weight-imperial" className="block text-left flex justify-between">
               Weight (pounds)
               {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
             </Label>
@@ -295,7 +268,7 @@ const MacronutrientCalculator: React.FC<MacronutrientCalcProps> = ({ unitSystem,
 
         <TabsContent value="metric" className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="height-metric" className="flex justify-between">
+            <Label htmlFor="height-metric" className="block text-left flex justify-between">
               Height (cm)
               {errors.height && <span className="text-red-500 text-sm">{errors.height}</span>}
             </Label>
@@ -312,7 +285,7 @@ const MacronutrientCalculator: React.FC<MacronutrientCalcProps> = ({ unitSystem,
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="weight-metric" className="flex justify-between">
+            <Label htmlFor="weight-metric" className="block text-left flex justify-between">
               Weight (kg)
               {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
             </Label>
@@ -332,7 +305,7 @@ const MacronutrientCalculator: React.FC<MacronutrientCalcProps> = ({ unitSystem,
       </Tabs>
 
       <div className="space-y-2 mb-4">
-        <Label htmlFor="age" className="flex justify-between">
+        <Label htmlFor="age" className="block text-left flex justify-between">
           Age
           {errors.age && <span className="text-red-500 text-sm">{errors.age}</span>}
         </Label>
@@ -350,7 +323,7 @@ const MacronutrientCalculator: React.FC<MacronutrientCalcProps> = ({ unitSystem,
       </div>
 
       <div className="space-y-2 mb-4">
-        <Label>Gender</Label>
+        <Label className="block text-left">Gender</Label>
         <RadioGroup
           value={gender}
           onValueChange={val => setGender(val as "male" | "female")}
@@ -368,7 +341,7 @@ const MacronutrientCalculator: React.FC<MacronutrientCalcProps> = ({ unitSystem,
       </div>
 
       <div className="space-y-2 mb-4">
-        <Label htmlFor="activity">Activity Level</Label>
+        <Label htmlFor="activity" className="block text-left">Activity Level</Label>
         <select
           id="activity"
           className="block w-full rounded-md border border-input px-3 py-2 bg-background"
@@ -384,7 +357,7 @@ const MacronutrientCalculator: React.FC<MacronutrientCalcProps> = ({ unitSystem,
       </div>
 
       <div className="space-y-2 mb-6">
-        <Label htmlFor="goal">Diet Goal</Label>
+        <Label htmlFor="goal" className="block text-left">Diet Goal</Label>
         <select
           id="goal"
           className="block w-full rounded-md border border-input px-3 py-2 bg-background"
@@ -429,9 +402,9 @@ const MacronutrientCalculator: React.FC<MacronutrientCalcProps> = ({ unitSystem,
           </div>
 
           <div className="mt-4 flex flex-wrap gap-2 justify-center">
-            <Button variant="outline" size="sm" onClick={copyResults} className="flex items-center">
-              {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
-              {copied ? "Copied!" : "Copy Results"}
+            <Button variant="outline" size="sm" onClick={downloadResults} className="flex items-center">
+              <Share className="h-4 w-4 mr-1" />
+              Download Results
             </Button>
             <Button variant="outline" size="sm" onClick={shareLink} className="flex items-center">
               <Share className="h-4 w-4 mr-1" />

@@ -7,8 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { calculateBodyFat } from "@/utils/calculationUtils";
 import { BodyFatCalcProps, UnitSystem } from "@/types/calculatorTypes";
-import { downloadResultsAsCSV, copyResultsToClipboard } from "@/utils/downloadUtils";
-import { showSuccessToast, showErrorToast, showCopyToast, showDownloadToast } from "@/utils/notificationUtils";
+import { downloadResultsAsCSV } from "@/utils/downloadUtils";
+import { showSuccessToast, showErrorToast, showDownloadToast } from "@/utils/notificationUtils";
 import IntroSection from "@/components/calculator/IntroSection";
 
 const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSystemChange }) => {
@@ -115,31 +115,6 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
     showDownloadToast();
   };
 
-  const copyResults = () => {
-    if (bodyFatResult === null) {
-      showErrorToast("Please calculate your body fat first.");
-      return;
-    }
-
-    const results = {
-      title: "Body Fat Percentage Calculator",
-      results: {
-        "Body Fat Percentage": `${bodyFatResult}%`,
-        "Category": bodyFatCategory,
-        "Height": `${height} ${unitSystem === "metric" ? "cm" : "inches"}`,
-        "Waist": `${waist} ${unitSystem === "metric" ? "cm" : "inches"}`,
-        "Neck": `${neck} ${unitSystem === "metric" ? "cm" : "inches"}`,
-        ...(gender === "female" ? {"Hip": `${hip} ${unitSystem === "metric" ? "cm" : "inches"}`} : {}),
-        "Gender": gender
-      },
-      date: new Date().toLocaleDateString(),
-      unitSystem,
-      userName: userName || "User"
-    };
-
-    copyResultsToClipboard(results);
-    showCopyToast();
-  };
 
   return (
     <div className="space-y-6">
@@ -367,11 +342,8 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
                 Based on the U.S. Navy Method
               </p>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={copyResults}>
-                  Copy Results
-                </Button>
                 <Button variant="outline" size="sm" onClick={downloadResults}>
-                  Download CSV
+                  Download Results
                 </Button>
               </div>
             </div>

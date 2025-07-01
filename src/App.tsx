@@ -14,7 +14,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <PageLoader minLoadTime={4000}>
+        <PageLoader minLoadTime={2000}>
           <div className="min-h-screen bg-gray-50">
             <Routes>
               <Route path="/" element={<Index />} />

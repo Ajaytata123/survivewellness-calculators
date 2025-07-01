@@ -9,7 +9,7 @@ interface PageLoaderProps {
 
 const PageLoader: React.FC<PageLoaderProps> = ({ 
   children, 
-  minLoadTime = 4000 
+  minLoadTime = 2000 
 }) => {
   const [isLoading, setIsLoading] = useState(true);
 

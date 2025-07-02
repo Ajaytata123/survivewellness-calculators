@@ -9,6 +9,20 @@ export interface BaseCalcProps {
   userName?: string;
 }
 
+// Calculator Data structure
+export interface CalculatorData {
+  id: number;
+  name: string;
+  description: string;
+  category: string;
+  subcategory: string;
+  icon: string;
+  tags: string[];
+  route: string;
+  calculatorId: string;
+  featured: boolean;
+}
+
 // BMI Calculator
 export interface BMICalcProps extends BaseCalcProps {}
 

@@ -38,14 +38,14 @@ const InfoSection: React.FC<InfoSectionProps> = ({
           
           {benefits.length > 0 && (
             <div className="mb-3">
-              <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1">
+              <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
                 Benefits:
               </h4>
               <ul className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
                 {benefits.map((benefit, index) => (
-                  <li key={index} className="flex items-center">
-                    <span className="w-1 h-1 bg-blue-500 rounded-full mr-2"></span>
-                    {benefit}
+                  <li key={index} className="flex items-start">
+                    <span className="w-1 h-1 bg-blue-500 rounded-full mr-2 mt-1.5 flex-shrink-0"></span>
+                    <span>{benefit}</span>
                   </li>
                 ))}
               </ul>
@@ -54,7 +54,7 @@ const InfoSection: React.FC<InfoSectionProps> = ({
           
           {usage && (
             <div>
-              <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1">
+              <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
                 How to use:
               </h4>
               <p className="text-xs text-gray-600 dark:text-gray-400">

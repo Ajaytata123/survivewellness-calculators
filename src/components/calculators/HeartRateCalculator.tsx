@@ -120,7 +120,7 @@ const HeartRateCalculator: React.FC<HeartRateCalcProps> = ({ unitSystem }) => {
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -132,7 +132,7 @@ const HeartRateCalculator: React.FC<HeartRateCalcProps> = ({ unitSystem }) => {
 
           <div className="space-y-2">
             <Label htmlFor="age" className="flex justify-between">
-              Age
+              <span className="block text-left">Age</span>
               {errors.age && <span className="text-red-500 text-sm">{errors.age}</span>}
             </Label>
             <Input
@@ -149,7 +149,7 @@ const HeartRateCalculator: React.FC<HeartRateCalcProps> = ({ unitSystem }) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="restingHr" className="flex justify-between">
+            <Label htmlFor="restingHr" className="block text-left">
               Resting Heart Rate (optional)
             </Label>
             <Input

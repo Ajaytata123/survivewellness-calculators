@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -6,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { UnitSystem } from "@/types/calculatorTypes";
-import { downloadResultsAsCSV, copyResultsToClipboard, createShareableLink } from "@/utils/downloadUtils";
+import { downloadResultsAsCSV, createShareableLink } from "@/utils/downloadUtils";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
-import { Check, Copy, Share } from "lucide-react";
+import { Share } from "lucide-react";
 import IntroSection from "@/components/calculator/IntroSection";
 
 interface VO2MaxCalcProps {
@@ -25,7 +26,6 @@ const VO2MaxCalculator: React.FC<VO2MaxCalcProps> = ({ unitSystem, onUnitSystemC
   const [userName, setUserName] = useState<string>("");
   const [vo2MaxResult, setVO2MaxResult] = useState<number | null>(null);
   const [fitnessCategory, setFitnessCategory] = useState<string>("");
-  const [copied, setCopied] = useState(false);
 
   const calculateVO2Max = () => {
     // Validate inputs
@@ -170,31 +170,6 @@ const VO2MaxCalculator: React.FC<VO2MaxCalcProps> = ({ unitSystem, onUnitSystemC
     showSuccessToast("Results downloaded successfully!");
   };
 
-  const copyResults = () => {
-    if (vo2MaxResult === null) return;
-
-    const results = {
-      title: "VO2 Max Calculator",
-      results: {
-        "VO2 Max": `${vo2MaxResult} ml/kg/min`,
-        "Fitness Category": fitnessCategory,
-        "Age": age,
-        "Resting Heart Rate": `${restingHR} bpm`,
-        "Maximum Heart Rate": `${maxHR} bpm`,
-        "Gender": gender,
-        "Activity Level": getActivityLabel(activityLevel)
-      },
-      date: new Date().toLocaleDateString(),
-      unitSystem,
-      userName: userName || undefined,
-    };
-
-    copyResultsToClipboard(results);
-    setCopied(true);
-    showSuccessToast("Results copied to clipboard!");
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   const shareLink = () => {
     if (vo2MaxResult === null) return;
     
@@ -233,7 +208,7 @@ const VO2MaxCalculator: React.FC<VO2MaxCalcProps> = ({ unitSystem, onUnitSystemC
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -244,7 +219,7 @@ const VO2MaxCalculator: React.FC<VO2MaxCalcProps> = ({ unitSystem, onUnitSystemC
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="age">Age</Label>
+            <Label htmlFor="age" className="block text-left">Age</Label>
             <Input
               id="age"
               type="number"
@@ -255,7 +230,7 @@ const VO2MaxCalculator: React.FC<VO2MaxCalcProps> = ({ unitSystem, onUnitSystemC
           </div>
 
           <div className="space-y-2">
-            <Label>Gender</Label>
+            <Label className="block text-left">Gender</Label>
             <RadioGroup
               value={gender}
               onValueChange={(value) => setGender(value as "male" | "female")}
@@ -263,17 +238,17 @@ const VO2MaxCalculator: React.FC<VO2MaxCalcProps> = ({ unitSystem, onUnitSystemC
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="male" id="male-vo2" />
-                <Label htmlFor="male-vo2">Male</Label>
+                <Label htmlFor="male-vo2" className="block text-left">Male</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="female" id="female-vo2" />
-                <Label htmlFor="female-vo2">Female</Label>
+                <Label htmlFor="female-vo2" className="block text-left">Female</Label>
               </div>
             </RadioGroup>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="restingHR">Resting Heart Rate (bpm)</Label>
+            <Label htmlFor="restingHR" className="block text-left">Resting Heart Rate (bpm)</Label>
             <Input
               id="restingHR"
               type="number"
@@ -287,7 +262,7 @@ const VO2MaxCalculator: React.FC<VO2MaxCalcProps> = ({ unitSystem, onUnitSystemC
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="maxHR">Maximum Heart Rate (bpm)</Label>
+            <Label htmlFor="maxHR" className="block text-left">Maximum Heart Rate (bpm)</Label>
             <Input
               id="maxHR"
               type="number"
@@ -301,7 +276,7 @@ const VO2MaxCalculator: React.FC<VO2MaxCalcProps> = ({ unitSystem, onUnitSystemC
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="activityLevel">Activity Level</Label>
+            <Label htmlFor="activityLevel" className="block text-left">Activity Level</Label>
             <Select
               value={activityLevel}
               onValueChange={setActivityLevel}
@@ -371,10 +346,6 @@ const VO2MaxCalculator: React.FC<VO2MaxCalcProps> = ({ unitSystem, onUnitSystemC
               Based on heart rate reserve method
             </p>
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" onClick={copyResults} className="flex items-center">
-                {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
-                {copied ? "Copied!" : "Copy Results"}
-              </Button>
               <Button variant="outline" size="sm" onClick={shareLink} className="flex items-center">
                 <Share className="h-4 w-4 mr-1" />
                 Share Link

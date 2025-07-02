@@ -1,306 +1,205 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { format, addDays } from "date-fns";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
-import { BaseCalcProps } from "@/types/calculatorTypes";
-import IntroSection from "@/components/calculator/IntroSection";
-import ResultActions from "@/components/calculator/ResultActions";
-import KnowMoreButton from "@/components/calculator/KnowMoreButton";
+import { Calendar } from "@/components/ui/calendar";
+import { UnitSystem } from "@/types/calculatorTypes";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
-import { DatePicker } from "@/components/ui/date-picker";
-import "@/components/ui/period-calendar-styles.css";
+import IntroSection from "@/components/calculator/IntroSection";
+import { format, addDays, addMonths } from "date-fns";
 
-type CalendarDate = Date | undefined;
-
-interface PeriodDay {
-  date: Date;
-  type: 'period' | 'ovulation' | 'fertile';
+interface PeriodCalcProps {
+  unitSystem: UnitSystem;
+  onUnitSystemChange: (system: UnitSystem) => void;
 }
 
-const PeriodCalculator: React.FC<BaseCalcProps> = ({ unitSystem }) => {
+const PeriodCalculator: React.FC<PeriodCalcProps> = ({ unitSystem, onUnitSystemChange }) => {
   const [userName, setUserName] = useState<string>("");
-  const [lastPeriodDate, setLastPeriodDate] = useState<CalendarDate>(undefined);
+  const [lastPeriodDate, setLastPeriodDate] = useState<Date | undefined>(undefined);
   const [cycleLength, setCycleLength] = useState<string>("28");
   const [periodLength, setPeriodLength] = useState<string>("5");
-  const [periodDays, setPeriodDays] = useState<PeriodDay[]>([]);
-  const [calendarMonth, setCalendarMonth] = useState<Date>(new Date());
-  
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  
-  // Reset errors when inputs change
-  useEffect(() => {
-    setErrors({});
-  }, [lastPeriodDate, cycleLength, periodLength]);
+  const [predictions, setPredictions] = useState<{
+    nextPeriod: Date;
+    ovulation: Date;
+    fertileDays: { start: Date; end: Date };
+    nextThreePeriods: Date[];
+  } | null>(null);
 
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-    
+  const calculatePeriodPredictions = () => {
     if (!lastPeriodDate) {
-      newErrors.lastPeriodDate = "Last period date is required";
-    }
-    
-    if (!cycleLength) {
-      newErrors.cycleLength = "Cycle length is required";
-    } else {
-      const cycleDays = parseInt(cycleLength);
-      if (isNaN(cycleDays) || cycleDays < 21 || cycleDays > 35) {
-        newErrors.cycleLength = "Cycle length must be between 21-35 days";
-      }
-    }
-    
-    if (!periodLength) {
-      newErrors.periodLength = "Period length is required";
-    } else {
-      const days = parseInt(periodLength);
-      if (isNaN(days) || days < 2 || days > 10) {
-        newErrors.periodLength = "Period length must be between 2-10 days";
-      }
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const calculatePeriodCalendar = () => {
-    if (!validateForm()) {
-      showErrorToast("Please fill in all required fields correctly");
+      showErrorToast("Please select your last period date");
       return;
     }
 
-    if (!lastPeriodDate) {
-      showErrorToast("Please select your last period start date");
+    const cycleLengthNum = parseInt(cycleLength);
+    const periodLengthNum = parseInt(periodLength);
+
+    if (isNaN(cycleLengthNum) || cycleLengthNum < 21 || cycleLengthNum > 35) {
+      showErrorToast("Please enter a valid cycle length between 21-35 days");
       return;
     }
 
-    const cycleDays = parseInt(cycleLength);
-    const periodDays = parseInt(periodLength);
-    const resultDays: PeriodDay[] = [];
-
-    // Calculate 6 cycles
-    for (let i = 0; i < 6; i++) {
-      // Period days
-      const cycleStartDate = addDays(lastPeriodDate, i * cycleDays);
-      
-      for (let day = 0; day < periodDays; day++) {
-        resultDays.push({
-          date: addDays(cycleStartDate, day),
-          type: 'period'
-        });
-      }
-      
-      // Ovulation day (typically cycle length - 14)
-      const ovulationDate = addDays(cycleStartDate, cycleDays - 14);
-      resultDays.push({
-        date: ovulationDate,
-        type: 'ovulation'
-      });
-      
-      // Fertile window (typically 5 days before ovulation and the ovulation day)
-      for (let day = 5; day > 0; day--) {
-        resultDays.push({
-          date: addDays(ovulationDate, -day),
-          type: 'fertile'
-        });
-      }
+    if (isNaN(periodLengthNum) || periodLengthNum < 3 || periodLengthNum > 8) {
+      showErrorToast("Please enter a valid period length between 3-8 days");
+      return;
     }
 
-    setPeriodDays(resultDays);
-    setCalendarMonth(lastPeriodDate);
-    showSuccessToast("Period calendar calculated successfully!");
+    // Calculate next period
+    const nextPeriod = addDays(lastPeriodDate, cycleLengthNum);
     
-    // Scroll to results
-    setTimeout(() => {
-      document.getElementById('period-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  };
+    // Calculate ovulation (typically 14 days before next period)
+    const ovulation = addDays(nextPeriod, -14);
+    
+    // Calculate fertile window (5 days before ovulation + ovulation day)
+    const fertileDays = {
+      start: addDays(ovulation, -5),
+      end: ovulation
+    };
 
-  const modifiers = {
-    period: (date: Date) => 
-      periodDays.some(day => 
-        day.type === 'period' && day.date.toDateString() === date.toDateString()
-      ),
-    ovulation: (date: Date) => 
-      periodDays.some(day => 
-        day.type === 'ovulation' && day.date.toDateString() === date.toDateString()
-      ),
-    fertile: (date: Date) => 
-      periodDays.some(day => 
-        day.type === 'fertile' && day.date.toDateString() === date.toDateString()
-      )
-  };
+    // Calculate next 3 periods
+    const nextThreePeriods = [
+      nextPeriod,
+      addDays(nextPeriod, cycleLengthNum),
+      addDays(nextPeriod, cycleLengthNum * 2)
+    ];
 
-  const NextPeriodInfo = () => {
-    if (!lastPeriodDate || !cycleLength) return null;
-    
-    const cycleDays = parseInt(cycleLength);
-    const nextPeriod = addDays(lastPeriodDate, cycleDays);
-    const nextNextPeriod = addDays(lastPeriodDate, cycleDays * 2);
-    const ovulationDate = addDays(lastPeriodDate, cycleDays - 14);
-    
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
-        <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-sm">
-          <p className="text-sm text-gray-500 dark:text-gray-400">Next Period</p>
-          <p className="text-lg font-bold text-wellness-pink dark:text-wellness-pink/90">
-            {format(nextPeriod, "MMM d, yyyy")}
-          </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            {Math.max(0, Math.floor((nextPeriod.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))} days from now
-          </p>
-        </div>
-        
-        <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-sm">
-          <p className="text-sm text-gray-500 dark:text-gray-400">Ovulation Day</p>
-          <p className="text-lg font-bold text-wellness-purple dark:text-wellness-purple/90">
-            {format(ovulationDate, "MMM d, yyyy")}
-          </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            {Math.max(0, Math.floor((ovulationDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))} days from now
-          </p>
-        </div>
-      </div>
-    );
+    setPredictions({
+      nextPeriod,
+      ovulation,
+      fertileDays,
+      nextThreePeriods
+    });
+
+    showSuccessToast("Period predictions calculated!");
   };
 
   return (
-    <Card className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">Period Calculator</h2>
-      
-      <div className="space-y-4 mb-6">
-        <div className="space-y-2">
-          <Label htmlFor="userName">Your Name (optional)</Label>
-          <Input
-            id="userName"
-            type="text"
-            placeholder="Enter your name"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-        </div>
-        
-        <DatePicker
-          date={lastPeriodDate}
-          onDateChange={setLastPeriodDate}
-          label="First Day of Last Period"
-          placeholder="Select date"
-          id="lastPeriod"
-          error={errors.lastPeriodDate}
-        />
-        
-        <div className="grid grid-cols-2 gap-4">
+    <div className="space-y-6">
+      <Card className="p-6">
+        <h2 className="text-2xl font-bold mb-4 text-center">Period Calculator</h2>
+        <p className="text-gray-600 mb-4 text-center">
+          Track your menstrual cycle and predict your next period
+        </p>
+
+        <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="cycleLength">Cycle Length (days)</Label>
+            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
             <Input
-              id="cycleLength"
-              type="number"
-              min="21"
-              max="35"
-              placeholder="e.g., 28"
-              value={cycleLength}
-              onChange={(e) => setCycleLength(e.target.value)}
-              className={errors.cycleLength ? "border-red-500" : ""}
+              id="userName"
+              type="text"
+              placeholder="Enter your name"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
             />
-            {errors.cycleLength && (
-              <p className="error-message text-red-500 text-sm mt-1">{errors.cycleLength}</p>
-            )}
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Average is 28 days (21-35 days is normal)
-            </p>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="periodLength">Period Length (days)</Label>
-            <Input
-              id="periodLength"
-              type="number"
-              min="2"
-              max="10"
-              placeholder="e.g., 5"
-              value={periodLength}
-              onChange={(e) => setPeriodLength(e.target.value)}
-              className={errors.periodLength ? "border-red-500" : ""}
-            />
-            {errors.periodLength && (
-              <p className="error-message text-red-500 text-sm mt-1">{errors.periodLength}</p>
-            )}
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Average is 5 days (2-10 days is normal)
-            </p>
-          </div>
-        </div>
-      </div>
-      
-      <Button onClick={calculatePeriodCalendar} className="w-full mb-6">
-        Calculate Period Calendar
-      </Button>
-      
-      {periodDays.length > 0 && (
-        <div id="period-results" className="results-container">
-          <div className="text-center mb-4">
-            <h3 className="text-xl font-bold">Your Period Calendar</h3>
-            {userName && <p className="text-sm mb-2">Results for: {userName}</p>}
-          </div>
-          
-          <NextPeriodInfo />
-          
-          <div className="mb-6 mt-6 bg-white dark:bg-gray-800 p-4 rounded-lg border">
-            <CalendarComponent
-              month={calendarMonth}
-              onMonthChange={setCalendarMonth}
-              modifiers={modifiers}
-              modifiersClassNames={{
-                period: "rdp-day_period",
-                ovulation: "rdp-day_ovulation",
-                fertile: "rdp-day_fertile",
-              }}
-              showOutsideDays={false}
-              className="w-full pointer-events-auto"
-            />
-            
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
-              <div className="flex items-center">
-                <div className="w-4 h-4 rounded-full bg-pink-400 mr-2"></div>
-                <span>Period Days</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-4 h-4 rounded-full bg-purple-600 mr-2"></div>
-                <span>Ovulation Day</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-4 h-4 rounded-full bg-green-400 mr-2"></div>
-                <span>Fertile Window</span>
-              </div>
-            </div>
           </div>
 
-          <ResultActions
-            title="Period Calculator"
-            results={{
-              "Last Period Date": lastPeriodDate ? format(lastPeriodDate, "MMM d, yyyy") : "",
-              "Cycle Length": `${cycleLength} days`,
-              "Period Length": `${periodLength} days`,
-              "Next Period": lastPeriodDate ? format(addDays(lastPeriodDate, parseInt(cycleLength)), "MMM d, yyyy") : "",
-              "Next Ovulation": lastPeriodDate ? format(addDays(lastPeriodDate, parseInt(cycleLength) - 14), "MMM d, yyyy") : ""
-            }}
-            fileName="Period-Calculator"
-            userName={userName}
-            unitSystem={unitSystem}
-            referenceText="This calculator provides estimates based on the information you provided. Individual cycles may vary, and many factors can affect your period. Consult a healthcare provider for medical advice."
-          />
-          
-          <KnowMoreButton 
-            calculatorName="Period Calculator"
-            calculatorId="period"
-          />
+          <div className="space-y-2">
+            <Label className="block text-left">Last Period Start Date</Label>
+            <Calendar
+              mode="single"
+              selected={lastPeriodDate}
+              onSelect={setLastPeriodDate}
+              className="rounded-md border"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="cycleLength" className="block text-left">Cycle Length (days)</Label>
+              <Input
+                id="cycleLength"
+                type="number"
+                placeholder="e.g., 28"
+                value={cycleLength}
+                onChange={(e) => setCycleLength(e.target.value)}
+              />
+              <p className="text-sm text-gray-500">
+                Average cycle is 28 days (21-35 is normal)
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="periodLength" className="block text-left">Period Length (days)</Label>
+              <Input
+                id="periodLength"
+                type="number"
+                placeholder="e.g., 5"
+                value={periodLength}
+                onChange={(e) => setPeriodLength(e.target.value)}
+              />
+              <p className="text-sm text-gray-500">
+                How many days does your period last?
+              </p>
+            </div>
+          </div>
         </div>
-      )}
-      
+
+        <Button onClick={calculatePeriodPredictions} className="w-full mb-6">
+          Calculate Period Predictions
+        </Button>
+
+        {predictions && (
+          <div className="bg-gray-50 p-4 rounded-md">
+            <div className="text-center mb-4">
+              <h3 className="text-xl font-bold">Your Period Predictions</h3>
+              {userName && <p className="text-sm mt-2">Predictions for: {userName}</p>}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div className="bg-pink-100 p-3 rounded-md">
+                <p className="text-sm font-medium text-pink-800">Next Period</p>
+                <p className="text-lg font-bold text-pink-900">
+                  {format(predictions.nextPeriod, "MMM dd, yyyy")}
+                </p>
+              </div>
+
+              <div className="bg-purple-100 p-3 rounded-md">
+                <p className="text-sm font-medium text-purple-800">Ovulation</p>
+                <p className="text-lg font-bold text-purple-900">
+                  {format(predictions.ovulation, "MMM dd, yyyy")}
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-blue-100 p-3 rounded-md mb-4">
+              <p className="text-sm font-medium text-blue-800">Fertile Window</p>
+              <p className="text-lg font-bold text-blue-900">
+                {format(predictions.fertileDays.start, "MMM dd")} - {format(predictions.fertileDays.end, "MMM dd, yyyy")}
+              </p>
+            </div>
+
+            <div className="bg-white p-3 rounded-md">
+              <h4 className="font-medium mb-2">Next 3 Periods:</h4>
+              <ul className="space-y-1">
+                {predictions.nextThreePeriods.map((date, index) => (
+                  <li key={index} className="text-sm">
+                    <span className="font-medium">Period {index + 1}:</span> {format(date, "MMM dd, yyyy")}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="mt-4 text-sm text-gray-600">
+              <p className="font-medium">Important Notes:</p>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                <li>These are estimates based on average cycles</li>
+                <li>Actual dates may vary due to stress, illness, or other factors</li>
+                <li>Track your cycles for more accurate predictions</li>
+                <li>Consult a healthcare provider for irregular cycles</li>
+              </ul>
+            </div>
+            
+            <div className="mt-6 text-center text-sm text-wellness-purple">
+              <p>Thank you for using Survive<span className="lowercase">w</span>ellness!</p>
+            </div>
+          </div>
+        )}
+      </Card>
+
       <IntroSection calculatorId="period" title="" description="" />
-    </Card>
+    </div>
   );
 };
 

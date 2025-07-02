@@ -125,7 +125,7 @@ const WorkoutPlannerCalculator: React.FC<WorkoutPlannerCalcProps> = ({ unitSyste
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -136,7 +136,7 @@ const WorkoutPlannerCalculator: React.FC<WorkoutPlannerCalcProps> = ({ unitSyste
           </div>
 
           <div className="space-y-2">
-            <Label>Fitness Goal</Label>
+            <Label className="block text-left">Fitness Goal</Label>
             <Select value={fitnessGoal} onValueChange={setFitnessGoal}>
               <SelectTrigger>
                 <SelectValue />
@@ -151,7 +151,7 @@ const WorkoutPlannerCalculator: React.FC<WorkoutPlannerCalcProps> = ({ unitSyste
           </div>
 
           <div className="space-y-2">
-            <Label>Experience Level</Label>
+            <Label className="block text-left">Experience Level</Label>
             <RadioGroup
               value={experienceLevel}
               onValueChange={setExperienceLevel}
@@ -159,22 +159,22 @@ const WorkoutPlannerCalculator: React.FC<WorkoutPlannerCalcProps> = ({ unitSyste
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="beginner" id="beginner" />
-                <Label htmlFor="beginner">Beginner</Label>
+                <Label htmlFor="beginner" className="block text-left">Beginner</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="intermediate" id="intermediate" />
-                <Label htmlFor="intermediate">Intermediate</Label>
+                <Label htmlFor="intermediate" className="block text-left">Intermediate</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="advanced" id="advanced" />
-                <Label htmlFor="advanced">Advanced</Label>
+                <Label htmlFor="advanced" className="block text-left">Advanced</Label>
               </div>
             </RadioGroup>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Available Time (minutes per workout)</Label>
+              <Label className="block text-left">Available Time (minutes per workout)</Label>
               <Select value={availableTime} onValueChange={setAvailableTime}>
                 <SelectTrigger>
                   <SelectValue />
@@ -190,7 +190,7 @@ const WorkoutPlannerCalculator: React.FC<WorkoutPlannerCalcProps> = ({ unitSyste
             </div>
 
             <div className="space-y-2">
-              <Label>Workout Days per Week</Label>
+              <Label className="block text-left">Workout Days per Week</Label>
               <Select value={workoutDays} onValueChange={setWorkoutDays}>
                 <SelectTrigger>
                   <SelectValue />
@@ -207,7 +207,7 @@ const WorkoutPlannerCalculator: React.FC<WorkoutPlannerCalcProps> = ({ unitSyste
           </div>
 
           <div className="space-y-2">
-            <Label>Available Equipment</Label>
+            <Label className="block text-left">Available Equipment</Label>
             <Select value={equipment} onValueChange={setEquipment}>
               <SelectTrigger>
                 <SelectValue />

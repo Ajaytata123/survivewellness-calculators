@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -6,9 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { UnitSystem } from "@/types/calculatorTypes";
-import { downloadResultsAsCSV, copyResultsToClipboard } from "@/utils/downloadUtils";
+import { downloadResultsAsCSV } from "@/utils/downloadUtils";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
-import { Check, Copy } from "lucide-react";
 import IntroSection from "@/components/calculator/IntroSection";
 
 interface StepCounterCalcProps {
@@ -29,7 +29,6 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
     activeMins: number;
     goalPercentage: number;
   } | null>(null);
-  const [copied, setCopied] = useState(false);
 
   const handleUnitChange = (value: string) => {
     onUnitSystemChange(value as UnitSystem);
@@ -158,35 +157,6 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
     showSuccessToast("Results downloaded successfully!");
   };
 
-  const copyResults = () => {
-    if (!results) return;
-
-    const distanceUnit = unitSystem === "imperial" ? "miles" : "km";
-
-    const data = {
-      title: "Step Counter Calculator",
-      results: {
-        "Total Steps": steps,
-        "Distance": `${results.distance} ${distanceUnit}`,
-        "Calories Burned": `${results.calories} calories`,
-        "Active Minutes": `${results.activeMins} minutes`,
-        "Goal Progress": `${results.goalPercentage}% of 10,000 steps`,
-        "Height": `${height} ${unitSystem === "imperial" ? "in" : "cm"}`,
-        ...(weight ? {"Weight": `${weight} ${unitSystem === "imperial" ? "lbs" : "kg"}`} : {}),
-        ...(age ? {"Age": age} : {}),
-        "Gender": gender
-      },
-      date: new Date().toLocaleDateString(),
-      unitSystem,
-      userName: userName || undefined,
-    };
-
-    copyResultsToClipboard(data);
-    setCopied(true);
-    showSuccessToast("Results copied to clipboard!");
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <div className="space-y-6">
       <Card className="p-6">
@@ -197,7 +167,7 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -208,7 +178,7 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="steps">Number of Steps</Label>
+            <Label htmlFor="steps" className="block text-left">Number of Steps</Label>
             <Input
               id="steps"
               type="number"
@@ -231,7 +201,7 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
 
           <TabsContent value="imperial" className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="height-imperial">Height (inches)</Label>
+              <Label htmlFor="height-imperial" className="block text-left">Height (inches)</Label>
               <Input
                 id="height-imperial"
                 type="number"
@@ -245,7 +215,7 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="weight-imperial">Weight (pounds, optional)</Label>
+              <Label htmlFor="weight-imperial" className="block text-left">Weight (pounds, optional)</Label>
               <Input
                 id="weight-imperial"
                 type="number"
@@ -261,7 +231,7 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
 
           <TabsContent value="metric" className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="height-metric">Height (cm)</Label>
+              <Label htmlFor="height-metric" className="block text-left">Height (cm)</Label>
               <Input
                 id="height-metric"
                 type="number"
@@ -272,7 +242,7 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="weight-metric">Weight (kg, optional)</Label>
+              <Label htmlFor="weight-metric" className="block text-left">Weight (kg, optional)</Label>
               <Input
                 id="weight-metric"
                 type="number"
@@ -289,7 +259,7 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="age">Age (optional)</Label>
+            <Label htmlFor="age" className="block text-left">Age (optional)</Label>
             <Input
               id="age"
               type="number"
@@ -300,7 +270,7 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
           </div>
 
           <div className="space-y-2">
-            <Label>Gender</Label>
+            <Label className="block text-left">Gender</Label>
             <RadioGroup
               value={gender}
               onValueChange={(value) => setGender(value as "male" | "female")}
@@ -308,11 +278,11 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="male" id="male-steps" />
-                <Label htmlFor="male-steps">Male</Label>
+                <Label htmlFor="male-steps" className="block text-left">Male</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="female" id="female-steps" />
-                <Label htmlFor="female-steps">Female</Label>
+                <Label htmlFor="female-steps" className="block text-left">Female</Label>
               </div>
             </RadioGroup>
           </div>
@@ -366,10 +336,6 @@ const StepCounterCalculator: React.FC<StepCounterCalcProps> = ({ unitSystem, onU
                 Based on your height and step count
               </p>
               <div className="flex flex-wrap gap-2">
-                <Button variant="outline" size="sm" onClick={copyResults} className="flex items-center">
-                  {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
-                  {copied ? "Copied!" : "Copy Results"}
-                </Button>
                 <Button variant="outline" size="sm" onClick={downloadResults}>
                   Download CSV
                 </Button>

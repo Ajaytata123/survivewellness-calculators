@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -115,7 +116,6 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
     showDownloadToast();
   };
 
-
   return (
     <div className="space-y-6">
       <Card className="p-6">
@@ -125,7 +125,7 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
         </p>
 
         <div className="mb-6">
-          <Label htmlFor="userName">Your Name (Optional)</Label>
+          <Label htmlFor="userName" className="block text-left">Your Name (Optional)</Label>
           <Input
             id="userName"
             placeholder="Enter your name"
@@ -147,7 +147,7 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
 
           <TabsContent value="imperial" className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="height-imperial">Height (inches)</Label>
+              <Label htmlFor="height-imperial" className="block text-left">Height (inches)</Label>
               <Input
                 id="height-imperial"
                 type="number"
@@ -158,7 +158,7 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="neck-imperial">Neck Circumference (inches)</Label>
+              <Label htmlFor="neck-imperial" className="block text-left">Neck Circumference (inches)</Label>
               <Input
                 id="neck-imperial"
                 type="number"
@@ -169,7 +169,7 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="waist-imperial">Waist Circumference (inches)</Label>
+              <Label htmlFor="waist-imperial" className="block text-left">Waist Circumference (inches)</Label>
               <Input
                 id="waist-imperial"
                 type="number"
@@ -184,7 +184,7 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
 
             {gender === "female" && (
               <div className="space-y-2">
-                <Label htmlFor="hip-imperial">Hip Circumference (inches)</Label>
+                <Label htmlFor="hip-imperial" className="block text-left">Hip Circumference (inches)</Label>
                 <Input
                   id="hip-imperial"
                   type="number"
@@ -201,7 +201,7 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
 
           <TabsContent value="metric" className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="height-metric">Height (cm)</Label>
+              <Label htmlFor="height-metric" className="block text-left">Height (cm)</Label>
               <Input
                 id="height-metric"
                 type="number"
@@ -212,7 +212,7 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="neck-metric">Neck Circumference (cm)</Label>
+              <Label htmlFor="neck-metric" className="block text-left">Neck Circumference (cm)</Label>
               <Input
                 id="neck-metric"
                 type="number"
@@ -223,7 +223,7 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="waist-metric">Waist Circumference (cm)</Label>
+              <Label htmlFor="waist-metric" className="block text-left">Waist Circumference (cm)</Label>
               <Input
                 id="waist-metric"
                 type="number"
@@ -238,7 +238,7 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
 
             {gender === "female" && (
               <div className="space-y-2">
-                <Label htmlFor="hip-metric">Hip Circumference (cm)</Label>
+                <Label htmlFor="hip-metric" className="block text-left">Hip Circumference (cm)</Label>
                 <Input
                   id="hip-metric"
                   type="number"
@@ -256,7 +256,7 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label>Gender</Label>
+            <Label className="block text-left">Gender</Label>
             <RadioGroup
               value={gender}
               onValueChange={(value) => setGender(value as "male" | "female")}
@@ -264,11 +264,11 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="male" id="male-bf" />
-                <Label htmlFor="male-bf">Male</Label>
+                <Label htmlFor="male-bf" className="block text-left">Male</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="female" id="female-bf" />
-                <Label htmlFor="female-bf">Female</Label>
+                <Label htmlFor="female-bf" className="block text-left">Female</Label>
               </div>
             </RadioGroup>
           </div>
@@ -351,7 +351,6 @@ const BodyFatCalculator: React.FC<BodyFatCalcProps> = ({ unitSystem, onUnitSyste
         )}
       </Card>
 
-      {/* Add info section at the bottom */}
       <IntroSection calculatorId="bodyfat" title="" description="" />
     </div>
   );

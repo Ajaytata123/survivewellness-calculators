@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -6,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { WaterIntakeCalcProps, UnitSystem } from "@/types/calculatorTypes";
-import { downloadResultsAsCSV, copyResultsToClipboard, createShareableLink } from "@/utils/downloadUtils";
+import { downloadResultsAsCSV, createShareableLink } from "@/utils/downloadUtils";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
-import { Check, Copy, Share } from "lucide-react";
+import { Share } from "lucide-react";
 import IntroSection from "@/components/calculator/IntroSection";
 
 const WaterIntakeCalculator: React.FC<WaterIntakeCalcProps> = ({ unitSystem, onUnitSystemChange }) => {
@@ -22,7 +23,6 @@ const WaterIntakeCalculator: React.FC<WaterIntakeCalcProps> = ({ unitSystem, onU
     ounces: number;
     glasses: number;
   } | null>(null);
-  const [copied, setCopied] = useState(false);
 
   const validateInputs = (): boolean => {
     const newErrors: {weight?: string} = {};
@@ -162,30 +162,6 @@ const WaterIntakeCalculator: React.FC<WaterIntakeCalcProps> = ({ unitSystem, onU
     showSuccessToast("Results downloaded successfully!");
   };
 
-  const copyResults = () => {
-    if (!waterResult) return;
-
-    const results = {
-      title: "Water Intake Calculator",
-      results: {
-        "Daily Water Intake (Liters)": waterResult.liters,
-        "Daily Water Intake (Ounces)": waterResult.ounces,
-        "Glasses of Water (8oz)": waterResult.glasses,
-        "Weight": `${weight} ${unitSystem === "metric" ? "kg" : "pounds"}`,
-        "Activity Level": getActivityLabel(activityLevel),
-        "Climate": getClimateLabel(climate),
-      },
-      date: new Date().toLocaleDateString(),
-      unitSystem,
-      userName: userName || undefined,
-    };
-
-    copyResultsToClipboard(results);
-    setCopied(true);
-    showSuccessToast("Results copied to clipboard!");
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   const shareLink = () => {
     if (!waterResult) return;
     
@@ -212,7 +188,7 @@ const WaterIntakeCalculator: React.FC<WaterIntakeCalcProps> = ({ unitSystem, onU
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -236,7 +212,7 @@ const WaterIntakeCalculator: React.FC<WaterIntakeCalcProps> = ({ unitSystem, onU
           <TabsContent value="imperial" className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="weight-imperial" className="flex justify-between">
-                Weight (pounds)
+                <span className="block text-left">Weight (pounds)</span>
                 {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
               </Label>
               <Input
@@ -256,7 +232,7 @@ const WaterIntakeCalculator: React.FC<WaterIntakeCalcProps> = ({ unitSystem, onU
           <TabsContent value="metric" className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="weight-metric" className="flex justify-between">
-                Weight (kg)
+                <span className="block text-left">Weight (kg)</span>
                 {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
               </Label>
               <Input
@@ -276,7 +252,7 @@ const WaterIntakeCalculator: React.FC<WaterIntakeCalcProps> = ({ unitSystem, onU
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="activity">Activity Level</Label>
+            <Label htmlFor="activity" className="block text-left">Activity Level</Label>
             <Select
               value={activityLevel}
               onValueChange={setActivityLevel}
@@ -295,7 +271,7 @@ const WaterIntakeCalculator: React.FC<WaterIntakeCalcProps> = ({ unitSystem, onU
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="climate">Climate</Label>
+          <Label htmlFor="climate" className="block text-left">Climate</Label>
           <Select
             value={climate}
             onValueChange={setClimate}
@@ -354,10 +330,6 @@ const WaterIntakeCalculator: React.FC<WaterIntakeCalcProps> = ({ unitSystem, onU
               Based on recommendations from the U.S. National Academies of Sciences, Engineering, and Medicine
             </p>
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" onClick={copyResults} className="flex items-center">
-                {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
-                {copied ? "Copied!" : "Copy Results"}
-              </Button>
               <Button variant="outline" size="sm" onClick={shareLink} className="flex items-center">
                 <Share className="h-4 w-4 mr-1" />
                 Share Link

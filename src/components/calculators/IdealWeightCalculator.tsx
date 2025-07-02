@@ -133,7 +133,7 @@ const IdealWeightCalculator: React.FC<IdealWeightCalcProps> = ({ unitSystem, onU
         </p>
 
         <div className="mb-6">
-          <Label htmlFor="userName">Your Name (optional)</Label>
+          <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
           <Input
             id="userName"
             type="text"
@@ -156,7 +156,7 @@ const IdealWeightCalculator: React.FC<IdealWeightCalcProps> = ({ unitSystem, onU
 
           <TabsContent value="imperial" className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="height-imperial">Height (inches)</Label>
+              <Label htmlFor="height-imperial" className="block text-left">Height (inches)</Label>
               <Input
                 id="height-imperial"
                 type="number"
@@ -169,7 +169,7 @@ const IdealWeightCalculator: React.FC<IdealWeightCalcProps> = ({ unitSystem, onU
 
           <TabsContent value="metric" className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="height-metric">Height (cm)</Label>
+              <Label htmlFor="height-metric" className="block text-left">Height (cm)</Label>
               <Input
                 id="height-metric"
                 type="number"
@@ -183,7 +183,7 @@ const IdealWeightCalculator: React.FC<IdealWeightCalcProps> = ({ unitSystem, onU
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label>Gender</Label>
+            <Label className="block text-left">Gender</Label>
             <RadioGroup
               value={gender}
               onValueChange={(value) => setGender(value as "male" | "female")}

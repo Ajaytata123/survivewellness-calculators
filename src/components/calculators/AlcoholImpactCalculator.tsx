@@ -137,7 +137,7 @@ const AlcoholImpactCalculator: React.FC<AlcoholImpactCalcProps> = ({ unitSystem,
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -149,7 +149,7 @@ const AlcoholImpactCalculator: React.FC<AlcoholImpactCalcProps> = ({ unitSystem,
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="age">Age</Label>
+              <Label htmlFor="age" className="block text-left">Age</Label>
               <Input
                 id="age"
                 type="number"
@@ -159,7 +159,7 @@ const AlcoholImpactCalculator: React.FC<AlcoholImpactCalcProps> = ({ unitSystem,
               />
             </div>
             <div className="space-y-2">
-              <Label>Gender</Label>
+              <Label className="block text-left">Gender</Label>
               <RadioGroup
                 value={gender}
                 onValueChange={(value) => setGender(value as "male" | "female")}
@@ -178,7 +178,7 @@ const AlcoholImpactCalculator: React.FC<AlcoholImpactCalcProps> = ({ unitSystem,
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="weight">Weight ({unitSystem === "metric" ? "kg" : "lbs"})</Label>
+            <Label htmlFor="weight" className="block text-left">Weight ({unitSystem === "metric" ? "kg" : "lbs"})</Label>
             <Input
               id="weight"
               type="number"
@@ -189,7 +189,7 @@ const AlcoholImpactCalculator: React.FC<AlcoholImpactCalcProps> = ({ unitSystem,
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="drinksPerWeek">Drinks per Week</Label>
+            <Label htmlFor="drinksPerWeek" className="block text-left">Drinks per Week</Label>
             <Input
               id="drinksPerWeek"
               type="number"
@@ -200,7 +200,7 @@ const AlcoholImpactCalculator: React.FC<AlcoholImpactCalcProps> = ({ unitSystem,
           </div>
 
           <div className="space-y-2">
-            <Label>Primary Drink Type</Label>
+            <Label className="block text-left">Primary Drink Type</Label>
             <Select value={drinkType} onValueChange={setDrinkType}>
               <SelectTrigger>
                 <SelectValue />

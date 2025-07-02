@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -155,7 +154,7 @@ const ObesityRiskCalculator: React.FC<ObesityRiskCalcProps> = ({ unitSystem, onU
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -174,7 +173,7 @@ const ObesityRiskCalculator: React.FC<ObesityRiskCalcProps> = ({ unitSystem, onU
             <TabsContent value="imperial" className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="height-imperial">Height (inches)</Label>
+                  <Label htmlFor="height-imperial" className="block text-left">Height (inches)</Label>
                   <Input
                     id="height-imperial"
                     type="number"
@@ -184,7 +183,7 @@ const ObesityRiskCalculator: React.FC<ObesityRiskCalcProps> = ({ unitSystem, onU
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="weight-imperial">Weight (lbs)</Label>
+                  <Label htmlFor="weight-imperial" className="block text-left">Weight (lbs)</Label>
                   <Input
                     id="weight-imperial"
                     type="number"
@@ -195,7 +194,7 @@ const ObesityRiskCalculator: React.FC<ObesityRiskCalcProps> = ({ unitSystem, onU
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="waist-imperial">Waist Circumference (inches)</Label>
+                <Label htmlFor="waist-imperial" className="block text-left">Waist Circumference (inches)</Label>
                 <Input
                   id="waist-imperial"
                   type="number"
@@ -209,7 +208,7 @@ const ObesityRiskCalculator: React.FC<ObesityRiskCalcProps> = ({ unitSystem, onU
             <TabsContent value="metric" className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="height-metric">Height (cm)</Label>
+                  <Label htmlFor="height-metric" className="block text-left">Height (cm)</Label>
                   <Input
                     id="height-metric"
                     type="number"
@@ -219,7 +218,7 @@ const ObesityRiskCalculator: React.FC<ObesityRiskCalcProps> = ({ unitSystem, onU
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="weight-metric">Weight (kg)</Label>
+                  <Label htmlFor="weight-metric" className="block text-left">Weight (kg)</Label>
                   <Input
                     id="weight-metric"
                     type="number"
@@ -230,7 +229,7 @@ const ObesityRiskCalculator: React.FC<ObesityRiskCalcProps> = ({ unitSystem, onU
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="waist-metric">Waist Circumference (cm)</Label>
+                <Label htmlFor="waist-metric" className="block text-left">Waist Circumference (cm)</Label>
                 <Input
                   id="waist-metric"
                   type="number"
@@ -244,7 +243,7 @@ const ObesityRiskCalculator: React.FC<ObesityRiskCalcProps> = ({ unitSystem, onU
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="age">Age</Label>
+              <Label htmlFor="age" className="block text-left">Age</Label>
               <Input
                 id="age"
                 type="number"
@@ -254,7 +253,7 @@ const ObesityRiskCalculator: React.FC<ObesityRiskCalcProps> = ({ unitSystem, onU
               />
             </div>
             <div className="space-y-2">
-              <Label>Gender</Label>
+              <Label className="block text-left">Gender</Label>
               <RadioGroup
                 value={gender}
                 onValueChange={(value) => setGender(value as "male" | "female")}
@@ -273,7 +272,7 @@ const ObesityRiskCalculator: React.FC<ObesityRiskCalcProps> = ({ unitSystem, onU
           </div>
 
           <div className="space-y-2">
-            <Label>Family History of Obesity</Label>
+            <Label className="block text-left">Family History of Obesity</Label>
             <RadioGroup
               value={familyHistory}
               onValueChange={(value) => setFamilyHistory(value as "yes" | "no")}
@@ -291,7 +290,7 @@ const ObesityRiskCalculator: React.FC<ObesityRiskCalcProps> = ({ unitSystem, onU
           </div>
 
           <div className="space-y-2">
-            <Label>Physical Activity Level</Label>
+            <Label className="block text-left">Physical Activity Level</Label>
             <RadioGroup
               value={activityLevel}
               onValueChange={(value) => setActivityLevel(value as "low" | "moderate" | "high")}

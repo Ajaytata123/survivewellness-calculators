@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -131,7 +130,7 @@ const IronIntakeCalculator: React.FC<IronIntakeCalcProps> = ({ unitSystem, onUni
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -143,7 +142,7 @@ const IronIntakeCalculator: React.FC<IronIntakeCalcProps> = ({ unitSystem, onUni
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="age">Age</Label>
+              <Label htmlFor="age" className="block text-left">Age</Label>
               <Input
                 id="age"
                 type="number"
@@ -153,7 +152,7 @@ const IronIntakeCalculator: React.FC<IronIntakeCalcProps> = ({ unitSystem, onUni
               />
             </div>
             <div className="space-y-2">
-              <Label>Gender</Label>
+              <Label className="block text-left">Gender</Label>
               <RadioGroup
                 value={gender}
                 onValueChange={(value) => setGender(value as "male" | "female")}
@@ -173,7 +172,7 @@ const IronIntakeCalculator: React.FC<IronIntakeCalcProps> = ({ unitSystem, onUni
 
           {gender === "female" && (
             <div className="space-y-2">
-              <Label>Pregnancy Status</Label>
+              <Label className="block text-left">Pregnancy Status</Label>
               <RadioGroup
                 value={pregnancyStatus}
                 onValueChange={(value) => setPregnancyStatus(value as "notPregnant" | "pregnant" | "lactating")}
@@ -196,7 +195,7 @@ const IronIntakeCalculator: React.FC<IronIntakeCalcProps> = ({ unitSystem, onUni
           )}
 
           <div className="space-y-2">
-            <Label>Diet Type</Label>
+            <Label className="block text-left">Diet Type</Label>
             <Select value={dietType} onValueChange={(value) => setDietType(value as "omnivorous" | "vegetarian" | "vegan")}>
               <SelectTrigger>
                 <SelectValue />

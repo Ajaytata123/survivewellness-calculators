@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -134,7 +133,7 @@ const IntermittentFastingCalculator: React.FC<IntermittentFastingCalcProps> = ({
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -145,7 +144,7 @@ const IntermittentFastingCalculator: React.FC<IntermittentFastingCalcProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label>Fasting Method</Label>
+            <Label className="block text-left">Fasting Method</Label>
             <Select value={fastingMethod} onValueChange={setFastingMethod}>
               <SelectTrigger>
                 <SelectValue />
@@ -160,7 +159,7 @@ const IntermittentFastingCalculator: React.FC<IntermittentFastingCalcProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label>Primary Goal</Label>
+            <Label className="block text-left">Primary Goal</Label>
             <RadioGroup
               value={goal}
               onValueChange={setGoal}
@@ -182,7 +181,7 @@ const IntermittentFastingCalculator: React.FC<IntermittentFastingCalcProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label>Lifestyle</Label>
+            <Label className="block text-left">Lifestyle</Label>
             <Select value={lifestyle} onValueChange={setLifestyle}>
               <SelectTrigger>
                 <SelectValue />
@@ -196,7 +195,7 @@ const IntermittentFastingCalculator: React.FC<IntermittentFastingCalcProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="startTime">Preferred Eating Start Time</Label>
+            <Label htmlFor="startTime" className="block text-left">Preferred Eating Start Time</Label>
             <Input
               id="startTime"
               type="time"

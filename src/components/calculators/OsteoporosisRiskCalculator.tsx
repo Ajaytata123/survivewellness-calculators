@@ -114,7 +114,7 @@ const OsteoporosisRiskCalculator: React.FC<OsteoporosisRiskCalcProps> = ({ unitS
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -126,7 +126,7 @@ const OsteoporosisRiskCalculator: React.FC<OsteoporosisRiskCalcProps> = ({ unitS
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="age">Age</Label>
+              <Label htmlFor="age" className="block text-left">Age</Label>
               <Input
                 id="age"
                 type="number"
@@ -136,7 +136,7 @@ const OsteoporosisRiskCalculator: React.FC<OsteoporosisRiskCalcProps> = ({ unitS
               />
             </div>
             <div className="space-y-2">
-              <Label>Gender</Label>
+              <Label className="block text-left">Gender</Label>
               <RadioGroup
                 value={gender}
                 onValueChange={(value) => setGender(value as "male" | "female")}
@@ -156,7 +156,7 @@ const OsteoporosisRiskCalculator: React.FC<OsteoporosisRiskCalcProps> = ({ unitS
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="weight">Weight ({unitSystem === "metric" ? "kg" : "lbs"})</Label>
+              <Label htmlFor="weight" className="block text-left">Weight ({unitSystem === "metric" ? "kg" : "lbs"})</Label>
               <Input
                 id="weight"
                 type="number"
@@ -166,7 +166,7 @@ const OsteoporosisRiskCalculator: React.FC<OsteoporosisRiskCalcProps> = ({ unitS
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="height">Height ({unitSystem === "metric" ? "cm" : "inches"})</Label>
+              <Label htmlFor="height" className="block text-left">Height ({unitSystem === "metric" ? "cm" : "inches"})</Label>
               <Input
                 id="height"
                 type="number"
@@ -178,7 +178,7 @@ const OsteoporosisRiskCalculator: React.FC<OsteoporosisRiskCalcProps> = ({ unitS
           </div>
 
           <div className="space-y-2">
-            <Label>Family History of Osteoporosis</Label>
+            <Label className="block text-left">Family History of Osteoporosis</Label>
             <RadioGroup
               value={familyHistory}
               onValueChange={(value) => setFamilyHistory(value as "yes" | "no")}
@@ -196,7 +196,7 @@ const OsteoporosisRiskCalculator: React.FC<OsteoporosisRiskCalcProps> = ({ unitS
           </div>
 
           <div className="space-y-2">
-            <Label>Smoking</Label>
+            <Label className="block text-left">Smoking</Label>
             <RadioGroup
               value={smoking}
               onValueChange={(value) => setSmoking(value as "yes" | "no")}
@@ -214,7 +214,7 @@ const OsteoporosisRiskCalculator: React.FC<OsteoporosisRiskCalcProps> = ({ unitS
           </div>
 
           <div className="space-y-2">
-            <Label>Alcohol Consumption</Label>
+            <Label className="block text-left">Alcohol Consumption</Label>
             <RadioGroup
               value={alcohol}
               onValueChange={(value) => setAlcohol(value as "low" | "moderate" | "high")}
@@ -236,7 +236,7 @@ const OsteoporosisRiskCalculator: React.FC<OsteoporosisRiskCalcProps> = ({ unitS
           </div>
 
           <div className="space-y-2">
-            <Label>Calcium Intake</Label>
+            <Label className="block text-left">Calcium Intake</Label>
             <RadioGroup
               value={calciumIntake}
               onValueChange={(value) => setCalciumIntake(value as "low" | "moderate" | "high")}
@@ -258,7 +258,7 @@ const OsteoporosisRiskCalculator: React.FC<OsteoporosisRiskCalcProps> = ({ unitS
           </div>
 
           <div className="space-y-2">
-            <Label>Physical Activity</Label>
+            <Label className="block text-left">Physical Activity</Label>
             <RadioGroup
               value={physicalActivity}
               onValueChange={(value) => setPhysicalActivity(value as "low" | "moderate" | "high")}

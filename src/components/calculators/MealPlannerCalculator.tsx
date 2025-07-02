@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -119,7 +118,7 @@ const MealPlannerCalculator: React.FC<MealPlannerCalcProps> = ({ unitSystem, onU
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -130,7 +129,7 @@ const MealPlannerCalculator: React.FC<MealPlannerCalcProps> = ({ unitSystem, onU
           </div>
 
           <div className="space-y-2">
-            <Label>Diet Type</Label>
+            <Label className="block text-left">Diet Type</Label>
             <Select value={dietType} onValueChange={setDietType}>
               <SelectTrigger>
                 <SelectValue />
@@ -148,7 +147,7 @@ const MealPlannerCalculator: React.FC<MealPlannerCalcProps> = ({ unitSystem, onU
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="calorieGoal">Daily Calorie Goal</Label>
+              <Label htmlFor="calorieGoal" className="block text-left">Daily Calorie Goal</Label>
               <Input
                 id="calorieGoal"
                 type="number"
@@ -159,7 +158,7 @@ const MealPlannerCalculator: React.FC<MealPlannerCalcProps> = ({ unitSystem, onU
             </div>
 
             <div className="space-y-2">
-              <Label>Meals per Day</Label>
+              <Label className="block text-left">Meals per Day</Label>
               <Select value={mealsPerDay} onValueChange={setMealsPerDay}>
                 <SelectTrigger>
                   <SelectValue />
@@ -175,7 +174,7 @@ const MealPlannerCalculator: React.FC<MealPlannerCalcProps> = ({ unitSystem, onU
           </div>
 
           <div className="space-y-2">
-            <Label>Food Allergies</Label>
+            <Label className="block text-left">Food Allergies</Label>
             <div className="grid grid-cols-2 gap-2">
               {allergyOptions.map((allergy) => (
                 <div key={allergy} className="flex items-center space-x-2">
@@ -191,7 +190,7 @@ const MealPlannerCalculator: React.FC<MealPlannerCalcProps> = ({ unitSystem, onU
           </div>
 
           <div className="space-y-2">
-            <Label>Dietary Preferences</Label>
+            <Label className="block text-left">Dietary Preferences</Label>
             <div className="grid grid-cols-2 gap-2">
               {preferenceOptions.map((preference) => (
                 <div key={preference} className="flex items-center space-x-2">

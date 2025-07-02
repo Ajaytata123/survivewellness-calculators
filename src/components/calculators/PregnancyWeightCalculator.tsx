@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -161,24 +160,17 @@ const PregnancyWeightCalculator: React.FC<PregnancyWeightCalcProps> = ({ unitSys
     }, 100);
   };
 
-  const getBMICategory = (bmi: number): string => {
-    if (bmi < 18.5) return "Underweight";
-    if (bmi < 25) return "Normal weight";
-    if (bmi < 30) return "Overweight";
-    return "Obese";
-  };
-
   return (
     <div className="space-y-6">
       <Card className="p-6">
         <h2 className="text-2xl font-bold mb-4 text-center">Pregnancy Weight Calculator</h2>
         <p className="text-gray-600 mb-4 text-center">
-          Calculate healthy weight gain during pregnancy based on your pre-pregnancy BMI
+          Calculate healthy weight gain recommendations during pregnancy
         </p>
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -188,191 +180,135 @@ const PregnancyWeightCalculator: React.FC<PregnancyWeightCalcProps> = ({ unitSys
             />
           </div>
 
-          <Tabs defaultValue={unitSystem} onValueChange={handleUnitChange} className="mb-0">
+          <Tabs defaultValue={unitSystem} onValueChange={handleUnitChange} className="mb-6">
             <TabsList className="grid grid-cols-2 mb-4">
               <TabsTrigger value="imperial">Imperial (US)</TabsTrigger>
               <TabsTrigger value="metric">Metric</TabsTrigger>
             </TabsList>
 
             <TabsContent value="imperial" className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="weight-imperial">Pre-Pregnancy Weight (lbs)</Label>
-                <Input
-                  id="weight-imperial"
-                  type="number"
-                  placeholder="e.g., 150"
-                  value={prePregnancyWeight}
-                  onChange={(e) => setPrePregnancyWeight(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="height-imperial">Height (inches)</Label>
-                <Input
-                  id="height-imperial"
-                  type="number"
-                  placeholder="e.g., 65"
-                  value={height}
-                  onChange={(e) => setHeight(e.target.value)}
-                />
-                <p className="text-sm text-gray-500">
-                  For 5'5", enter 65 inches (5×12 + 5)
-                </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="height-imperial" className="block text-left">Height (inches)</Label>
+                  <Input
+                    id="height-imperial"
+                    type="number"
+                    placeholder="e.g., 65"
+                    value={height}
+                    onChange={(e) => setHeight(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="weight-imperial" className="block text-left">Pre-pregnancy Weight (lbs)</Label>
+                  <Input
+                    id="weight-imperial"
+                    type="number"
+                    placeholder="e.g., 140"
+                    value={prePregnancyWeight}
+                    onChange={(e) => setPrePregnancyWeight(e.target.value)}
+                  />
+                </div>
               </div>
             </TabsContent>
 
             <TabsContent value="metric" className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="weight-metric">Pre-Pregnancy Weight (kg)</Label>
-                <Input
-                  id="weight-metric"
-                  type="number"
-                  placeholder="e.g., 68"
-                  value={prePregnancyWeight}
-                  onChange={(e) => setPrePregnancyWeight(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="height-metric">Height (cm)</Label>
-                <Input
-                  id="height-metric"
-                  type="number"
-                  placeholder="e.g., 165"
-                  value={height}
-                  onChange={(e) => setHeight(e.target.value)}
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="height-metric" className="block text-left">Height (cm)</Label>
+                  <Input
+                    id="height-metric"
+                    type="number"
+                    placeholder="e.g., 165"
+                    value={height}
+                    onChange={(e) => setHeight(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="weight-metric" className="block text-left">Pre-pregnancy Weight (kg)</Label>
+                  <Input
+                    id="weight-metric"
+                    type="number"
+                    placeholder="e.g., 63"
+                    value={prePregnancyWeight}
+                    onChange={(e) => setPrePregnancyWeight(e.target.value)}
+                  />
+                </div>
               </div>
             </TabsContent>
           </Tabs>
 
           <div className="space-y-2">
-            <Label>Multiple Pregnancy</Label>
+            <Label className="block text-left">Type of Pregnancy</Label>
             <RadioGroup
-              value={isMultiples ? "yes" : "no"}
-              onValueChange={(value) => setIsMultiples(value === "yes")}
+              value={isMultiples ? "multiples" : "single"}
+              onValueChange={(value) => setIsMultiples(value === "multiples")}
               className="flex space-x-4"
             >
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="no" id="single" />
-                <Label htmlFor="single">Single</Label>
+                <RadioGroupItem value="single" id="single" />
+                <Label htmlFor="single">Single Baby</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="yes" id="twins" />
-                <Label htmlFor="twins">Twins or more</Label>
+                <RadioGroupItem value="multiples" id="multiples" />
+                <Label htmlFor="multiples">Twins/Multiples</Label>
               </div>
             </RadioGroup>
           </div>
         </div>
 
         <Button onClick={calculateRecommendedWeightGain} className="w-full mb-6">
-          Calculate Recommended Weight Gain
+          Calculate Weight Gain
         </Button>
 
-        {weightGainResult && prePregnancyBMI !== null && (
-          <div id="pregnancy-weight-results" className="results-container">
-            <div className="bg-gray-50 p-4 rounded-md">
-              <div className="text-center mb-3">
-                <h3 className="text-xl font-bold">Your Pregnancy Weight Gain</h3>
-                {userName && <p className="text-sm mb-2">Results for: {userName}</p>}
-                <div className="bg-wellness-softPink inline-block px-4 py-1 rounded-full">
-                  <p className="text-pink-800 font-medium">
-                    {isMultiples ? "Multiple Pregnancy" : "Single Pregnancy"}
-                  </p>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                <div className="bg-white p-3 rounded-md shadow-sm">
-                  <p className="text-sm text-gray-700">Pre-Pregnancy BMI</p>
-                  <p className="font-bold text-lg">{prePregnancyBMI}</p>
-                  <p className="text-sm text-wellness-blue">{getBMICategory(prePregnancyBMI)}</p>
-                </div>
-                <div className="bg-wellness-softPurple p-3 rounded-md">
-                  <p className="text-sm text-gray-700">Recommended Weight Gain</p>
-                  <p className="font-bold text-lg">
-                    {weightGainResult.recommended} {unitSystem === "imperial" ? "lbs" : "kg"}
-                  </p>
-                </div>
-              </div>
-              
-              <div className="bg-white p-3 rounded-md shadow-sm mb-4">
-                <h4 className="font-medium mb-2">Healthy Weight Gain Range</h4>
-                <div className="flex justify-between items-center">
-                  <p className="text-sm text-gray-600">Minimum</p>
-                  <p className="text-sm text-gray-600">Target</p>
-                  <p className="text-sm text-gray-600">Maximum</p>
-                </div>
-                <div className="w-full bg-gray-200 h-2 rounded-full mt-2 mb-1 relative">
-                  <div 
-                    className="h-2 bg-wellness-purple rounded-full"
-                    style={{ 
-                      width: '100%',
-                    }}
-                  ></div>
-                  <div
-                    className="absolute h-6 w-6 bg-wellness-purple rounded-full flex items-center justify-center text-white text-xs -top-2"
-                    style={{
-                      left: `${((weightGainResult.recommended - weightGainResult.min) / (weightGainResult.max - weightGainResult.min)) * 100}%`,
-                      transform: 'translateX(-50%)'
-                    }}
-                  >
-                    ✓
-                  </div>
-                </div>
-                <div className="flex justify-between text-sm mt-4">
-                  <p className="font-medium">
-                    {weightGainResult.min} {unitSystem === "imperial" ? "lbs" : "kg"}
-                  </p>
-                  <p className="font-medium">
-                    {weightGainResult.recommended} {unitSystem === "imperial" ? "lbs" : "kg"}
-                  </p>
-                  <p className="font-medium">
-                    {weightGainResult.max} {unitSystem === "imperial" ? "lbs" : "kg"}
-                  </p>
-                </div>
-              </div>
+        {weightGainResult && (
+          <div id="pregnancy-weight-results" className="bg-gray-50 p-4 rounded-md">
+            <div className="text-center mb-4">
+              <h3 className="text-xl font-bold">Weight Gain Recommendations</h3>
+              {userName && <p className="text-sm mt-2">Results for: {userName}</p>}
+            </div>
 
-              <div className="bg-white p-3 rounded-md shadow-sm mb-4">
-                <h4 className="font-medium mb-2">Trimester Breakdown</h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <p className="text-sm">First Trimester</p>
-                    <p className="font-medium">{weightGainResult.trimesterBreakdown.first}</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="text-sm">Second Trimester</p>
-                    <p className="font-medium">{weightGainResult.trimesterBreakdown.second}</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="text-sm">Third Trimester</p>
-                    <p className="font-medium">{weightGainResult.trimesterBreakdown.third}</p>
-                  </div>
+            {prePregnancyBMI && (
+              <div className="bg-white p-3 rounded-md mb-4 text-center">
+                <p className="text-sm text-gray-700">Pre-pregnancy BMI</p>
+                <p className="text-lg font-bold">{prePregnancyBMI}</p>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+              <div className="bg-white p-3 rounded-md text-center">
+                <p className="text-sm text-gray-700">Minimum</p>
+                <p className="text-lg font-bold">{weightGainResult.min} {unitSystem === "imperial" ? "lbs" : "kg"}</p>
+              </div>
+              <div className="bg-wellness-softPurple p-3 rounded-md text-center">
+                <p className="text-sm text-gray-700">Recommended</p>
+                <p className="text-lg font-bold text-wellness-purple">{weightGainResult.recommended} {unitSystem === "imperial" ? "lbs" : "kg"}</p>
+              </div>
+              <div className="bg-white p-3 rounded-md text-center">
+                <p className="text-sm text-gray-700">Maximum</p>
+                <p className="text-lg font-bold">{weightGainResult.max} {unitSystem === "imperial" ? "lbs" : "kg"}</p>
+              </div>
+            </div>
+
+            <div className="bg-white p-4 rounded-md">
+              <h4 className="font-medium mb-3">Weight Gain by Trimester</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm font-medium">First Trimester:</span>
+                  <span className="text-sm">{weightGainResult.trimesterBreakdown.first}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm font-medium">Second Trimester:</span>
+                  <span className="text-sm">{weightGainResult.trimesterBreakdown.second}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm font-medium">Third Trimester:</span>
+                  <span className="text-sm">{weightGainResult.trimesterBreakdown.third}</span>
                 </div>
               </div>
+            </div>
 
-              <ResultActions
-                title="Pregnancy Weight Calculator"
-                results={{
-                  "Pre-Pregnancy Weight": `${prePregnancyWeight} ${unitSystem === "imperial" ? "lbs" : "kg"}`,
-                  "Height": `${height} ${unitSystem === "imperial" ? "inches" : "cm"}`,
-                  "Pre-Pregnancy BMI": prePregnancyBMI.toString(),
-                  "BMI Category": getBMICategory(prePregnancyBMI),
-                  "Multiple Pregnancy": isMultiples ? "Yes" : "No",
-                  "Recommended Weight Gain": `${weightGainResult.recommended} ${unitSystem === "imperial" ? "lbs" : "kg"}`,
-                  "Weight Gain Range": `${weightGainResult.min}-${weightGainResult.max} ${unitSystem === "imperial" ? "lbs" : "kg"}`,
-                  "First Trimester": weightGainResult.trimesterBreakdown.first,
-                  "Second Trimester": weightGainResult.trimesterBreakdown.second,
-                  "Third Trimester": weightGainResult.trimesterBreakdown.third
-                }}
-                fileName="Pregnancy-Weight-Calculator"
-                userName={userName}
-                unitSystem={unitSystem}
-                referenceText="This calculator provides general guidelines based on recommendations from the American College of Obstetricians and Gynecologists (ACOG). Always consult with your healthcare provider for personalized advice."
-              />
-              
-              <KnowMoreButton 
-                calculatorName="Pregnancy Weight Calculator"
-                calculatorId="pregnancyweight"
-              />
+            <div className="mt-6 text-center text-sm text-wellness-purple">
+              <p>Thank you for using Survive<span className="lowercase">w</span>ellness!</p>
             </div>
           </div>
         )}

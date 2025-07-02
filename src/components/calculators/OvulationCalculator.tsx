@@ -155,7 +155,7 @@ const OvulationCalculator: React.FC<OvulationCalcProps> = ({ unitSystem }) => {
       
       <div className="space-y-4 mb-6">
         <div className="space-y-2">
-          <Label htmlFor="userName">Your Name (optional)</Label>
+          <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
           <Input
             id="userName"
             type="text"
@@ -175,7 +175,7 @@ const OvulationCalculator: React.FC<OvulationCalcProps> = ({ unitSystem }) => {
         />
         
         <div className="space-y-2">
-          <Label htmlFor="cycleLength">Average Cycle Length (days)</Label>
+          <Label htmlFor="cycleLength" className="block text-left">Average Cycle Length (days)</Label>
           <Select value={cycleLength} onValueChange={setCycleLength}>
             <SelectTrigger id="cycleLength" className={errors.cycleLength ? "input-error" : ""}>
               <SelectValue placeholder="Select cycle length" />
@@ -195,7 +195,7 @@ const OvulationCalculator: React.FC<OvulationCalcProps> = ({ unitSystem }) => {
         </div>
         
         <div className="space-y-2">
-          <Label>Do you have regular periods?</Label>
+          <Label className="block text-left">Do you have regular periods?</Label>
           <RadioGroup
             value={regularCycle}
             onValueChange={(value) => setRegularCycle(value as "yes" | "no")}

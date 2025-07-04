@@ -126,8 +126,8 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
 
   return (
     <div className="h-full flex flex-col bg-white border-r border-gray-200">
-      {/* Search section */}
-      <div className="p-4 border-b border-gray-200 bg-white">
+      {/* Search section - Reduced padding */}
+      <div className="p-3 border-b border-gray-200 bg-white">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
@@ -139,9 +139,9 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
         </div>
       </div>
 
-      {/* Categories */}
+      {/* Categories - Optimized spacing to show more content */}
       <div className="flex-1 overflow-y-auto">
-        <div className="p-3 space-y-2">
+        <div className="p-2 space-y-1">
           {filteredCategories.map(([category, calculators]) => {
             const isExpanded = expandedCategories[category];
             const categoryInfo = getCategoryInfo(category);
@@ -151,7 +151,7 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
               <div key={category} className="space-y-1">
                 <Button
                   variant="ghost"
-                  className={`w-full justify-between p-3 h-auto font-medium text-left border rounded-lg transition-all duration-200 ${categoryInfo.colorClass}`}
+                  className={`w-full justify-between p-2.5 h-auto font-medium text-left border rounded-lg transition-all duration-200 ${categoryInfo.colorClass}`}
                   onClick={() => toggleCategory(category)}
                 >
                   <div className="flex items-center space-x-2">
@@ -166,14 +166,14 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
                 </Button>
                 
                 {isExpanded && (
-                  <div className="ml-2 space-y-1 border-l-2 border-gray-100 pl-3">
+                  <div className="ml-2 space-y-0.5 border-l-2 border-gray-100 pl-2">
                     {calculators.map((calc) => {
                       const CalculatorIcon = getIconComponent(calc.icon);
                       return (
                         <Button
                           key={calc.id}
                           variant="ghost"
-                          className={`w-full justify-start p-3 text-left text-sm h-auto transition-all duration-200 rounded-md ${
+                          className={`w-full justify-start p-2.5 text-left text-sm h-auto transition-all duration-200 rounded-md ${
                             selectedCalculator === calc.id
                               ? 'bg-blue-50 text-blue-700 shadow-sm hover:bg-blue-100 border border-blue-200'
                               : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600'
@@ -183,7 +183,7 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
                             onClose?.();
                           }}
                         >
-                          <div className="flex items-center space-x-3">
+                          <div className="flex items-center space-x-2.5">
                             <CalculatorIcon className={`w-4 h-4 ${
                               selectedCalculator === calc.id ? 'text-blue-600' : 'text-purple-500'
                             }`} />

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -117,31 +118,37 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
     if (calc.id === 'menstrual-cycle') {
       return 'Period Calculator';
     }
-    // Also handle if the calculator name is "Menstrual Cycle Calculator"
+    // Also handle if the calculator name is "Menstrual Cycle Calculator" or "Menstrual Cycle"
     if (calc.name === 'Menstrual Cycle Calculator' || calc.name === 'Menstrual Cycle') {
       return 'Period Calculator';
     }
     return calc.name;
   };
 
+  const handleCalculatorClick = (calculatorId: string) => {
+    // Prevent scroll to top by not triggering page navigation
+    onCalculatorSelect(calculatorId);
+    onClose?.();
+  };
+
   return (
     <div className="h-full flex flex-col bg-white border-r border-gray-200">
       {/* Search section */}
-      <div className="p-4 border-b border-gray-200 bg-white">
+      <div className="p-3 border-b border-gray-200 bg-white flex-shrink-0">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
             placeholder="Search calculators..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-white border-gray-300 focus:border-purple-500 focus:ring-purple-500 transition-all"
+            className="pl-10 bg-white border-gray-300 focus:border-purple-500 focus:ring-purple-500 transition-all text-sm h-9"
           />
         </div>
       </div>
 
-      {/* Categories */}
+      {/* Categories - Optimized for better space usage */}
       <div className="flex-1 overflow-y-auto">
-        <div className="p-3 space-y-2">
+        <div className="p-2 space-y-1">
           {filteredCategories.map(([category, calculators]) => {
             const isExpanded = expandedCategories[category];
             const categoryInfo = getCategoryInfo(category);
@@ -151,40 +158,37 @@ const CalculatorSidebar: React.FC<CalculatorSidebarProps> = ({
               <div key={category} className="space-y-1">
                 <Button
                   variant="ghost"
-                  className={`w-full justify-between p-3 h-auto font-medium text-left border rounded-lg transition-all duration-200 ${categoryInfo.colorClass}`}
+                  className={`w-full justify-between p-2 h-auto font-medium text-left border rounded-lg transition-all duration-200 ${categoryInfo.colorClass}`}
                   onClick={() => toggleCategory(category)}
                 >
                   <div className="flex items-center space-x-2">
-                    <CategoryIcon className={`h-4 w-4 ${categoryInfo.iconClass}`} />
-                    <span className="text-sm font-semibold">{categoryInfo.name}</span>
+                    <CategoryIcon className={`h-3.5 w-3.5 ${categoryInfo.iconClass}`} />
+                    <span className="text-xs font-semibold">{categoryInfo.name}</span>
                   </div>
                   {isExpanded ? (
-                    <ChevronDown className="h-4 w-4 flex-shrink-0" />
+                    <ChevronDown className="h-3.5 w-3.5 flex-shrink-0" />
                   ) : (
-                    <ChevronRight className="h-4 w-4 flex-shrink-0" />
+                    <ChevronRight className="h-3.5 w-3.5 flex-shrink-0" />
                   )}
                 </Button>
                 
                 {isExpanded && (
-                  <div className="ml-2 space-y-1 border-l-2 border-gray-100 pl-3">
+                  <div className="ml-1 space-y-0.5 border-l-2 border-gray-100 pl-2">
                     {calculators.map((calc) => {
                       const CalculatorIcon = getIconComponent(calc.icon);
                       return (
                         <Button
                           key={calc.id}
                           variant="ghost"
-                          className={`w-full justify-start p-3 text-left text-sm h-auto transition-all duration-200 rounded-md ${
+                          className={`w-full justify-start p-2 text-left text-xs h-auto transition-all duration-200 rounded-md ${
                             selectedCalculator === calc.id
                               ? 'bg-blue-50 text-blue-700 shadow-sm hover:bg-blue-100 border border-blue-200'
                               : 'text-gray-700 hover:bg-gray-100 hover:text-blue-600'
                           }`}
-                          onClick={() => {
-                            onCalculatorSelect(calc.id);
-                            onClose?.();
-                          }}
+                          onClick={() => handleCalculatorClick(calc.id)}
                         >
-                          <div className="flex items-center space-x-3">
-                            <CalculatorIcon className={`w-4 h-4 ${
+                          <div className="flex items-center space-x-2">
+                            <CalculatorIcon className={`w-3.5 h-3.5 ${
                               selectedCalculator === calc.id ? 'text-blue-600' : 'text-purple-500'
                             }`} />
                             <span className="font-medium">{getCalculatorDisplayName(calc)}</span>

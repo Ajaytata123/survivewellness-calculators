@@ -1,4 +1,3 @@
-
 import { CalculatorData } from "@/types/calculatorTypes";
 
 export const calculatorsData: CalculatorData[] = [
@@ -261,19 +260,19 @@ export const calculatorsData: CalculatorData[] = [
     category: "Women's Health",
     subcategory: "",
     icon: "🩸",
-    tags: ["period", "menstrual", "cycle", "tracking", "pms", "menstruation", "p"],
+    tags: ["period", "menstrual", "cycle", "tracking", "pms", "menstruation", "p", "periods"],
     route: "/period",
     calculatorId: "period",
     featured: false
   },
   {
     id: 23,
-    name: "Menopause Estimator",
-    description: "Estimate your menopause timeline and symptoms",
+    name: "Period Estimator",
+    description: "Estimate your period timeline and symptoms",
     category: "Women's Health",
     subcategory: "",
     icon: "🌅",
-    tags: ["menopause", "perimenopause", "symptoms", "hormone", "transition", "women"],
+    tags: ["period", "perimenopause", "symptoms", "hormone", "transition", "women"],
     route: "/menopause",
     calculatorId: "menopause",
     featured: false

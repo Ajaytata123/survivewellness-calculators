@@ -120,7 +120,7 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName" className="block text-left">Your Name (optional)</Label>
+            <Label htmlFor="userName">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -132,7 +132,7 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="currentAge" className="block text-left">Current Age</Label>
+              <Label htmlFor="currentAge">Current Age</Label>
               <Input
                 id="currentAge"
                 type="number"
@@ -143,7 +143,7 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="motherMenopauseAge" className="block text-left">Mother's Menopause Age (if known)</Label>
+              <Label htmlFor="motherMenopauseAge">Mother's Menopause Age (if known)</Label>
               <Input
                 id="motherMenopauseAge"
                 type="number"
@@ -155,7 +155,7 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
           </div>
 
           <div className="space-y-2">
-            <Label className="block text-left">Smoking Status</Label>
+            <Label>Smoking Status</Label>
             <RadioGroup
               value={smokingStatus}
               onValueChange={setSmokingStatus}
@@ -177,7 +177,7 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
           </div>
 
           <div className="space-y-2">
-            <Label className="block text-left">Exercise Frequency</Label>
+            <Label>Exercise Frequency</Label>
             <RadioGroup
               value={exerciseFrequency}
               onValueChange={setExerciseFrequency}
@@ -203,7 +203,7 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
           </div>
 
           <div className="space-y-2">
-            <Label className="block text-left">Body Weight</Label>
+            <Label>Body Weight</Label>
             <RadioGroup
               value={bodyWeight}
               onValueChange={setBodyWeight}
@@ -225,7 +225,7 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
           </div>
 
           <div className="space-y-2">
-            <Label className="block text-left">Stress Level</Label>
+            <Label>Stress Level</Label>
             <RadioGroup
               value={stressLevel}
               onValueChange={setStressLevel}

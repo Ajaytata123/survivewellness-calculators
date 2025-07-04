@@ -1,3 +1,4 @@
+
 import { CalculatorData } from "@/types/calculatorTypes";
 
 export const calculatorsData: CalculatorData[] = [
@@ -260,7 +261,7 @@ export const calculatorsData: CalculatorData[] = [
     category: "Women's Health",
     subcategory: "",
     icon: "🩸",
-    tags: ["period", "menstrual", "cycle", "tracking", "pms", "menstruation", "p", "periods"],
+    tags: ["period", "menstrual", "cycle", "tracking", "pms", "menstruation", "p", "periods", "per"],
     route: "/period",
     calculatorId: "period",
     featured: false

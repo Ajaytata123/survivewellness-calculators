@@ -34,9 +34,9 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
   
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Fixed Sidebar - Increased width and height to show all calculators */}
-      <div className="fixed left-0 top-0 w-96 h-screen bg-gray-50 border-r border-gray-200 z-10">
-        <div className="h-full p-4 overflow-hidden">
+      {/* Fixed Sidebar - Absolutely positioned to prevent layout shifts */}
+      <div className="fixed left-0 top-0 w-80 h-screen bg-gray-50 border-r border-gray-200 z-10">
+        <div className="h-full p-6 overflow-hidden">
           <CalculatorSidebar 
             selectedCalculator={activeCalculator}
             onCalculatorSelect={onCalculatorSelect}
@@ -44,8 +44,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = ({
         </div>
       </div>
       
-      {/* Main Content Area - Adjusted margin for wider sidebar */}
-      <div className="flex-1 ml-96">
+      {/* Main Content Area - Fixed margin to account for sidebar */}
+      <div className="flex-1 ml-80">
         <div className="min-h-screen flex flex-col">
           {/* Fixed Header */}
           <div className="bg-white border-b border-gray-100 px-6 py-4 sticky top-0 z-5">

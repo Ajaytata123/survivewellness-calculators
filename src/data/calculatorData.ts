@@ -130,14 +130,6 @@ export const calculators: CalculatorInfo[] = [
   
   // Wellness & Lifestyle
   { 
-    id: "pregnancy", 
-    name: "Pregnancy Weight", 
-    icon: "Weight", 
-    color: "wellness-pink", 
-    category: "wellness",
-    url: "#pregnancy"
-  },
-  { 
     id: "alcohol", 
     name: "Alcohol Impact", 
     icon: "Wine", 
@@ -163,6 +155,14 @@ export const calculators: CalculatorInfo[] = [
   },
   
   // Women's Health
+  { 
+    id: "pregnancy", 
+    name: "Pregnancy Weight", 
+    icon: "Weight", 
+    color: "wellness-pink", 
+    category: "women",
+    url: "#pregnancy"
+  },
   {
     id: "ovulation",
     name: "Ovulation Calculator",
@@ -181,7 +181,7 @@ export const calculators: CalculatorInfo[] = [
   },
   {
     id: "menstrual",
-    name: "Menstrual Cycle",
+    name: "Period Calculator",
     icon: "Calendar",
     color: "wellness-red",
     category: "women",

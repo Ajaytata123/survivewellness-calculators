@@ -120,7 +120,7 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
 
         <div className="space-y-4 mb-6">
           <div className="space-y-2">
-            <Label htmlFor="userName">Your Name (optional)</Label>
+            <Label htmlFor="userName" className="text-left block">Your Name (optional)</Label>
             <Input
               id="userName"
               type="text"
@@ -132,7 +132,7 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="currentAge">Current Age</Label>
+              <Label htmlFor="currentAge" className="text-left block">Current Age</Label>
               <Input
                 id="currentAge"
                 type="number"
@@ -143,7 +143,7 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="motherMenopauseAge">Mother's Menopause Age (if known)</Label>
+              <Label htmlFor="motherMenopauseAge" className="text-left block">Mother's Menopause Age (if known)</Label>
               <Input
                 id="motherMenopauseAge"
                 type="number"
@@ -155,7 +155,7 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
           </div>
 
           <div className="space-y-2">
-            <Label>Smoking Status</Label>
+            <Label className="text-left block">Smoking Status</Label>
             <RadioGroup
               value={smokingStatus}
               onValueChange={setSmokingStatus}
@@ -163,21 +163,21 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="never" id="never" />
-                <Label htmlFor="never">Never smoked</Label>
+                <Label htmlFor="never" className="text-left">Never smoked</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="former" id="former" />
-                <Label htmlFor="former">Former smoker</Label>
+                <Label htmlFor="former" className="text-left">Former smoker</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="current" id="current" />
-                <Label htmlFor="current">Current smoker</Label>
+                <Label htmlFor="current" className="text-left">Current smoker</Label>
               </div>
             </RadioGroup>
           </div>
 
           <div className="space-y-2">
-            <Label>Exercise Frequency</Label>
+            <Label className="text-left block">Exercise Frequency</Label>
             <RadioGroup
               value={exerciseFrequency}
               onValueChange={setExerciseFrequency}
@@ -185,25 +185,25 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="none" id="none" />
-                <Label htmlFor="none">Rarely or never</Label>
+                <Label htmlFor="none" className="text-left">Rarely or never</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="light" id="light" />
-                <Label htmlFor="light">Light exercise (1-2 times/week)</Label>
+                <Label htmlFor="light" className="text-left">Light exercise (1-2 times/week)</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="regular" id="regular" />
-                <Label htmlFor="regular">Regular exercise (3-4 times/week)</Label>
+                <Label htmlFor="regular" className="text-left">Regular exercise (3-4 times/week)</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="high" id="high" />
-                <Label htmlFor="high">High intensity (5+ times/week)</Label>
+                <Label htmlFor="high" className="text-left">High intensity (5+ times/week)</Label>
               </div>
             </RadioGroup>
           </div>
 
           <div className="space-y-2">
-            <Label>Body Weight</Label>
+            <Label className="text-left block">Body Weight</Label>
             <RadioGroup
               value={bodyWeight}
               onValueChange={setBodyWeight}
@@ -211,21 +211,21 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="underweight" id="underweight" />
-                <Label htmlFor="underweight">Underweight</Label>
+                <Label htmlFor="underweight" className="text-left">Underweight</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="normal" id="normal" />
-                <Label htmlFor="normal">Normal weight</Label>
+                <Label htmlFor="normal" className="text-left">Normal weight</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="overweight" id="overweight" />
-                <Label htmlFor="overweight">Overweight</Label>
+                <Label htmlFor="overweight" className="text-left">Overweight</Label>
               </div>
             </RadioGroup>
           </div>
 
           <div className="space-y-2">
-            <Label>Stress Level</Label>
+            <Label className="text-left block">Stress Level</Label>
             <RadioGroup
               value={stressLevel}
               onValueChange={setStressLevel}
@@ -233,15 +233,15 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="low" id="low" />
-                <Label htmlFor="low">Low stress</Label>
+                <Label htmlFor="low" className="text-left">Low stress</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="moderate" id="moderate" />
-                <Label htmlFor="moderate">Moderate stress</Label>
+                <Label htmlFor="moderate" className="text-left">Moderate stress</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="high" id="high" />
-                <Label htmlFor="high">High stress</Label>
+                <Label htmlFor="high" className="text-left">High stress</Label>
               </div>
             </RadioGroup>
           </div>
@@ -253,7 +253,7 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
                 checked={hadChildren}
                 onCheckedChange={(checked) => setHadChildren(checked as boolean)}
               />
-              <Label htmlFor="hadChildren">Have you had children?</Label>
+              <Label htmlFor="hadChildren" className="text-left">Have you had children?</Label>
             </div>
           </div>
 
@@ -264,7 +264,7 @@ const MenopauseEstimatorCalculator: React.FC<MenopauseEstimatorCalcProps> = ({ u
                 checked={currentlyMenstruating}
                 onCheckedChange={(checked) => setCurrentlyMenstruating(checked as boolean)}
               />
-              <Label htmlFor="currentlyMenstruating">Are you currently menstruating regularly?</Label>
+              <Label htmlFor="currentlyMenstruating" className="text-left">Are you currently menstruating regularly?</Label>
             </div>
           </div>
         </div>

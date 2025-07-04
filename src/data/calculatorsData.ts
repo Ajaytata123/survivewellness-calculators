@@ -261,19 +261,19 @@ export const calculatorsData: CalculatorData[] = [
     category: "Women's Health",
     subcategory: "",
     icon: "🩸",
-    tags: ["period", "menstrual", "cycle", "tracking", "pms", "menstruation", "p", "periods", "per"],
+    tags: ["period", "menstrual", "cycle", "tracking", "pms", "menstruation", "periods", "per", "p", "monthly", "flow", "women", "female"],
     route: "/period",
     calculatorId: "period",
     featured: false
   },
   {
     id: 23,
-    name: "Period Estimator",
-    description: "Estimate your period timeline and symptoms",
+    name: "Menopause Estimator",
+    description: "Estimate your menopause timeline and symptoms",
     category: "Women's Health",
     subcategory: "",
     icon: "🌅",
-    tags: ["period", "perimenopause", "symptoms", "hormone", "transition", "women"],
+    tags: ["menopause", "perimenopause", "symptoms", "hormone", "transition", "women"],
     route: "/menopause",
     calculatorId: "menopause",
     featured: false

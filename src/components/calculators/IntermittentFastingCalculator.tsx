@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -41,40 +42,70 @@ const IntermittentFastingCalculator: React.FC<IntermittentFastingCalcProps> = ({
     let tips: string[] = [];
     let schedule: string[] = [];
 
+    // Convert start time to calculate eating windows
+    const [startHour, startMinute] = startTime.split(':').map(Number);
+    
+    const formatTime = (hour: number, minute: number) => {
+      const period = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+      return `${displayHour}:${minute.toString().padStart(2, '0')} ${period}`;
+    };
+
+    const addHours = (hour: number, minute: number, hoursToAdd: number) => {
+      let newHour = hour + hoursToAdd;
+      let newMinute = minute;
+      
+      if (newHour >= 24) {
+        newHour = newHour - 24;
+      }
+      
+      return { hour: newHour, minute: newMinute };
+    };
+
     switch (fastingMethod) {
       case "16:8":
         fastingWindow = "16 hours";
         eatingWindow = "8 hours";
         tips = [
-          "Start eating at 12:00 PM, stop at 8:00 PM",
+          "Start eating at your chosen time, maintain 8-hour eating window",
           "Drink water, black coffee, or plain tea during fasting",
           "Eat nutrient-dense meals during eating window",
           "Listen to your body and adjust as needed"
         ];
+        
+        const eating8End = addHours(startHour, startMinute, 8);
+        const nextDayStart = formatTime(startHour, startMinute);
+        
         schedule = [
-          "12:00 PM - First meal (break fast)",
-          "3:00 PM - Snack (optional)",
-          "6:00 PM - Second meal",
-          "8:00 PM - Last meal/snack",
-          "8:00 PM - 12:00 PM next day: Fasting period"
+          `${formatTime(startHour, startMinute)} - First meal (break fast)`,
+          `${formatTime(startHour + 3, startMinute)} - Snack (optional)`,
+          `${formatTime(startHour + 6, startMinute)} - Second meal`,
+          `${formatTime(eating8End.hour, eating8End.minute)} - Last meal/eating window closes`,
+          `${formatTime(eating8End.hour, eating8End.minute)} - ${nextDayStart} next day: Fasting period`
         ];
         break;
+
       case "18:6":
         fastingWindow = "18 hours";
         eatingWindow = "6 hours";
         tips = [
           "More advanced fasting protocol",
-          "Start eating at 1:00 PM, stop at 7:00 PM",
           "Focus on protein and healthy fats",
-          "Stay hydrated during longer fasting period"
+          "Stay hydrated during longer fasting period",
+          "Consider electrolyte supplementation"
         ];
+        
+        const eating6End = addHours(startHour, startMinute, 6);
+        const nextDay18Start = formatTime(startHour, startMinute);
+        
         schedule = [
-          "1:00 PM - First meal (break fast)",
-          "4:00 PM - Second meal",
-          "7:00 PM - Last meal",
-          "7:00 PM - 1:00 PM next day: Fasting period"
+          `${formatTime(startHour, startMinute)} - First meal (break fast)`,
+          `${formatTime(startHour + 3, startMinute)} - Second meal`,
+          `${formatTime(eating6End.hour, eating6End.minute)} - Last meal/eating window closes`,
+          `${formatTime(eating6End.hour, eating6End.minute)} - ${nextDay18Start} next day: Fasting period`
         ];
         break;
+
       case "20:4":
         fastingWindow = "20 hours";
         eatingWindow = "4 hours";
@@ -84,13 +115,18 @@ const IntermittentFastingCalculator: React.FC<IntermittentFastingCalcProps> = ({
           "Focus on nutrient density",
           "Consider electrolyte supplementation"
         ];
+        
+        const eating4End = addHours(startHour, startMinute, 4);
+        const nextDay20Start = formatTime(startHour, startMinute);
+        
         schedule = [
-          "4:00 PM - First meal",
-          "7:00 PM - Second meal (optional)",
-          "8:00 PM - Eating window closes",
-          "8:00 PM - 4:00 PM next day: Fasting period"
+          `${formatTime(startHour, startMinute)} - First meal (break fast)`,
+          `${formatTime(startHour + 2, startMinute)} - Second meal (optional)`,
+          `${formatTime(eating4End.hour, eating4End.minute)} - Eating window closes`,
+          `${formatTime(eating4End.hour, eating4End.minute)} - ${nextDay20Start} next day: Fasting period`
         ];
         break;
+
       case "5:2":
         fastingWindow = "2 days per week";
         eatingWindow = "5 days normal eating";

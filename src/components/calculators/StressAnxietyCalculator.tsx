@@ -1,13 +1,13 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { UnitSystem } from "@/types/calculatorTypes";
-import { downloadResultsAsCSV, copyResultsToClipboard, createShareableLink } from "@/utils/downloadUtils";
 import { showSuccessToast, showErrorToast } from "@/utils/notificationUtils";
 import { Input } from "@/components/ui/input";
-import { Check, Copy, Share } from "lucide-react";
+import ResultActions from "@/components/calculator/ResultActions";
 import IntroSection from "@/components/calculator/IntroSection";
 
 interface StressAnxietyCalcProps {
@@ -84,18 +84,29 @@ const StressAnxietyCalculator: React.FC<StressAnxietyCalcProps> = ({ unitSystem,
     recommendations: string[];
     categoryScores: Record<string, { score: number; percentage: number }>;
   } | null>(null);
-  const [copied, setCopied] = useState(false);
 
   const handleAnswer = (questionId: number, value: number) => {
     const questionInfo = questions[questionId - 1];
     const adjustedValue = questionInfo.reverse ? 5 - value : value;
     
     setAnswers(prev => ({ ...prev, [questionId]: adjustedValue }));
+  };
+
+  const handleNext = () => {
+    const currentQuestionData = questions[currentQuestion];
+    if (!answers[currentQuestionData.id]) {
+      showErrorToast("Please select an answer before proceeding");
+      return;
+    }
     
-    if (questionId < questions.length) {
-      setCurrentQuestion(questionId);
-    } else {
-      calculateResults();
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
     }
   };
 
@@ -204,86 +215,21 @@ const StressAnxietyCalculator: React.FC<StressAnxietyCalcProps> = ({ unitSystem,
     }
   };
 
-  const downloadResults = () => {
-    if (!stressResult) return;
-
-    const categoryResults: Record<string, string> = {};
-    Object.entries(stressResult.categoryScores).forEach(([category, data]) => {
-      const formattedCategory = category
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-      
-      categoryResults[formattedCategory] = `${data.percentage}%`;
-    });
-
-    const results = {
-      title: "Stress & Anxiety Assessment",
-      results: {
-        "Overall Score": `${stressResult.score}/40`,
-        "Stress Level": stressResult.level,
-        ...categoryResults,
-        "Top Recommendation": stressResult.recommendations[0]
-      },
-      date: new Date().toLocaleDateString(),
-      unitSystem, // Not really relevant for this calculator, but required for the interface
-      userName: userName || undefined,
-    };
-
-    downloadResultsAsCSV(results, "Stress-Anxiety-Assessment");
-    showSuccessToast("Results downloaded successfully!");
-  };
-
-  const copyResults = () => {
-    if (!stressResult) return;
-
-    const categoryResults: Record<string, string> = {};
-    Object.entries(stressResult.categoryScores).forEach(([category, data]) => {
-      const formattedCategory = category
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-      
-      categoryResults[formattedCategory] = `${data.percentage}%`;
-    });
-
-    const results = {
-      title: "Stress & Anxiety Assessment",
-      results: {
-        "Overall Score": `${stressResult.score}/40`,
-        "Stress Level": stressResult.level,
-        ...categoryResults,
-        "Recommendations": stressResult.recommendations.join("; ")
-      },
-      date: new Date().toLocaleDateString(),
-      unitSystem,
-      userName: userName || undefined,
-    };
-
-    copyResultsToClipboard(results);
-    setCopied(true);
-    showSuccessToast("Results copied to clipboard!");
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const shareLink = () => {
-    if (!stressResult) return;
-    
-    // We'll just share the final score rather than all individual answers for privacy
-    const params = {
-      score: stressResult.score.toString(),
-      level: stressResult.level,
-      name: userName || ""
-    };
-    
-    const link = createShareableLink("stress", params);
-    navigator.clipboard.writeText(link);
-    showSuccessToast("Shareable link copied to clipboard!");
-  };
-
   // Render the current question or the results
   const renderContent = () => {
     if (resultCalculated && stressResult) {
+      const results = {
+        "Overall Score": `${stressResult.score}/40`,
+        "Stress Level": stressResult.level,
+        ...Object.fromEntries(
+          Object.entries(stressResult.categoryScores).map(([category, data]) => [
+            category.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+            `${data.percentage}%`
+          ])
+        ),
+        "Top Recommendation": stressResult.recommendations[0]
+      };
+
       return (
         <div className="bg-gray-50 p-4 rounded-md">
           <div className="text-center mb-4">
@@ -358,31 +304,19 @@ const StressAnxietyCalculator: React.FC<StressAnxietyCalcProps> = ({ unitSystem,
             </ul>
           </div>
 
+          <ResultActions
+            title="Stress & Anxiety Assessment"
+            results={results}
+            fileName="Stress-Anxiety-Assessment"
+            userName={userName}
+            unitSystem={unitSystem}
+            referenceText="This assessment provides general insights and is not a clinical diagnosis. If you're experiencing severe stress or anxiety, please consult a healthcare professional."
+          />
+
           <div className="mt-4 flex flex-wrap gap-2">
             <Button variant="outline" size="sm" onClick={resetAssessment}>
               Retake Assessment
             </Button>
-            <Button variant="outline" size="sm" onClick={copyResults} className="flex items-center">
-              {copied ? <Check className="h-4 w-4 mr-1" /> : <Copy className="h-4 w-4 mr-1" />}
-              {copied ? "Copied!" : "Copy Results"}
-            </Button>
-            <Button variant="outline" size="sm" onClick={shareLink} className="flex items-center">
-              <Share className="h-4 w-4 mr-1" />
-              Share Link
-            </Button>
-            <Button variant="outline" size="sm" onClick={downloadResults}>
-              Download CSV
-            </Button>
-          </div>
-
-          <div className="mt-6 text-center text-sm text-wellness-purple">
-            <p>
-              This assessment provides general insights and is not a clinical diagnosis. 
-              If you're experiencing severe stress or anxiety, please consult a healthcare professional.
-            </p>
-            <p className="mt-2">
-              Thank you for using Survive<span className="lowercase">w</span>ellness!
-            </p>
           </div>
         </div>
       );
@@ -448,14 +382,14 @@ const StressAnxietyCalculator: React.FC<StressAnxietyCalcProps> = ({ unitSystem,
           <Button 
             variant="outline" 
             disabled={currentQuestion === 0}
-            onClick={() => setCurrentQuestion(prev => prev - 1)}
+            onClick={handlePrevious}
           >
             Previous
           </Button>
           {currentQuestion < questions.length - 1 ? (
             <Button 
               disabled={!answers[question?.id]}
-              onClick={() => question && handleAnswer(question.id, answers[question.id])}
+              onClick={handleNext}
             >
               Next
             </Button>
@@ -464,7 +398,7 @@ const StressAnxietyCalculator: React.FC<StressAnxietyCalcProps> = ({ unitSystem,
               disabled={!answers[question?.id]}
               onClick={calculateResults}
             >
-              See Results
+              Complete Assessment
             </Button>
           )}
         </div>

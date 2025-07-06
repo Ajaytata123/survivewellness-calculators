@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Download, Share } from 'lucide-react';
+import { Download, Share, Check } from 'lucide-react';
 import { ResultForDownload, UnitSystem } from '@/types/calculatorTypes';
 import { 
   downloadResultsAsCSV
@@ -27,6 +27,8 @@ const ResultActions: React.FC<ResultActionsProps> = ({
   className,
   referenceText
 }) => {
+  const [shareSuccess, setShareSuccess] = useState(false);
+
   const prepareResults = (): ResultForDownload => {
     return {
       title,
@@ -42,14 +44,16 @@ const ResultActions: React.FC<ResultActionsProps> = ({
       // Get the current page URL with calculator hash
       const currentUrl = window.location.href;
       
-      // Create shareable content with the direct calculator link
-      const shareText = `Check out my ${title} results from Survivewellness!\n\n${Object.entries(results).map(([key, value]) => `${key}: ${value}`).join('\n')}\n\nCalculate yours at: ${currentUrl}`;
+      // Create shareable content with the direct calculator link and tools page
+      const shareText = `Check out my ${title} results from Survivewellness!\n\n${Object.entries(results).map(([key, value]) => `${key}: ${value}`).join('\n')}\n\nCalculate yours at: ${currentUrl}\n\nExplore more calculators: https://survivewellness.com/tools-calculators/`;
       
       // Try to copy the share content to clipboard
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(shareText);
+        setShareSuccess(true);
         showSuccessToast('Calculator link copied and ready to share!');
         console.log('Share content copied to clipboard successfully');
+        setTimeout(() => setShareSuccess(false), 3000);
       } else {
         // Fallback method for older browsers
         const textArea = document.createElement('textarea');
@@ -65,8 +69,10 @@ const ResultActions: React.FC<ResultActionsProps> = ({
         document.body.removeChild(textArea);
         
         if (successful) {
+          setShareSuccess(true);
           showSuccessToast('Calculator link copied and ready to share!');
           console.log('Fallback copy successful');
+          setTimeout(() => setShareSuccess(false), 3000);
         } else {
           throw new Error('Fallback copy failed');
         }
@@ -108,8 +114,8 @@ const ResultActions: React.FC<ResultActionsProps> = ({
               onClick={handleShareResults}
               type="button"
             >
-              <Share className="h-4 w-4" />
-              Share Calculator Link
+              {shareSuccess ? <Check className="h-4 w-4" /> : <Share className="h-4 w-4" />}
+              {shareSuccess ? 'Link Copied!' : 'Share Calculator Link'}
             </Button>
             <Button 
               variant="outline" 
@@ -121,6 +127,19 @@ const ResultActions: React.FC<ResultActionsProps> = ({
               Download CSV
             </Button>
           </div>
+          
+          {shareSuccess && (
+            <div className="text-center mb-4">
+              <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                <p className="text-green-800 text-sm font-medium">
+                  ✓ Link copied to clipboard! Share it with your friends and family.
+                </p>
+                <p className="text-green-600 text-xs mt-1">
+                  The link includes your results and access to more calculators.
+                </p>
+              </div>
+            </div>
+          )}
           
           <div className="text-center border-t border-violet-200 pt-4">
             <div className="bg-white rounded-lg p-3 shadow-sm border border-violet-100">

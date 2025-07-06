@@ -18,17 +18,8 @@ const MealPlannerCalculator: React.FC<MealPlannerCalcProps> = ({ unitSystem, onU
   const [dietType, setDietType] = useState<string>("balanced");
   const [calorieGoal, setCalorieGoal] = useState<string>("2000");
   const [mealsPerDay, setMealsPerDay] = useState<string>("3");
-  const [allergies, setAllergies] = useState<string[]>([]);
   const [preferences, setPreferences] = useState<string[]>([]);
   const [mealPlan, setMealPlan] = useState<MealPlan | null>(null);
-
-  const handleAllergyChange = (allergy: string, checked: boolean) => {
-    if (checked) {
-      setAllergies([...allergies, allergy]);
-    } else {
-      setAllergies(allergies.filter(a => a !== allergy));
-    }
-  };
 
   const handlePreferenceChange = (preference: string, checked: boolean) => {
     if (checked) {
@@ -80,9 +71,7 @@ const MealPlannerCalculator: React.FC<MealPlannerCalcProps> = ({ unitSystem, onU
           setCalorieGoal={setCalorieGoal}
           mealsPerDay={mealsPerDay}
           setMealsPerDay={setMealsPerDay}
-          allergies={allergies}
           preferences={preferences}
-          onAllergyChange={handleAllergyChange}
           onPreferenceChange={handlePreferenceChange}
           onGeneratePlan={handleGenerateMealPlan}
         />

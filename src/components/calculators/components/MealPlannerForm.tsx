@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,9 +15,7 @@ interface MealPlannerFormProps {
   setCalorieGoal: (goal: string) => void;
   mealsPerDay: string;
   setMealsPerDay: (meals: string) => void;
-  allergies: string[];
   preferences: string[];
-  onAllergyChange: (allergy: string, checked: boolean) => void;
   onPreferenceChange: (preference: string, checked: boolean) => void;
   onGeneratePlan: () => void;
 }
@@ -31,14 +29,18 @@ const MealPlannerForm: React.FC<MealPlannerFormProps> = ({
   setCalorieGoal,
   mealsPerDay,
   setMealsPerDay,
-  allergies,
   preferences,
-  onAllergyChange,
   onPreferenceChange,
   onGeneratePlan
 }) => {
-  const allergyOptions = ["Nuts", "Dairy", "Gluten", "Shellfish", "Eggs", "Soy"];
   const preferenceOptions = ["Low-carb", "High-protein", "Vegetarian", "Vegan", "Mediterranean"];
+
+  // Auto-generate meal plan when preferences change
+  useEffect(() => {
+    if (calorieGoal && mealsPerDay) {
+      onGeneratePlan();
+    }
+  }, [preferences, dietType, calorieGoal, mealsPerDay]);
 
   return (
     <div className="space-y-4 mb-6">
@@ -95,22 +97,6 @@ const MealPlannerForm: React.FC<MealPlannerFormProps> = ({
               <SelectItem value="6">6 meals</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label className="block text-left">Food Allergies</Label>
-        <div className="grid grid-cols-2 gap-2">
-          {allergyOptions.map((allergy) => (
-            <div key={allergy} className="flex items-center space-x-2">
-              <Checkbox
-                id={allergy}
-                checked={allergies.includes(allergy)}
-                onCheckedChange={(checked) => onAllergyChange(allergy, checked as boolean)}
-              />
-              <Label htmlFor={allergy} className="text-sm">{allergy}</Label>
-            </div>
-          ))}
         </div>
       </div>
 

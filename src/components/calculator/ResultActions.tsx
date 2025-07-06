@@ -41,24 +41,16 @@ const ResultActions: React.FC<ResultActionsProps> = ({
     try {
       const resultsData = prepareResults();
       
-      // Create shareable link with current URL
-      const currentUrl = window.location.href;
-      const shareText = `Check out my ${resultsData.title} results from Survivewellness!\n\n${Object.entries(resultsData.results).map(([key, value]) => `${key}: ${value}`).join('\n')}\n\nCalculate yours at: ${currentUrl}`;
+      // Create shareable content with results
+      const shareText = `Check out my ${resultsData.title} results from Survivewellness!\n\n${Object.entries(resultsData.results).map(([key, value]) => `${key}: ${value}`).join('\n')}\n\nCalculate yours at: ${window.location.origin}${window.location.pathname}${window.location.hash}`;
       
-      // Copy to clipboard
-      await navigator.clipboard.writeText(shareText);
-      showSuccessToast('Results link copied and ready to share!');
-      
-      console.log('Share link copied to clipboard successfully');
-    } catch (error) {
-      console.error('Error copying share link:', error);
-      // Fallback method for older browsers
-      try {
-        const resultsData = prepareResults();
-        const currentUrl = window.location.href;
-        const shareText = `Check out my ${resultsData.title} results from Survivewellness!\n\n${Object.entries(resultsData.results).map(([key, value]) => `${key}: ${value}`).join('\n')}\n\nCalculate yours at: ${currentUrl}`;
-        
-        // Create temporary textarea for fallback copy
+      // Try to copy to clipboard
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(shareText);
+        showSuccessToast('Results link copied and ready to share!');
+        console.log('Share content copied to clipboard successfully');
+      } else {
+        // Fallback method for older browsers
         const textArea = document.createElement('textarea');
         textArea.value = shareText;
         textArea.style.position = 'fixed';
@@ -68,13 +60,19 @@ const ResultActions: React.FC<ResultActionsProps> = ({
         textArea.focus();
         textArea.select();
         
-        document.execCommand('copy');
+        const successful = document.execCommand('copy');
         document.body.removeChild(textArea);
         
-        showSuccessToast('Results link copied and ready to share!');
-      } catch (fallbackError) {
-        showErrorToast('Failed to copy share link. Please try again.');
+        if (successful) {
+          showSuccessToast('Results link copied and ready to share!');
+          console.log('Fallback copy successful');
+        } else {
+          throw new Error('Fallback copy failed');
+        }
       }
+    } catch (error) {
+      console.error('Error copying share content:', error);
+      showErrorToast('Failed to copy share link. Please try again.');
     }
   };
 

@@ -39,15 +39,16 @@ const ResultActions: React.FC<ResultActionsProps> = ({
 
   const handleShareResults = async () => {
     try {
-      const resultsData = prepareResults();
+      // Get the current page URL with calculator hash
+      const currentUrl = window.location.href;
       
-      // Create shareable content with results
-      const shareText = `Check out my ${resultsData.title} results from Survivewellness!\n\n${Object.entries(resultsData.results).map(([key, value]) => `${key}: ${value}`).join('\n')}\n\nCalculate yours at: ${window.location.origin}${window.location.pathname}${window.location.hash}`;
+      // Create shareable content with the direct calculator link
+      const shareText = `Check out my ${title} results from Survivewellness!\n\n${Object.entries(results).map(([key, value]) => `${key}: ${value}`).join('\n')}\n\nCalculate yours at: ${currentUrl}`;
       
-      // Try to copy to clipboard
+      // Try to copy the share content to clipboard
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(shareText);
-        showSuccessToast('Results link copied and ready to share!');
+        showSuccessToast('Calculator link copied and ready to share!');
         console.log('Share content copied to clipboard successfully');
       } else {
         // Fallback method for older browsers
@@ -64,7 +65,7 @@ const ResultActions: React.FC<ResultActionsProps> = ({
         document.body.removeChild(textArea);
         
         if (successful) {
-          showSuccessToast('Results link copied and ready to share!');
+          showSuccessToast('Calculator link copied and ready to share!');
           console.log('Fallback copy successful');
         } else {
           throw new Error('Fallback copy failed');
@@ -108,7 +109,7 @@ const ResultActions: React.FC<ResultActionsProps> = ({
               type="button"
             >
               <Share className="h-4 w-4" />
-              Share Results
+              Share Calculator Link
             </Button>
             <Button 
               variant="outline" 
